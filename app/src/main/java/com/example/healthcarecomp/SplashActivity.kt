@@ -23,7 +23,6 @@ class SplashActivity : AppCompatActivity() {
         val progressBar = findViewById<ProgressBar>(R.id.progressBar_Splash)
         // Timedelay is a time to wait unitl change new acitvity: 100 = 1 second
         startProgressBar(progressBar, timeDelay = 200)
-
     }
 
     private fun openMainActivity() {
