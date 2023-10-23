@@ -1,0 +1,108 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.dagger.hilt.android'
+    id("com.google.devtools.ksp")
+}
+
+android {
+    namespace 'com.example.healthcarecomp'
+    compileSdk 34
+
+    buildFeatures{
+        dataBinding = true
+        viewBinding = true
+    }
+
+    defaultConfig {
+        applicationId "com.example.healthcarecomp"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    //nav
+    implementation("androidx.navigation:navigation-fragment-ktx:2.4.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.4.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
+
+    // View Model Scope
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
+    // Retrofit
+    var retrofit_version = "2.9.0"
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-moshi:$retrofit_version")
+
+    // Moshi
+    var moshi_version = "1.11.0"
+    implementation("com.squareup.moshi:moshi-kotlin:$moshi_version")
+
+    // OkHttpClient
+    var ok_httpclient_version = "4.9.0"
+    implementation("com.squareup.okhttp3:okhttp:$ok_httpclient_version")
+    implementation("com.squareup.okhttp3:logging-interceptor:$ok_httpclient_version")
+
+    // Glide Library
+    var glide_version = "4.12.0"
+    implementation("com.github.bumptech.glide:glide:$glide_version")
+
+    //Dagger - Hilt
+    var dagger_hilt_version = "2.48.1"
+    implementation ("com.google.dagger:hilt-android:$dagger_hilt_version")
+    kapt("com.google.dagger:hilt-android-compiler:$dagger_hilt_version")
+
+
+    // Coroutine
+    var coroutines_version = "1.5.2"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
+
+    // ViewPager2
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+
+    implementation("androidx.activity:activity-ktx:1.4.0")
+
+    // Circle Image
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    var room_version = "2.5.0"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    // To use Kotlin annotation processing tool (kapt)
+//    kapt("androidx.room:room-compiler:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+    ksp("androidx.room:room-compiler:$room_version")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+    // optional - Paging 3 Integration
+    implementation("androidx.room:room-paging:$room_version")
+}
