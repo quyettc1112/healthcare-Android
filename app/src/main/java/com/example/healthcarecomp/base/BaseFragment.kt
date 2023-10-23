@@ -5,7 +5,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.healthcarecomp.R
 
 
-open class BaseFragment() : Fragment() {
+open class BaseFragment(view: Int) : Fragment(view) {
 
     protected fun navigateToPage(actionId: Int) {
         findNavController().navigate(actionId)
