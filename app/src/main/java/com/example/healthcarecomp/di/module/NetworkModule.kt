@@ -1,7 +1,7 @@
 package com.example.healthcarecomp.di.module
 
 import com.example.healthcarecomp.common.Constant
-import com.example.healthcarecomp.data.api.UserAPI
+import com.example.healthcarecomp.data.api.DoctorApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -20,8 +20,8 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
-    fun provideCustomerAPI(@Named("MainSite") retrofit: Retrofit): UserAPI {
-        return retrofit.create(UserAPI::class.java)
+    fun provideCustomerAPI(@Named("MainSite") retrofit: Retrofit): DoctorApi {
+        return retrofit.create(DoctorApi::class.java)
     }
 
 
