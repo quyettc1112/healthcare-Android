@@ -1,4 +1,7 @@
 package com.example.healthcarecomp.ui.user.register
 
-class RegisterUseCase {
+import com.example.healthcarecomp.data.repository.DoctorRepository
+import javax.inject.Inject
+
+class RegisterUseCase{
 }
