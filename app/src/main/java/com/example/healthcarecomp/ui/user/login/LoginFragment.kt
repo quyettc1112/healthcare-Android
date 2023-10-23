@@ -5,4 +5,10 @@ import com.example.healthcarecomp.base.BaseFragment
 
 class LoginFragment : BaseFragment() {
 
+
+
+
+
+
+
 }
