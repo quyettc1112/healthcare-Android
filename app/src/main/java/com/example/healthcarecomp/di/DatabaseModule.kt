@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.di.module
+package com.example.healthcarecomp.di
 
 import android.content.Context
 import androidx.room.Room

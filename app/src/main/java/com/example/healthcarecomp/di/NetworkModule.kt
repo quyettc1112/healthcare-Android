@@ -1,7 +1,8 @@
-package com.example.healthcarecomp.di.module
+package com.example.healthcarecomp.di
 
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.api.DoctorApi
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -18,6 +19,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    @Provides
+    @Singleton
+    fun provideFireBaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Provides
     fun provideCustomerAPI(@Named("MainSite") retrofit: Retrofit): DoctorApi {

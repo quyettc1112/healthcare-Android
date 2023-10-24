@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "448679009081",
+    "project_id": "healtcarecomp",
+    "storage_bucket": "healtcarecomp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448679009081:android:22e077c9194b96992926e8",
+        "android_client_info": {
+          "package_name": "com.example.healthcarecomp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbt87-7U6HHxgnAL5svE7bxCyK05ybobs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
