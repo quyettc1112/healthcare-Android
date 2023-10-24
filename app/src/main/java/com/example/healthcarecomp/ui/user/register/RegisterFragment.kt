@@ -56,10 +56,41 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
 
         binding.etSignUpFirstName.apply {
             this.afterTextChanged {
-                if(it.length < 2){
-                    error = "First name is not valid"
-                }else{
-                    error = null
+                error = when {
+                    it.length < 2 -> "First name is not valid"
+                    else -> null
+                }
+            }
+        }
+        binding.etSignUpLastName.apply {
+            this.afterTextChanged {
+                error = when {
+                    it.length < 2 -> "Last name is not valid"
+                    else -> null
+                }
+            }
+        }
+        binding.etSignUpPassword.apply {
+            this.afterTextChanged {
+                error = when {
+                    it.length <= 6 -> "Password too short"
+                    else -> null
+                }
+            }
+        }
+        binding.etSignUpPhoneNumber.apply {
+            this.afterTextChanged {
+                error = when {
+                    it.length !in 9..11 -> "Phone number is not valid"
+                    else -> null
+                }
+            }
+        }
+        binding.etSignUpDoctorCode.apply {
+            this.afterTextChanged {
+                error = when {
+                    it.length != 6 -> "Doctor code is not valid"
+                    else -> null
                 }
             }
         }
@@ -83,11 +114,7 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
             }
 
             R.id.btnSignUp -> {
-                when {
-                    else -> {
-                        navigateToPage(R.id.action_registerFragment_to_loginFragment)
-                    }
-                }
+                navigateToPage(R.id.action_registerFragment_to_loginFragment)
             }
             R.id.tvSignUpLoginBtn -> {
                 navigateToPage(R.id.action_registerFragment_to_loginFragment)
