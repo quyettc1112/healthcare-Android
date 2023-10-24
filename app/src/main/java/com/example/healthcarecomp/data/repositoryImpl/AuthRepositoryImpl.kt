@@ -3,10 +3,11 @@ package com.example.healthcarecomp.data.repositoryImpl
 import com.example.healthcarecomp.data.repository.AuthRepository
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.ValidationUtils
-import com.example.healthcarecomp.util.extension.await
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
