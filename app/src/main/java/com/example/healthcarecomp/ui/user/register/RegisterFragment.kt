@@ -14,6 +14,7 @@ import androidx.activity.OnBackPressedCallback
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.databinding.FragmentRegisterBinding
+import com.example.healthcarecomp.ui.activity.AuthActivity
 import com.example.healthcarecomp.util.extension.afterTextChanged
 
 
@@ -119,6 +120,7 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
             R.id.tvSignUpLoginBtn -> {
                 navigateToPage(R.id.action_registerFragment_to_loginFragment)
             }
+
         }
     }
 

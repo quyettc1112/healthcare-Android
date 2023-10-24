@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.ui.user.login
 
 import android.content.Intent
+import android.content.IntentSender
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -10,12 +11,25 @@ import android.view.ViewGroup
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
+import com.example.healthcarecomp.ui.activity.AuthActivity
 import com.example.healthcarecomp.ui.activity.MainActivity
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import java.util.zip.Inflater
+import javax.inject.Inject
 
 
 class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListener{
     private lateinit var binding: FragmentLoginBinding
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,7 +46,6 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
     private fun setupUI() {
 
-
         //set up display out line when user select role login
         binding.ivLoginPatient.setOnClickListener(this)
         binding.ivLoginDoctor.setOnClickListener(this)
@@ -45,6 +58,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         binding.tvLoginForgotBnt.setOnClickListener(this)
 
     }
+
 
     override fun onClick(v: View?) {
         when(v?.id){
@@ -62,17 +76,18 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
             //
             R.id.btnLogin -> {
-
                 openMainActivity()
             }
 
             R.id.ibLoginWithGoogle -> {
-                openMainActivity()
+                (requireActivity() as AuthActivity).loginWithGoogle()
             }
 
             R.id.tvLoginSignUpBtn -> {
                 navigateToPage(R.id.action_loginFragment_to_registerFragment)
             }
+
+
         }
     }
 
