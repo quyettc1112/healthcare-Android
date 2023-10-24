@@ -29,5 +29,6 @@
 
 
     <color name="item_userhom_bg">#2dc653</color>
+    <color name="red_light">#ED3E3E</color>
 
 </resources>
