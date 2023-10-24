@@ -27,4 +27,7 @@
 
     <color name="process_bar_color">#B7B7B7</color>
 
+
+    <color name="item_userhom_bg">#2dc653</color>
+
 </resources>

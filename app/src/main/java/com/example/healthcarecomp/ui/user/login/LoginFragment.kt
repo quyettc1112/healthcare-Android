@@ -24,6 +24,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentLoginBinding.inflate(inflater,container,false)
         return binding.root
+
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,6 +81,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         startActivity(intent)
         requireActivity().finish()
     }
+
 
 
 }
