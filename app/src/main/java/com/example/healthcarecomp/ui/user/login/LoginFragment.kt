@@ -11,9 +11,10 @@ import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
 import com.example.healthcarecomp.ui.activity.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.zip.Inflater
 
-
+@AndroidEntryPoint
 class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListener{
     private lateinit var binding: FragmentLoginBinding
     override fun onCreateView(

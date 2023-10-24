@@ -1,6 +1,6 @@
 package com.example.healthcarecomp.data.model
 
-data class Patient(
+data class User(
     val id: Int?,
     val phone: Int?,
     val email: String?,
