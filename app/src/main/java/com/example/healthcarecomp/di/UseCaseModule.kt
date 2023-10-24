@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.di.module
+package com.example.healthcarecomp.di
 
 import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.ui.user.login.LoginUseCase

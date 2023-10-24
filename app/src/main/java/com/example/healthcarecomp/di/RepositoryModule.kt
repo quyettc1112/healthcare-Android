@@ -1,6 +1,8 @@
-package com.example.healthcarecomp.di.module
+package com.example.healthcarecomp.di
 
+import com.example.healthcarecomp.data.repository.AuthRepository
 import com.example.healthcarecomp.data.repository.DoctorRepository
+import com.example.healthcarecomp.data.repositoryImpl.AuthRepositoryImpl
 import com.example.healthcarecomp.data.repositoryImpl.DoctorRepositoryImpl
 import dagger.Binds
 import dagger.Module
@@ -15,4 +17,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindDoctorRepository(doctorRepositoryImpl: DoctorRepositoryImpl): DoctorRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
 }
