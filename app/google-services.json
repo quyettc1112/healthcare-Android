@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "448679009081",
+    "firebase_url": "https://healtcarecomp-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "healtcarecomp",
     "storage_bucket": "healtcarecomp.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.healthcarecomp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "448679009081-uolcnkj9ujk5bahvnk8q8a48lqieqn7p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.healthcarecomp",
+            "certificate_hash": "9e27554b7afcb6baadbfae11cbdc7cc6dec49785"
+          }
+        },
+        {
+          "client_id": "448679009081-b1mugi9il2et4advljg6a3vh1pkm0rhl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDbt87-7U6HHxgnAL5svE7bxCyK05ybobs"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "448679009081-b1mugi9il2et4advljg6a3vh1pkm0rhl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
