@@ -1,9 +1,13 @@
 package com.example.healthcarecomp.ui.activity
 
+import android.app.ActionBar
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.ListView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.healthcarecomp.R
@@ -15,7 +19,6 @@ class MainActivity : BaseActivity() {
     private var loadingLayout: FrameLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.e("Frank","MainActivity")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
        // loadingLayout = findViewById(R.id.loadingLayout)
@@ -33,6 +36,8 @@ class MainActivity : BaseActivity() {
         navView.setupWithNavController(navController)
 
     }
+
+
 
 
 
