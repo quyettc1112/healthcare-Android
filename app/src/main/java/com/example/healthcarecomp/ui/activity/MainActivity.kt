@@ -1,4 +1,4 @@
-package com.example.healthcarecomp
+package com.example.healthcarecomp.ui.activity
 
 import android.app.ActionBar
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.ListView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

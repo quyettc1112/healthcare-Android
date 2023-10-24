@@ -22,9 +22,8 @@
     <color name="icon_color_bottom_normal">@color/primaryLightColor</color>
     <color name="icon_color_bottom_selected">@color/primaryColor</color>
 
-
     <color name="icon_color_normal">#B7B7B7</color>
-
+    <color name="purple_700">#6750A4</color>
 
     <color name="process_bar_color">#B7B7B7</color>
 

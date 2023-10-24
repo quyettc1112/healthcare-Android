@@ -1,10 +1,11 @@
-package com.example.healthcarecomp
+package com.example.healthcarecomp.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import com.example.healthcarecomp.R
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
 import java.util.TimerTask
@@ -25,8 +26,8 @@ class SplashActivity : AppCompatActivity() {
         startProgressBar(progressBar, timeDelay = 200)
     }
 
-    private fun openMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+    private fun openAuthActivity() {
+        val intent = Intent(this, AuthActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -43,7 +44,7 @@ class SplashActivity : AppCompatActivity() {
                 if (progressBarProgress >= timeDelay) {
                     timer.cancel()
                     // Chuyển sang main activity.
-                    openMainActivity()
+                    openAuthActivity()
                 }
             }
         }, 0, 10)
