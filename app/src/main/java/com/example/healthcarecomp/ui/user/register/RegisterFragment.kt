@@ -10,10 +10,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
-import androidx.core.widget.doOnTextChanged
+
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.databinding.FragmentRegisterBinding
+import com.example.healthcarecomp.util.extension.afterTextChanged
 
 
 class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickListener {
@@ -52,20 +53,14 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
         binding.tvSignUpLoginBtn.setOnClickListener(this)
 
         // input validate
+
         binding.etSignUpFirstName.apply {
-            setOnEditorActionListener { _, actionId, _ ->
-
-                when(actionId) {
-                    EditorInfo.IME_ACTION_DONE -> {
-                        if(text.toString().length <= 2){
-                            error = "First name is not valid"
-                        }else{
-                            error = null
-                        }
-
-                    }
+            this.afterTextChanged {
+                if(it.length < 2){
+                    error = "First name is not valid"
+                }else{
+                    error = null
                 }
-                false
             }
         }
 
