@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_nav"
-    app:startDestination="@id/homeFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
 
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/navigation_home"
         android:name="com.example.healthcarecomp.ui.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="@string/home_title"
+        tools:layout="@layout/fragment_home">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_schedule"
+        android:name="com.example.healthcarecomp.ui.schedule.ScheduleFragment"
+        android:label="@string/schedule_title"
+        tools:layout="@layout/fragment_schedule">
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="com.example.healthcarecomp.ui.chat.ChatFragment"
+        android:label="@string/chat_title"
+        tools:layout="@layout/fragment_chat">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_info"
+        android:name="com.example.healthcarecomp.ui.info.InfoFragment"
+        android:label="@string/info_title"
+        tools:layout="@layout/fragment_info">
+    </fragment>
+
+
+
 </navigation>

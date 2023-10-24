@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.data.model
-data class Doctor(
+
+data class Patient(
     val id: Int?,
     val phone: Int?,
     var password: String?,
