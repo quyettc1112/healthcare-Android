@@ -3,5 +3,33 @@
     <string name="default_notify_title">Message</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Login Screen -->
+    <string name="login_phone_number_hint">PhoneNumber</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_forgot_password_text"><u>Forgot password?</u></string>
+    <string name="login_btn">Login</string>
+    <string name="login_with_text">Or, login with</string>
+    <string name="login_dont_have_account">Don\'t have an account?</string>
+    <string name="login_sign_up_btn">Sign Up</string>
+
+    <!-- Sign up Screen -->
+    <string name="sign_up_first_name_hint">First Name</string>
+    <string name="sign_up_last_name_hint">Last Name</string>
+    <string name="sign_up_phone_number_hint">Phone Number</string>
+    <string name="sign_up_password_hint">Password</string>
+    <string name="sign_up_doctor_code_hint">Doctor Code</string>
+    <string name="sign_up_btn">Register</string>
+    <string name="sign_up_with_text">Or, sign up with</string>
+    <string name="sign_up_have_account_text">Already have an account?</string>
+    <string name="sign_up_Login_btn">Login</string>
+
     <string name="health_care">Health Care</string>
+
+
+    <string name="home_title">Home</string>
+    <string name="schedule_title">Schedule</string>
+    <string name="chat_title">Chat</string>
+    <string name="info_title">Info</string>
 </resources>
