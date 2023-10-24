@@ -62,6 +62,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
             //
             R.id.btnLogin -> {
+
                 openMainActivity()
             }
 
@@ -70,7 +71,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
             }
 
             R.id.tvLoginSignUpBtn -> {
-
+                navigateToPage(R.id.action_loginFragment_to_registerFragment)
             }
         }
     }
@@ -80,6 +81,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         startActivity(intent)
         requireActivity().finish()
     }
+
+
 
 
 }
