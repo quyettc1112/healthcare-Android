@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/schedule_recycle"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="29dp">
+
+        <LinearLayout
+            android:layout_width="17dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/schedule_recycle_in">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/tv_mounth_schedule"
+                android:text="MAY"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
+                android:id="@+id/tv_day_schedule"
+                android:text="22"
+                android:textStyle="bold"
+                android:textSize="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_nameUserMeeting_schedule"
+                android:text="Meting Dr.Black Jack"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:maxLines="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
+                android:id="@+id/tv_time_meetting_schedule"
+                android:text="11:30AM - 15:00 PM"
+                android:maxLines="1"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+            android:id="@+id/iv_userAVT_schedule"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/default_user_avt">
+
+        </ImageView>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
