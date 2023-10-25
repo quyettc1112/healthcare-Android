@@ -54,7 +54,6 @@ class AuthActivity : BaseActivity() {
                     .build()
             ).setAutoSelectEnabled(true)
             .build()
-
         auth = Firebase.auth
 
     }
@@ -104,7 +103,6 @@ class AuthActivity : BaseActivity() {
                                 }
                         }
                     }
-
                 }catch (e: ApiException){
                     Log.e(TAG, "api exception")
                 }

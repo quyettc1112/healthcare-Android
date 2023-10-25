@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.databinding.RvItemUserhomeBinding
 
-class ItemUserHomeAdapter(val ItemList: List<Constant.Item_recycleView>) :
-    RecyclerView.Adapter<ItemUserHomeAdapter.MainViewHolder>() {
+class ItemActitivyHomeAdapter(val ItemList: List<Constant.Item_recycleView>) :
+    RecyclerView.Adapter<ItemActitivyHomeAdapter.MainViewHolder>() {
 
     var onItemClick: ((Constant.Item_recycleView) -> Unit)? = null
 
@@ -33,7 +33,7 @@ class ItemUserHomeAdapter(val ItemList: List<Constant.Item_recycleView>) :
         )
     }
 
-    override fun onBindViewHolder(holder: ItemUserHomeAdapter.MainViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemActitivyHomeAdapter.MainViewHolder, position: Int) {
         val Item = ItemList[position]
         holder.bindItem(Item)
         holder.itemView.setOnClickListener {
@@ -42,7 +42,7 @@ class ItemUserHomeAdapter(val ItemList: List<Constant.Item_recycleView>) :
     }
 
     override fun getItemCount(): Int {
-        return Constant.getItemListForRecycleView().size
+        return Constant.getItemListForRecycleView_UserHome().size
     }
 
 

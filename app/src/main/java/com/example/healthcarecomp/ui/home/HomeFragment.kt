@@ -1,22 +1,18 @@
 package com.example.healthcarecomp.ui.home
 
-import android.app.AlertDialog
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
-import com.example.healthcarecomp.common.Adapter.ItemUserHomeAdapter
+import com.example.healthcarecomp.common.Adapter.ItemActitivyHomeAdapter
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.databinding.FragmentHomeBinding
 
@@ -43,17 +39,15 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     private fun setUpAnimationMenu(binding: FragmentHomeBinding) {
         // Inflate animation
         val rotateAnimation = AnimationUtils.loadAnimation(context, R.anim.rotate_button)
-
         // Gán animation cho button
         binding.btnMenuOptionUserHome.animation = rotateAnimation
-
         binding.btnMenuOptionUserHome.setOnClickListener {
             binding.btnMenuOptionUserHome.startAnimation(rotateAnimation)
         }
     }
 
     private fun setUpRecycleView(binding: FragmentHomeBinding) {
-        val adapter = ItemUserHomeAdapter(Constant.getItemListForRecycleView())
+        val adapter = ItemActitivyHomeAdapter(Constant.getItemListForRecycleView_UserHome())
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 2,  GridLayoutManager.HORIZONTAL, false)
 
         val gridSpacingItemDecoration = GridSpacingItemDecoration(20)
@@ -70,17 +64,17 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         // Lưu trữ số item hiện đang được hiển thị trên màn hình
         var visibleItemCount = layoutManager.childCount
 
-        var progress = 0
+        var progress = 0F
 
+        var tmp = 0F
         binding.rvItemUserHome.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-
-                progress = progress + (dx * 100 / (recyclerView.width - 300 )).toInt()
+                tmp += dx
+                progress = (tmp / 900 * 100)
+                Log.d("tmppp", progress.toString())
                 binding.pbItemUserhome.progress = progress.toInt()
             }
-
-
         })
     }
 
