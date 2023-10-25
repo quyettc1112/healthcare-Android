@@ -10,37 +10,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center|top"
             android:background="@drawable/home_bg"
-
+            android:gravity="center"
             android:orientation="vertical">
 
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="Your Schedule"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </TextView>
 
             <ImageView
                 android:id="@+id/im_banner_schedule"
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/schedule_banner"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/textView">
@@ -52,8 +38,8 @@
                 android:id="@+id/btn_show_date_picker"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Choose Day"
-                android:layout_marginTop="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -62,12 +48,12 @@
 
 
             <LinearLayout
-                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp">
 
@@ -108,50 +94,78 @@
             </LinearLayout>
 
             <LinearLayout
-                android:background="@drawable/userhome_bg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="5dp">
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="80dp"
 
-
-
+                android:background="@drawable/userhome_bg"
+                android:orientation="vertical">
                 <LinearLayout
+                    android:layout_weight="1"
                     android:layout_width="match_parent"
-                    android:orientation="vertical"
-
-                    android:layout_marginTop="16dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_today"
-                        android:layout_marginLeft="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginBottom="5dp"
                         android:text="Today"
                         android:textSize="20dp"
                         android:textStyle="bold">
 
                     </TextView>
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_listTodaySchedule"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        tools:listitem="@layout/rv_list_schedule"
-                       ></androidx.recyclerview.widget.RecyclerView>
+                        android:layout_marginBottom="20dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
+                    </androidx.recyclerview.widget.RecyclerView>
 
                 </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_upcoming"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:text="Up Coming"
+                        android:textSize="20dp"
+                        android:textStyle="bold">
+
+                    </TextView>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_listUpcomingSchedule"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        tools:listitem="@layout/rv_list_schedule"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+                    </androidx.recyclerview.widget.RecyclerView>
+                </LinearLayout>
+
+
 
 
             </LinearLayout>
 
 
         </LinearLayout>
+
 
     </ScrollView>
 

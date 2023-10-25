@@ -152,13 +152,13 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:orientation="horizontal"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
                     android:id="@+id/rv_item_userHome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
                 </androidx.recyclerview.widget.RecyclerView>
