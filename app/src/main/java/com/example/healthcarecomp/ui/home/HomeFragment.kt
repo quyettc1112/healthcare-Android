@@ -56,7 +56,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         binding.rvItemUserHome.layoutManager = layoutManager
         binding.rvItemUserHome.adapter = adapter
         adapter.onItemClick = {
-            Toast.makeText(requireContext(), "Click", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireContext(), "Click", Toast.LENGTH_SHORT).show()
+            it.actionId?.let {
+                navigateToPage(it)
+            }
         }
 
         // Lưu trữ tổng số item trong Grid layout

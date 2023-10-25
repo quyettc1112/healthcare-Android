@@ -10,6 +10,10 @@
         android:name="com.example.healthcarecomp.ui.home.HomeFragment"
         android:label="@string/home_title"
         tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_navigation_home_to_medicalHistoryFragment"
+            app:destination="@id/medicalHistoryFragment"
+            app:enterAnim="@anim/zoom_in"/>
     </fragment>
 
     <fragment
@@ -33,7 +37,16 @@
         android:label="@string/info_title"
         tools:layout="@layout/fragment_info">
     </fragment>
-
+    <fragment
+        android:id="@+id/medicalHistoryFragment"
+        android:name="com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryFragment"
+        android:label="fragment_medical_history"
+        tools:layout="@layout/fragment_medical_history" >
+        <action
+            android:id="@+id/action_medicalHistoryFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:exitAnim="@anim/zoom_out"/>
+    </fragment>
 
 
 </navigation>

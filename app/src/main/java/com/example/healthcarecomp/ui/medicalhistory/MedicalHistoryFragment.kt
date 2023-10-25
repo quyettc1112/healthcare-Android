@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
@@ -24,6 +25,13 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
     ): View? {
          super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentMedicalHistoryBinding.inflate(inflater, container, false)
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                navigateToPage(R.id.action_medicalHistoryFragment_to_navigation_home)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,onBackPressedCallback)
+
         return _binding.root
     }
 
@@ -47,6 +55,12 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
             adapter =_recyclerViewAdapter
             layoutManager = LinearLayoutManager(requireActivity())
         }
+        _binding.ibMedicalHistoryBack.setOnClickListener {
+            navigateToPage(R.id.action_medicalHistoryFragment_to_navigation_home)
+        }
+
     }
+
+
 
 }
