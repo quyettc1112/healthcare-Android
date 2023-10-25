@@ -54,7 +54,6 @@ class AuthActivity : BaseActivity() {
                     .build()
             ).setAutoSelectEnabled(true)
             .build()
-
         auth = Firebase.auth
 
     }
