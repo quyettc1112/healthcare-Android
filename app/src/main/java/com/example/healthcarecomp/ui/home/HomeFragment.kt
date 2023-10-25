@@ -39,7 +39,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     private fun setUpAnimationMenu(binding: FragmentHomeBinding) {
         // Inflate animation
         val rotateAnimation = AnimationUtils.loadAnimation(context, R.anim.rotate_button)
-
         // Gán animation cho button
         binding.btnMenuOptionUserHome.animation = rotateAnimation
         binding.btnMenuOptionUserHome.setOnClickListener {
