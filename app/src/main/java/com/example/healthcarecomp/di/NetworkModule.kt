@@ -3,6 +3,8 @@ package com.example.healthcarecomp.di
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.api.DoctorApi
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -23,6 +25,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideFireBaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFireBaseDataBase(): DatabaseReference = FirebaseDatabase.getInstance().reference
 
     @Provides
     fun provideCustomerAPI(@Named("MainSite") retrofit: Retrofit): DoctorApi {
