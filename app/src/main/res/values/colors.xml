@@ -26,6 +26,9 @@
     <color name="purple_700">#6750A4</color>
 
     <color name="process_bar_color">#B7B7B7</color>
+
+
+    <color name="item_userhom_bg">#2dc653</color>
     <color name="red_light">#ED3E3E</color>
 
     <color name="text_black_blue">#393557</color>
