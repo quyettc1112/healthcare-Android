@@ -32,6 +32,7 @@ class ScheduleAdapter(val scheduleList: List<MedicalSchedule>, val kindOfSchdule
                 LayoutInflater.from(parent.context),
                 parent,
                 false
+
             )
         )
     }
