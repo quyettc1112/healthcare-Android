@@ -13,19 +13,11 @@ import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
 import com.example.healthcarecomp.ui.activity.AuthActivity
 import com.example.healthcarecomp.ui.activity.MainActivity
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.zip.Inflater
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListener{
     private lateinit var binding: FragmentLoginBinding
 
