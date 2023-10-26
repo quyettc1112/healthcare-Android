@@ -21,15 +21,16 @@ class MedicalHistoryViewModel @Inject constructor(
     var medicalHistoryList = MutableLiveData<Resource<MutableList<MedicalRecord>>>()
     var medicalAdded = MutableLiveData<Resource<MedicalRecord>>()
     init {
-        medicalHistoryList.value = Resource.Loading()
-        medicalHistoryUseCase.onDataChange {
-            medicalHistoryList.value = it
+        loadMedicalRecord()
+    }
+
+    fun loadMedicalRecord(){
+        viewModelScope.launch {
+            medicalHistoryList.value = Resource.Loading()
+            medicalHistoryUseCase.getAllByPatientID("2222222") {
+                medicalHistoryList.value = it
+            }
         }
-
-
-//        medicalHistoryUseCase.getAllByPatientID("2222222") {
-//            medicalHistoryList.value = it
-//        }
     }
 
     fun upsertMedialRecord(medicalRecord: MedicalRecord) = viewModelScope.launch {

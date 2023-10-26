@@ -17,8 +17,7 @@ import javax.inject.Inject
 class MedicalHistoryRepositoryImpl @Inject constructor(
     private val firebaseRef: DatabaseReference
 ) : MedicalHistoryRepository {
-    private var _onChildAddedListener: ((Resource<MutableList<MedicalRecord>>) -> Unit)? = null
-    private val _dbRef = FirebaseDatabase.getInstance(Constant.FIREBASE_DATABASE_URL).reference.child(Constant.MEDICAL_HISTORY_TBL)
+    private val _dbRef = firebaseRef.child(Constant.MEDICAL_HISTORY_TBL)
 
     override suspend fun upsert(medicalRecord: MedicalRecord): Resource<MedicalRecord> {
         var result : Resource<MedicalRecord> =  Resource.Loading()
@@ -47,32 +46,6 @@ class MedicalHistoryRepositoryImpl @Inject constructor(
         return result
     }
 
-    override fun onDataChange(listener: (Resource<MutableList<MedicalRecord>>) -> Unit) {
-        _onChildAddedListener = listener
-        Log.e("lol", "call")
-        _dbRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val list = mutableListOf<MedicalRecord>()
-                snapshot.children.forEach {data ->
-                    val mr = data.getValue(MedicalRecord::class.java)
-                    mr?.let {
-                        list.add(it)
-                    }
-
-                }
-                _onChildAddedListener?.let {
-                    it(Resource.Success(list))
-                    Log.e("lol", "update")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
-
-    }
 
     override suspend fun getAll(listener: (Resource<MutableList<MedicalRecord>>) -> Unit) {
         val query = _dbRef
@@ -83,20 +56,20 @@ class MedicalHistoryRepositoryImpl @Inject constructor(
         doctorID: String,
         listener: (Resource<MutableList<MedicalRecord>>) -> Unit
     ) {
-        val query = _dbRef.orderByChild("doctorID").equalTo(doctorID)
+        val query = _dbRef.orderByChild("doctorId").equalTo(doctorID)
         fetchData(query, listener)
     }
 
-    override  fun getAllByPatientID(
+    override suspend  fun getAllByPatientID(
         patientID: String,
         listener: (Resource<MutableList<MedicalRecord>>) -> Unit
     ) {
-        val query = _dbRef.orderByChild("patientID").equalTo(patientID)
+        val query = _dbRef.orderByChild("patientId").equalTo(patientID)
         fetchData(query, listener)
     }
 
     private fun fetchData(query: Query, listener: (Resource<MutableList<MedicalRecord>>) -> Unit){
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
+        query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val list = mutableListOf<MedicalRecord>()
                 snapshot.children.forEach {data ->
@@ -110,9 +83,8 @@ class MedicalHistoryRepositoryImpl @Inject constructor(
                     it(Resource.Success(list))
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
-
+                listener(Resource.Error(error.message))
             }
 
         })
