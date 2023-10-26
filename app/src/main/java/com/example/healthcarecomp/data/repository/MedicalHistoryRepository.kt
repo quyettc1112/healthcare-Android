@@ -7,5 +7,8 @@ interface MedicalHistoryRepository {
     suspend fun upsert(medicalRecord: MedicalRecord): Resource<MedicalRecord>
     suspend fun remove(medicalRecord: MedicalRecord): Resource<MedicalRecord>
     fun onDataChange(listener: (Resource<MutableList<MedicalRecord>>) -> Unit)
-    fun bindChildEvent()
+
+    suspend fun getAll(listener: (Resource<MutableList<MedicalRecord>>) -> Unit )
+    suspend fun getAllByDoctorID(doctorID: String, listener: (Resource<MutableList<MedicalRecord>>) -> Unit )
+      fun getAllByPatientID(patientID: String, listener: (Resource<MutableList<MedicalRecord>>) -> Unit )
 }

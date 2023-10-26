@@ -21,4 +21,16 @@ class MedicalHistoryUseCase @Inject constructor(
         medicalHistoryRepository.onDataChange(listener)
     }
 
+    suspend fun getAllByDoctorID(doctorID: String, listener: (Resource<MutableList<MedicalRecord>>) -> Unit){
+        medicalHistoryRepository.getAllByDoctorID(doctorID,listener)
+    }
+
+    fun getAllByPatientID(patientID: String, listener: (Resource<MutableList<MedicalRecord>>) -> Unit) {
+        medicalHistoryRepository.getAllByPatientID(patientID, listener)
+    }
+
+    suspend fun getAll(listener: (Resource<MutableList<MedicalRecord>>) -> Unit){
+        medicalHistoryRepository.getAll(listener)
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.ui.medicalhistory
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.UUID
 
 @AndroidEntryPoint
 class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
@@ -51,6 +53,18 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
 
         _recyclerViewAdapter = MedicalHistoryRecyclerViewAdapter()
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
+//        val medicalRecord = MedicalRecord(
+//            date = simpleDateFormat.parse("23/11/2023")
+//            , doctorId = "11111111",
+//            patientId = "2222222",
+//            bodyTemperature = 37.7F,
+//            bloodPressure = 70,
+//            healthRate = 110,
+//            bloodSugar = 28,
+//            general = "it is good",
+//            height = 170.7F,
+//            weight = 71.0F)
+//        medicalHistoryViewModel.upsertMedialRecord(medicalRecord)
 
         _binding.rvMedicalHistory.apply {
             adapter =_recyclerViewAdapter
@@ -60,13 +74,56 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
             navigateToPage(R.id.action_medicalHistoryFragment_to_navigation_home)
         }
 
-        medicalHistoryViewModel.medicalHistoryList.observe(viewLifecycleOwner, Observer {
+        medicalHistoryViewModel.medicalAdded.observe(viewLifecycleOwner, Observer {
             when(it) {
-                is Resource.Success -> _recyclerViewAdapter.differ.submitList(it.data)
-                else -> {}
+                is Resource.Success -> {
+                    Log.e("lol", "add done")
+                }
+                is Resource.Error -> {
+                    Log.e("lol", "add err: ${it.message}")
+                }
+
+                is Resource.Loading -> {
+                    Log.e("lol", "add loading")
+                }
+
+                else -> {
+                    Log.e("lol", "add unkown")
+                }
             }
         })
 
+        medicalHistoryViewModel.medicalHistoryList.observe(viewLifecycleOwner, Observer {
+            when(it) {
+                is Resource.Success -> {
+                    hindLoadingBar()
+                    _recyclerViewAdapter.differ.submitList(it.data?.toList())
+                }
+
+                is Resource.Loading -> {
+                    showLoadingBar()
+                    Log.e("lol", "loading")
+                }
+
+                is Resource.Error -> {
+                    hindLoadingBar()
+                    Log.e("Medical History Fragment", it.message!!)
+                }
+
+                else -> {
+                    Log.e("lol", "unknow")
+                }
+            }
+        })
+
+    }
+
+    private fun showLoadingBar(){
+        _binding.pbMedicalHistory.visibility = View.VISIBLE
+    }
+
+    private fun hindLoadingBar(){
+        _binding.pbMedicalHistory.visibility = View.INVISIBLE
     }
 
 
