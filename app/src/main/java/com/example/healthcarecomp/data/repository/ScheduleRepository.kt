@@ -1,6 +1,6 @@
 package com.example.healthcarecomp.data.repository
 
-import com.example.healthcarecomp.data.model.MedicalRecord
+
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.util.Resource
 

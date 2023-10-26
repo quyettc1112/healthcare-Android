@@ -1,7 +1,6 @@
 package com.example.healthcarecomp.ui.medicalhistory
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,14 +28,17 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         super.onCreateView(inflater, container, savedInstanceState)
+        super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentMedicalHistoryBinding.inflate(inflater, container, false)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 navigateToPage(R.id.action_medicalHistoryFragment_to_navigation_home)
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
         medicalHistoryViewModel = ViewModelProvider(this)[MedicalHistoryViewModel::class.java]
         return _binding.root
     }
@@ -53,22 +55,28 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
 
         _binding.rvMedicalHistory.apply {
-            adapter =_recyclerViewAdapter
+            adapter = _recyclerViewAdapter
             layoutManager = LinearLayoutManager(requireActivity())
         }
         _binding.ibMedicalHistoryBack.setOnClickListener {
             navigateToPage(R.id.action_medicalHistoryFragment_to_navigation_home)
         }
 
+        medicalHistoryViewModel.upsertMedialRecord(
+            MedicalRecord(
+                bodyTemperature = 0.1f,
+                date = Date(2023,10,20)
+
+            )
+        )
         medicalHistoryViewModel.medicalHistoryList.observe(viewLifecycleOwner, Observer {
-            when(it) {
+            when (it) {
                 is Resource.Success -> _recyclerViewAdapter.differ.submitList(it.data)
                 else -> {}
             }
         })
 
     }
-
 
 
 }
