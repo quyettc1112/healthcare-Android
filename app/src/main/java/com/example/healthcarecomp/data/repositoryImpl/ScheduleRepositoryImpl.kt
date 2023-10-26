@@ -26,7 +26,6 @@ class ScheduleRepositoryImpl @Inject constructor(
             .addOnFailureListener {
                 result = Resource.Error(it.message)
             }
-
         return result
     }
 
