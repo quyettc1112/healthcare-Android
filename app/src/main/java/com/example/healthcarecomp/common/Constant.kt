@@ -78,6 +78,7 @@ class Constant {
 
 
 
+        const val DOCTOR_SECURITY_DOCTOR = "bomaylabacsi"
     }
 
     class Item_recycleView(
