@@ -20,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
+
 @AndroidEntryPoint
 class AuthActivity : BaseActivity() {
     private lateinit var authViewModel: AuthViewModel
