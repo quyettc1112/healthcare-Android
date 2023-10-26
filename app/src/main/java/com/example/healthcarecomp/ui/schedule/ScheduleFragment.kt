@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.ui.schedule
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
+import com.example.healthcarecomp.base.dialog.ConfirmDialog
 import com.example.healthcarecomp.common.Adapter.ItemActitivyHomeAdapter
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Schedule
@@ -23,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
 @AndroidEntryPoint
-class ScheduleFragment: BaseFragment(R.layout.fragment_schedule){
+class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
     private lateinit var scheduleViewModel: ScheduleViewModel
 
@@ -39,22 +41,46 @@ class ScheduleFragment: BaseFragment(R.layout.fragment_schedule){
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
 
         binding.btnShowDatePicker.setOnClickListener {
-
-            val today = Calendar.getInstance()
-
-            // Gán giá trị của Calendar cho DatePickerDialog
-            val dayPickerDialog = DatePickerDialog(
+            // Tạo đối tượng DatePickerDialog
+            val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, dayOfMonth ->
-                    // ...
-                },
-                today.get(Calendar.YEAR),
-                today.get(Calendar.MONTH),
-                today.get(Calendar.DAY_OF_MONTH)
-            )
+                    // Cập nhật ngày tháng đã chọn
+                    val calendar = Calendar.getInstance()
+                    calendar.set(year, month, dayOfMonth)
 
-            dayPickerDialog.datePicker.minDate = Calendar.getInstance().timeInMillis
-            dayPickerDialog.show()
+                    // Tạo đối tượng TimePickerDialog
+                    val timePickerDialog = TimePickerDialog(
+                        requireContext(),
+                        { _, hourOfDay, minute ->
+                            // Cập nhật giờ đã chọn
+                            ConfirmDialog()
+                            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                            calendar.set(Calendar.MINUTE, minute)
+                            // In ra dữ liệu
+
+//                            if (ConfirmDialog() == true) {
+//                                Log.d("dayAndTime", calendar.time.toString())
+//                            }
+
+
+                        },
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        true
+                    )
+                    // Hiển thị TimePickerDialog
+                    timePickerDialog.show()
+
+                },
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+            )
+            // Hiển thị DatePickerDialog
+            datePickerDialog.show()
+
+
         }
 
 
@@ -68,5 +94,35 @@ class ScheduleFragment: BaseFragment(R.layout.fragment_schedule){
 
         val adapter_upcoming = ScheduleAdapter(Constant.getScheduleUpComing(), "UpComing")
         binding.rvListUpcomingSchedule.adapter = adapter_upcoming
+    }
+
+    fun ConfirmDialog(): Boolean? {
+        var result: Boolean? = false
+        val confirmDialog = ConfirmDialog(
+            requireContext(),
+            // Pass in a callback object to handle the actions that should be taken when the user clicks on the negative and positive buttons of the ConfirmDialog
+            object : ConfirmDialog.ConfirmCallback {
+                override fun negativeAction() {
+                   result = false
+                }
+
+                override fun positiveAction() {
+                    result = true
+                }
+            },
+            // Set the title of the ConfirmDialog
+            title = "Confirm",
+            // Set the message of the ConfirmDialog
+            message = "Are you sure you want to proceed?",
+            // Set the positive button title of the ConfirmDialog
+            positiveButtonTitle = "Yes",
+            // Set the negative button title of the ConfirmDialog
+            negativeButtonTitle = "No",
+
+        )
+
+        // Show the ConfirmDialog
+        confirmDialog.show()
+        return result
     }
 }
