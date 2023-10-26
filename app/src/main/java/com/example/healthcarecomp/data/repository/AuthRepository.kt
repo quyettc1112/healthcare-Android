@@ -15,15 +15,16 @@ interface AuthRepository {
     ): Resource<FirebaseUser>
 
     suspend fun signup(
-        phone: Int,
+        phone: String,
         password: String,
         confirmPassword: String,
         firstName: String,
         lastName: String,
-        email: String
+        email: String,
+        doctorCode: String?
     ): Resource<User>
 
-    suspend fun login(phone: Int, password: String): Resource<FirebaseUser>
+    suspend fun loginByPhone(phone: String, password: String): Resource<FirebaseUser>
 
     fun logout()
 }

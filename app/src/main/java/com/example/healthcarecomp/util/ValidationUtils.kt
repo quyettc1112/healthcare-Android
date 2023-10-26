@@ -1,9 +1,11 @@
 package com.example.healthcarecomp.util
 
+import android.app.appsearch.AppSearchSchema.BooleanPropertyConfig
 import android.content.Context
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.example.healthcarecomp.common.Constant
 
 object ValidationUtils{
 
@@ -48,5 +50,24 @@ object ValidationUtils{
         return true
     }
 
+    fun isValidDoctorSecurityCode(doctorSecurityCode: String): Boolean{
+        return doctorSecurityCode.equals(Constant.DOCTOR_SECURITY_DOCTOR)
+    }
+
+    fun isValidFirstName(firstName: String): Boolean{
+        return firstName.isNotEmpty()
+    }
+
+    fun isValidLastName(lastName: String): Boolean{
+        return lastName.length >= 2
+    }
+
+    fun isValidPhoneNumber(phoneNumber: String): Boolean{
+        return phoneNumber.toString().length in 9..11
+    }
+
+    fun isValidConfirmPassword(confirmPassword: String, password: String): Boolean {
+        return confirmPassword.equals(password)
+    }
 
 }

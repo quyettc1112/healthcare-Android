@@ -9,8 +9,6 @@ import javax.inject.Inject
 class RegisterUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    val currentUser: FirebaseUser?
-        get() = authRepository.currentUser
 
     suspend fun signup(
         email: String,
@@ -21,13 +19,14 @@ class RegisterUseCase @Inject constructor(
     }
 
     suspend fun signup(
-        phone: Int,
+        phone: String,
         password: String,
         confirmPassword: String,
         firstName: String,
         lastName: String,
-        email: String
+        email: String,
+        doctorCode: String?
     ): Resource<User> {
-        return authRepository.signup(phone, password, confirmPassword, firstName, lastName, email)
+        return authRepository.signup(phone, password, confirmPassword, firstName, lastName, email, doctorCode)
     }
 }

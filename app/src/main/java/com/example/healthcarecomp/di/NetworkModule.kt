@@ -28,7 +28,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideFireBaseDataBase(): DatabaseReference = FirebaseDatabase.getInstance().reference
+    fun provideFireBaseDataBaseRef(): DatabaseReference = FirebaseDatabase.getInstance().reference
+
+    @Provides
+    @Singleton
+    fun provideFireBaseDataBase(): FirebaseDatabase = FirebaseDatabase.getInstance()
 
     @Provides
     fun provideCustomerAPI(@Named("MainSite") retrofit: Retrofit): DoctorApi {
