@@ -2,6 +2,7 @@ package com.example.healthcarecomp.ui.user.register
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,18 +56,22 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         showDialog()
-    }
 
+    }
+    var bien :Boolean = false
     private fun showDialog() {
 
         if (requireActivity() is AuthActivity) {
             val confirmCallback = object : ConfirmDialog.ConfirmCallback {
                 override fun positiveAction() {
-                    Snackbar.make(requireView(), "Thank you", Snackbar.LENGTH_SHORT).show()
+                    bien = true
+                    Snackbar.make(requireView(), "Thank you $bien", Snackbar.LENGTH_SHORT).show()
+                    Log.d("bien", bien.toString())
                 }
-
                 override fun negativeAction() {
-                    Snackbar.make(requireView(), "No Thank you", Snackbar.LENGTH_SHORT).show()
+                    bien = false
+                    Snackbar.make(requireView(), "No Thank you $bien", Snackbar.LENGTH_SHORT).show()
+                    Log.d("bien", bien.toString())
                 }
 
             }
