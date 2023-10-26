@@ -13,8 +13,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity() {
     private var loadingLayout: FrameLayout? = null
 

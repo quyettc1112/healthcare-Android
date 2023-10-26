@@ -10,6 +10,7 @@ class Constant {
         const val FIREBASE_DATABASE_URL = "https://healtcarecomp-default-rtdb.asia-southeast1.firebasedatabase.app/"
         const val DOCTOR_TBL = "doctors"
         const val PATIENT_TBL = "patients"
+        const val MEDICAL_HISTORY_TBL = "medical_history"
         
 
 
