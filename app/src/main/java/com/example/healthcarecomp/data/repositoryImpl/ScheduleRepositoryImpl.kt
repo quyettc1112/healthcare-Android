@@ -4,7 +4,11 @@ import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.util.Resource
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import javax.inject.Inject
 
 class ScheduleRepositoryImpl @Inject constructor(
@@ -13,6 +17,7 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     // Tạo dbRef
     private val _dbRef = firebaseRef.child(Constant.SCHEDULE_TBL)
+    private var _onChildAddedListener: ((Resource<MutableList<Schedule>>) -> Unit)? = null
 
 
     override suspend fun upsert(schedule: Schedule): Resource<Schedule> {
@@ -30,10 +35,51 @@ class ScheduleRepositoryImpl @Inject constructor(
     }
 
     override fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit) {
-        TODO("Not yet implemented")
+        _onChildAddedListener = listener
+        onDataChange()
+    }
+    private fun onDataChange(){
+        val list = mutableListOf<Schedule>()
+        _dbRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {data ->
+                    val mr = data.getValue(Schedule::class.java)
+                    mr?.let {
+                        list.add(it)
+                    }
+                    _onChildAddedListener?.let { it(Resource.Success(list)) }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     override fun bindChildEvent() {
-        TODO("Not yet implemented")
+        _dbRef.addChildEventListener(object  : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                onDataChange()
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                onDataChange()
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                onDataChange()
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+
+        })
     }
 }
