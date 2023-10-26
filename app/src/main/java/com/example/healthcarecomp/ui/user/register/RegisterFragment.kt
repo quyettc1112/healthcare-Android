@@ -13,7 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
+import com.example.healthcarecomp.base.dialog.ConfirmDialog
 import com.example.healthcarecomp.databinding.FragmentRegisterBinding
+import com.example.healthcarecomp.ui.activity.AuthActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import com.google.android.material.snackbar.Snackbar
@@ -52,6 +54,31 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
+        showDialog()
+    }
+
+    private fun showDialog() {
+
+        if (requireActivity() is AuthActivity) {
+            val confirmCallback = object : ConfirmDialog.ConfirmCallback {
+                override fun positiveAction() {
+                    Snackbar.make(requireView(), "Thank you", Snackbar.LENGTH_SHORT).show()
+                }
+
+                override fun negativeAction() {
+                    Snackbar.make(requireView(), "No Thank you", Snackbar.LENGTH_SHORT).show()
+                }
+
+            }
+            val authActivity = requireActivity() as AuthActivity
+            authActivity.showConfirmDialog("Welcome to Health Care app",
+                "We need some of your information, we do not share user info",
+                "OK",
+                "Cancle",
+                "Yes",
+                confirmCallback
+                )
+        }
     }
 
     private fun setupUI() {
@@ -172,7 +199,7 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
                             Snackbar.LENGTH_SHORT
                         ).show()
                     } else {
-                        var doctorCode: String? =  _binding.etSignUpDoctorCode.text.toString()
+                        var doctorCode: String? = _binding.etSignUpDoctorCode.text.toString()
                         if (!isDoctorSignUp()) doctorCode = null
 
                         viewModel.register(
