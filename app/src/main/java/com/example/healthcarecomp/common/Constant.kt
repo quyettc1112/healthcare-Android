@@ -1,6 +1,8 @@
 package com.example.healthcarecomp.common
 
 import com.example.healthcarecomp.R
+import com.example.healthcarecomp.data.model.Schedule
+import java.util.Date
 
 class Constant {
     companion object{
@@ -11,6 +13,7 @@ class Constant {
         const val DOCTOR_TBL = "doctors"
         const val PATIENT_TBL = "patients"
         const val MEDICAL_HISTORY_TBL = "medical_history"
+        const val SCHEDULE_TBL = "schedule"
         
 
 
@@ -74,6 +77,56 @@ class Constant {
             val it12 = Item_recycleView(12, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
             return itemList
+        }
+
+        fun getScheduleToday(): ArrayList<Schedule> {
+            val scheduleList = ArrayList<Schedule>()
+
+            val schedule1 = Schedule(
+                doctorId = 1,
+                patientID = 2,
+                date_medical_examinaton = Date(2023,10,20),
+                status_medical_schedule = "Đã hẹn"
+            )
+            scheduleList.add(schedule1)
+            scheduleList.add(schedule1)
+
+            //  scheduleList.add(schedule1)
+
+//            val schedule2 = MedicalSchedule(
+//                doctorId = 2,
+//                patientID = 3,
+//                date_medical_examinaton = Calendar.getInstance().time,
+//                status_medical_schedule = "Chưa hẹn"
+//            )
+//            scheduleList.add(schedule2)
+            return  scheduleList
+        }
+
+        fun getScheduleUpComing(): ArrayList<Schedule> {
+            val scheduleUpComingList = ArrayList<Schedule>()
+
+            val schedule1 = Schedule(
+                doctorId = 1,
+                patientID = 2,
+                date_medical_examinaton = Date(2023,10,26),
+                status_medical_schedule = "Đã hẹn"
+            )
+
+
+            val schedule2 = Schedule(
+                doctorId = 2,
+                patientID = 3,
+                date_medical_examinaton = Date(2023,10,26),
+                status_medical_schedule = "Chưa hẹn"
+            )
+
+            scheduleUpComingList.add(schedule1)
+            scheduleUpComingList.add(schedule1)
+            scheduleUpComingList.add(schedule1)
+            scheduleUpComingList.add(schedule2)
+
+            return  scheduleUpComingList
         }
 
 
