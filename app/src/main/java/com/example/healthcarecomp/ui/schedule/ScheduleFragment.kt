@@ -44,7 +44,8 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
 
         setDate(binding)
-        setUpUI(binding)
+        binding.tvDayChoose.text = Calendar.getInstance().time.toString()
+       // setUpUI(binding)
         return binding.root
     }
 
@@ -54,7 +55,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, dayOfMonth ->
-
                     calendar.set(year, month, dayOfMonth)
                 },
                 Calendar.getInstance().get(Calendar.YEAR),
@@ -62,19 +62,14 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
             )
             var setTime: Calendar? = null
-            datePickerDialog.setOnCancelListener {
-                isCanceled = true
-            }
+            datePickerDialog.setOnCancelListener { isCanceled = true }
             datePickerDialog.setOnDismissListener {
                 if (isCanceled == false) {
                     setTime = calendar
                     setTime(setTime, binding)
-                } else {
-                    isCanceled = false
-                }
+                } else isCanceled = false
             }
             datePickerDialog.show()
-
         }
     }
 
@@ -89,14 +84,10 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             Calendar.getInstance().get(Calendar.MINUTE),
             true
         )
-
-        timePickerDialog.setOnCancelListener {
-            isTimeCanceled = true
-        }
+        timePickerDialog.setOnCancelListener { isTimeCanceled = true }
         timePickerDialog.setOnDismissListener {
             if (isTimeCanceled == false) {
                 ConfirmDialog(calendar, binding)
-
             } else isTimeCanceled = false
         }
         timePickerDialog.show()
@@ -104,6 +95,8 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     }
 
     private fun setUpUI(binding: FragmentScheduleBinding) {
+
+
         var adapter = ScheduleAdapter(Constant.getScheduleToday(), "Today")
         binding.rvListTodaySchedule.adapter = adapter
 
@@ -115,7 +108,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
         val confirmDialog = ConfirmDialog(
             requireContext(),
-            // Pass in a callback object to handle the actions that should be taken when the user clicks on the negative and positive buttons of the ConfirmDialog
             object : ConfirmDialog.ConfirmCallback {
                 override fun negativeAction() {
                     // Do something when user dont want to schedule
@@ -134,7 +126,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             negativeButtonTitle = "No"
         )
         // Show the ConfirmDialog
-
         confirmDialog.show()
     }
 
