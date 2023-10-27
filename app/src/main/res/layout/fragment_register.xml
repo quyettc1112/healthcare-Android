@@ -209,7 +209,12 @@
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
-
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pgRegister"
+                android:visibility="gone"
+                android:layout_gravity="center"/>
 
         </LinearLayout>
 
@@ -275,11 +280,7 @@
                     android:textColor="#1592E2"
                     android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                     />
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/pgRegister"
-                    android:visibility="invisible"/>
+
 
             </LinearLayout>
 

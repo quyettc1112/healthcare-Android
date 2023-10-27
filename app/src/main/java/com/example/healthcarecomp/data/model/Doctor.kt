@@ -4,15 +4,15 @@ import java.time.LocalDate
 import java.util.UUID
 
 class Doctor(
-    phone: String?,
-    email: String?,
-    password: String?,
-    firstName: String?,
-    lastName: String?,
-    avatar: String?,
-    gender: Boolean?,
-    dob: LocalDate?,
-    val specialty: String?
+    phone: String? = null,
+    email: String? = null,
+    password: String? = null,
+    firstName: String? = null,
+    lastName: String? = null,
+    avatar: String? = null,
+    gender: Boolean? = null,
+    dob: LocalDate? = null,
+    val specialty: String? = null
 ) : User(phone, email, password, firstName, lastName, avatar, gender, dob){
 
     override fun toString(): String {

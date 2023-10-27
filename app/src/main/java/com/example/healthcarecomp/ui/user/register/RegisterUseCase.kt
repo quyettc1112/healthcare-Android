@@ -10,13 +10,6 @@ class RegisterUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
 
-    suspend fun signup(
-        email: String,
-        password: String,
-        confirmPassword: String
-    ): Resource<FirebaseUser> {
-        return authRepository.signup(email, password, confirmPassword)
-    }
 
     suspend fun signup(
         phone: String,

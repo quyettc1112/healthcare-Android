@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
@@ -21,6 +22,9 @@ import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.example.healthcarecomp.util.ValidationUtils as ValidU
@@ -55,23 +59,19 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
+        observeRegisterState()
         showDialog()
 
     }
-    var bien :Boolean = false
+
     private fun showDialog() {
 
         if (requireActivity() is AuthActivity) {
             val confirmCallback = object : ConfirmDialog.ConfirmCallback {
                 override fun positiveAction() {
-                    bien = true
-                    Snackbar.make(requireView(), "Thank you $bien", Snackbar.LENGTH_SHORT).show()
-                    Log.d("bien", bien.toString())
+                    Snackbar.make(requireView(), "Thank you", Snackbar.LENGTH_SHORT).show()
                 }
                 override fun negativeAction() {
-                    bien = false
-                    Snackbar.make(requireView(), "No Thank you $bien", Snackbar.LENGTH_SHORT).show()
-                    Log.d("bien", bien.toString())
                 }
 
             }
@@ -216,7 +216,6 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
                             lastName = _binding.etSignUpPassword.text.toString(),
                             doctorCode = doctorCode
                         )
-                        observeRegisterState()
                     }
 
                 } catch (e: Exception) {
@@ -234,7 +233,7 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.registerFlow?.collectLatest {
-                    _binding.pgRegister.visibility = View.INVISIBLE
+                    _binding.pgRegister.visibility = View.GONE
                     when (it) {
                         is Resource.Error -> {
                             Toast.makeText(
@@ -254,19 +253,19 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
                                 "Sign up successfully please sign in",
                                 Toast.LENGTH_SHORT
                             ).show()
-//                            navigateToPage(R.id.action_registerFragment_to_loginFragment)
+                            val phone = _binding.etSignUpPhoneNumber.text.toString()
+                            var bundle: Bundle = Bundle()
+                            bundle.putString("phone", phone)
+                            findNavController().navigate(R.id.action_registerFragment_to_loginFragment,bundle)
                         }
 
-                        else -> Toast.makeText(
-                            requireContext(),
-                            "Something go wrong",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        else -> null
                     }
                 }
             }
         }
     }
+
 
 
 }

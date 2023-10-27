@@ -4,14 +4,14 @@ import java.time.LocalDate
 import java.util.UUID
 
 open class User(
-    val phone: String?,
-    val email: String?,
-    var password: String?,
-    var firstName: String?,
-    var lastName: String?,
-    var avatar: String?,
-    var gender: Boolean?,
-    val dob: LocalDate?,
+    val phone: String? = null,
+    val email: String? = null,
+    var password: String? = null,
+    var firstName: String? = null,
+    var lastName: String? = null,
+    var avatar: String? = null,
+    var gender: Boolean? = null,
+    val dob: LocalDate? = null,
     val id: String = UUID.randomUUID().toString()
 ) {
     override fun equals(other: Any?): Boolean {
