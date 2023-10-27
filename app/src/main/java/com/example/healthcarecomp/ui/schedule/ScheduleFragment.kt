@@ -2,8 +2,10 @@ package com.example.healthcarecomp.ui.schedule
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,70 +24,83 @@ import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.databinding.FragmentScheduleBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
 import java.util.Calendar
 
 @AndroidEntryPoint
 class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
     private lateinit var scheduleViewModel: ScheduleViewModel
-
+    private var calendar = Calendar.getInstance()
+    private var isCanceled: Boolean = false
+    private var isTimeCanceled: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // biến binding
-        val binding = FragmentScheduleBinding.inflate(inflater, container, false)
 
-        // tạo biến để observer
+        val binding = FragmentScheduleBinding.inflate(inflater, container, false)
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
 
+        setDate(binding)
+        setUpUI(binding)
+        return binding.root
+    }
+
+    private fun setDate(binding: FragmentScheduleBinding) {
         binding.btnShowDatePicker.setOnClickListener {
             // Tạo đối tượng DatePickerDialog
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, dayOfMonth ->
-                    // Cập nhật ngày tháng đã chọn
-                    val calendar = Calendar.getInstance()
+
                     calendar.set(year, month, dayOfMonth)
-
-                    // Tạo đối tượng TimePickerDialog
-                    val timePickerDialog = TimePickerDialog(
-                        requireContext(),
-                        { _, hourOfDay, minute ->
-                            // Cập nhật giờ đã chọn
-                            ConfirmDialog()
-                            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                            calendar.set(Calendar.MINUTE, minute)
-                            // In ra dữ liệu
-
-//                            if (ConfirmDialog() == true) {
-//                                Log.d("dayAndTime", calendar.time.toString())
-//                            }
-
-
-                        },
-                        calendar.get(Calendar.HOUR_OF_DAY),
-                        calendar.get(Calendar.MINUTE),
-                        true
-                    )
-                    // Hiển thị TimePickerDialog
-                    timePickerDialog.show()
-
                 },
                 Calendar.getInstance().get(Calendar.YEAR),
                 Calendar.getInstance().get(Calendar.MONTH),
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
             )
-            // Hiển thị DatePickerDialog
+            var setTime: Calendar? = null
+            datePickerDialog.setOnCancelListener {
+                isCanceled = true
+            }
+            datePickerDialog.setOnDismissListener {
+                if (isCanceled == false) {
+                    setTime = calendar
+                    setTime(setTime, binding)
+                } else {
+                    isCanceled = false
+                }
+            }
             datePickerDialog.show()
 
-
         }
+    }
 
+    private fun setTime(calendar: Calendar?, binding: FragmentScheduleBinding) {
+        val timePickerDialog = TimePickerDialog(
+            requireContext(),
+            { _, hourOfDay, minute ->
+                calendar?.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                calendar?.set(Calendar.MINUTE, minute)
+            },
+            Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+            Calendar.getInstance().get(Calendar.MINUTE),
+            true
+        )
 
-        setUpUI(binding)
-        return binding.root
+        timePickerDialog.setOnCancelListener {
+            isTimeCanceled = true
+        }
+        timePickerDialog.setOnDismissListener {
+            if (isTimeCanceled == false) {
+                ConfirmDialog(calendar, binding)
+
+            } else isTimeCanceled = false
+        }
+        timePickerDialog.show()
+
     }
 
     private fun setUpUI(binding: FragmentScheduleBinding) {
@@ -96,18 +111,17 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         binding.rvListUpcomingSchedule.adapter = adapter_upcoming
     }
 
-    fun ConfirmDialog(): Boolean? {
-        var result: Boolean? = false
+    fun ConfirmDialog(calendar: Calendar?, binding: FragmentScheduleBinding) {
+
         val confirmDialog = ConfirmDialog(
             requireContext(),
             // Pass in a callback object to handle the actions that should be taken when the user clicks on the negative and positive buttons of the ConfirmDialog
             object : ConfirmDialog.ConfirmCallback {
                 override fun negativeAction() {
-                   result = false
+                    // Do something when user dont want to schedule
                 }
-
                 override fun positiveAction() {
-                    result = true
+                   binding.tvDayChoose.text = calendar?.time.toString()
                 }
             },
             // Set the title of the ConfirmDialog
@@ -117,12 +131,12 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             // Set the positive button title of the ConfirmDialog
             positiveButtonTitle = "Yes",
             // Set the negative button title of the ConfirmDialog
-            negativeButtonTitle = "No",
-
+            negativeButtonTitle = "No"
         )
-
         // Show the ConfirmDialog
+
         confirmDialog.show()
-        return result
     }
+
 }
+
