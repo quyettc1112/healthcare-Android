@@ -23,7 +23,7 @@ class ScheduleRepositoryImpl @Inject constructor(
     override suspend fun upsert(schedule: Schedule): Resource<Schedule> {
         var result: Resource<Schedule> = Resource.Loading()
         _dbRef
-            .child(schedule.id)
+            .child(schedule.id!!)
             .setValue(schedule)
             .addOnCompleteListener {
                 result = Resource.Success(schedule)

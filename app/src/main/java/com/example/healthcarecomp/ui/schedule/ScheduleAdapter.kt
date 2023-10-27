@@ -2,10 +2,13 @@ package com.example.healthcarecomp.ui.schedule
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.R
 
 import com.example.healthcarecomp.common.Constant
+import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.data.model.Schedule
 
 import com.example.healthcarecomp.databinding.RvListScheduleBinding
@@ -16,8 +19,8 @@ class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: Strin
     inner class MainViewHolder(val itemBinding: RvListScheduleBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bindItem(Item: Schedule) {
-            itemBinding.tvMounthSchedule.text = Item.date_medical_examinaton.month.toString()
-            itemBinding.tvDaySchedule.text = Item.date_medical_examinaton.date.toString()
+            itemBinding.tvMounthSchedule.text = Item.date_medical_examinaton?.month.toString()
+            itemBinding.tvDaySchedule.text = Item.date_medical_examinaton?.date.toString()
             itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
             //itemBinding.tvTimeMeettingSchedule
         }
@@ -48,5 +51,21 @@ class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: Strin
             onItemClick?.invoke(Item)
         }
     }
+
+
+
+
+    private val differCallBack = object : DiffUtil.ItemCallback<Schedule>() {
+        override fun areItemsTheSame(oldItem: Schedule, newItem: Schedule): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Schedule, newItem: Schedule): Boolean {
+            return oldItem == newItem
+        }
+
+
+    }
+    val differ = AsyncListDiffer(this, differCallBack)
 
 }

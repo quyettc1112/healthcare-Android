@@ -13,6 +13,8 @@ import android.widget.Button
 import android.widget.DatePicker
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,9 +25,12 @@ import com.example.healthcarecomp.common.Adapter.ItemActitivyHomeAdapter
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.databinding.FragmentScheduleBinding
+import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.UUID
 
 @AndroidEntryPoint
 class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
@@ -41,12 +46,28 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     ): View? {
 
         val binding = FragmentScheduleBinding.inflate(inflater, container, false)
-        scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
+
 
         setDate(binding)
         binding.tvDayChoose.text = Calendar.getInstance().time.toString()
-       // setUpUI(binding)
+        setUpUI(binding)
         return binding.root
+    }
+
+    private fun planSchedule(calendar: Calendar?) {
+        scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
+        scheduleViewModel.upsertSchedule(
+            Schedule(
+                doctorId = 1,
+                patientID = 1,
+                date_medical_examinaton = Date(
+                    calendar?.get(Calendar.YEAR)!!.toInt(),
+                    calendar?.get(Calendar.MONTH)!!.toInt(),
+                    calendar?.get(Calendar.DAY_OF_MONTH)!!.toInt()
+                ),
+                status_medical_schedule = "Đã Đặt Lịch"
+            )
+        )
     }
 
     private fun setDate(binding: FragmentScheduleBinding) {
@@ -95,13 +116,21 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     }
 
     private fun setUpUI(binding: FragmentScheduleBinding) {
-
-
         var adapter = ScheduleAdapter(Constant.getScheduleToday(), "Today")
-        binding.rvListTodaySchedule.adapter = adapter
+        //binding.rvListTodaySchedule.adapter = adapter
 
-        val adapter_upcoming = ScheduleAdapter(Constant.getScheduleUpComing(), "UpComing")
-        binding.rvListUpcomingSchedule.adapter = adapter_upcoming
+        scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
+        scheduleViewModel.scheduleListToday.observe(viewLifecycleOwner, Observer {
+            when(it) {
+                is Resource.Success -> Toast.makeText(requireContext(), "test", Toast.LENGTH_SHORT).show()
+                else -> {}
+
+            }
+        })
+
+
+//        val adapter_upcoming = ScheduleAdapter(Constant.getScheduleUpComing(), "UpComing")
+//        binding.rvListUpcomingSchedule.adapter = adapter_upcoming
     }
 
     fun ConfirmDialog(calendar: Calendar?, binding: FragmentScheduleBinding) {
@@ -112,8 +141,10 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 override fun negativeAction() {
                     // Do something when user dont want to schedule
                 }
+
                 override fun positiveAction() {
-                   binding.tvDayChoose.text = calendar?.time.toString()
+                    binding.tvDayChoose.text = calendar?.time.toString()
+                    planSchedule(calendar)
                 }
             },
             // Set the title of the ConfirmDialog
