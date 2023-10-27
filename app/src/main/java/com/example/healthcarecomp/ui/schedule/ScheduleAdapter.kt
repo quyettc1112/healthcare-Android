@@ -39,13 +39,13 @@ class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: Strin
         )
     }
     override fun getItemCount(): Int {
-        if (kindOfSchdule.equals("Today")) return Constant.getScheduleToday().size
-        if (kindOfSchdule.equals("UpComing")) return Constant.getScheduleUpComing().size
+        if (kindOfSchdule.equals("Today")) return differ.currentList.size
+      //  if (kindOfSchdule.equals("UpComing")) return Constant.getScheduleUpComing().size
         return 0
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        val Item = scheduleList[position]
+        val Item = differ.currentList[position]
         holder.bindItem(Item)
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(Item)

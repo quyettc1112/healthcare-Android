@@ -49,9 +49,10 @@ class MedicalHistoryRepositoryImpl @Inject constructor(
     }
 
     private fun onDataChange(){
-        val list = mutableListOf<MedicalRecord>()
+
         _dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                val list = mutableListOf<MedicalRecord>()
                 snapshot.children.forEach {data ->
                     val mr = data.getValue(MedicalRecord::class.java)
                     mr?.let {

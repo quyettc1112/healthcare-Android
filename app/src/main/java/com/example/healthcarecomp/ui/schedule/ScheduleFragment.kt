@@ -25,6 +25,7 @@ import com.example.healthcarecomp.common.Adapter.ItemActitivyHomeAdapter
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.databinding.FragmentScheduleBinding
+import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryRecyclerViewAdapter
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -36,6 +37,7 @@ import java.util.UUID
 class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
     private lateinit var scheduleViewModel: ScheduleViewModel
+    private lateinit var _recyclerViewAdapter: ScheduleAdapter
     private var calendar = Calendar.getInstance()
     private var isCanceled: Boolean = false
     private var isTimeCanceled: Boolean = false
@@ -116,13 +118,15 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     }
 
     private fun setUpUI(binding: FragmentScheduleBinding) {
-        var adapter = ScheduleAdapter(Constant.getScheduleToday(), "Today")
-        //binding.rvListTodaySchedule.adapter = adapter
-
+//        var adapter = ScheduleAdapter(Constant.getScheduleToday(), "Today")
+        _recyclerViewAdapter = ScheduleAdapter(Constant.getScheduleToday(), "Today")
+        binding.rvListTodaySchedule.apply {
+            adapter = _recyclerViewAdapter
+        }
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
         scheduleViewModel.scheduleListToday.observe(viewLifecycleOwner, Observer {
             when(it) {
-                is Resource.Success -> Toast.makeText(requireContext(), "test", Toast.LENGTH_SHORT).show()
+                is Resource.Success -> _recyclerViewAdapter.differ.submitList(it.data)
                 else -> {}
 
             }

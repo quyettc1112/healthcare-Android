@@ -47,7 +47,6 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
             }
         }
 
-
     }
 
     override fun getItemCount(): Int {

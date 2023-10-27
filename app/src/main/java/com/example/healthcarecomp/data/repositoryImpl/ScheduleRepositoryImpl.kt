@@ -39,9 +39,10 @@ class ScheduleRepositoryImpl @Inject constructor(
         onDataChange()
     }
     private fun onDataChange(){
-        val list = mutableListOf<Schedule>()
+
         _dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                val list = mutableListOf<Schedule>()
                 snapshot.children.forEach {data ->
                     val mr = data.getValue(Schedule::class.java)
                     mr?.let {
