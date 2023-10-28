@@ -121,6 +121,7 @@
                                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
                                 <com.google.android.material.textfield.TextInputEditText
+                                    android:inputType="number"
                                     android:id="@+id/etMedicalRecordHearthRate"
                                     android:enabled="false"
                                     android:layout_width="match_parent"
@@ -191,6 +192,7 @@
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etMedicalRecordBloodSugar"
+                                    android:inputType="number"
                                     android:enabled="false"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -466,6 +468,7 @@
                                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
                                 <com.google.android.material.textfield.TextInputEditText
+                                    android:inputType="number"
                                     android:id="@+id/etMedicalRecordBloodPressure"
                                     android:enabled="false"
                                     android:layout_width="match_parent"

@@ -82,11 +82,14 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
         }
 
         _binding.btnMedicalRecordSave.setOnClickListener {
-            _medicalRecordViewModel.upsertMedicalRecord(
-                takeStatsData()
-            )
-            it.visibility = View.GONE
-            _binding.ibMedicalRecordEdit.visibility = View.VISIBLE
+            val medical = takeStatsData()
+            medical?.let {medical ->
+                _medicalRecordViewModel.upsertMedicalRecord(
+                    medical
+                )
+                it.visibility = View.GONE
+                _binding.ibMedicalRecordEdit.visibility = View.VISIBLE
+            }
         }
 
         _medicalRecordViewModel.upsertMedicalRecord.observe(viewLifecycleOwner, Observer {
@@ -196,7 +199,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
 
     //////////// take data from view /////////////
 
-    private fun takeStatsData(): MedicalRecord {
+    private fun takeStatsData(): MedicalRecord? {
         val hearthRate = _binding.etMedicalRecordHearthRate.text.toString().toIntOrNull()
         val weight = _binding.etMedicalRecordWeight.text.toString().toFloatOrNull()
         val height = _binding.etMedicalRecordHeight.text.toString().toFloatOrNull()
@@ -204,18 +207,28 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
         val bloodSugar = _binding.etMedicalRecordBloodSugar.text.toString().toIntOrNull()
         val bodyTemperature = _binding.etMedicalRecordBodyTemperature.text.toString().toFloatOrNull()
         val general = _binding.etMedicalRecordNote.text.toString()
-        return MedicalRecord(
-            hearthRate = hearthRate,
-            weight = weight,
-            height = height,
-            bloodPressure = bloodPressure,
-            bloodSugar = bloodSugar,
-            bodyTemperature = bodyTemperature,
-            id = _currentMedical!!.id,
-            doctorId = _currentMedical!!.doctorId,
-            patientId = _currentMedical!!.patientId,
-            general = general
-        )
+
+        when {
+            bodyTemperature == null -> _binding.etMedicalRecordBodyTemperature.error = "Not valid value"
+            weight == null -> _binding.etMedicalRecordWeight.error = "Not valid value"
+            height == null -> _binding.etMedicalRecordHeight.error = "Not valid value"
+            else -> {
+                return MedicalRecord(
+                    hearthRate = hearthRate,
+                    weight = weight,
+                    height = height,
+                    bloodPressure = bloodPressure,
+                    bloodSugar = bloodSugar,
+                    bodyTemperature = bodyTemperature,
+                    id = _currentMedical!!.id,
+                    doctorId = _currentMedical!!.doctorId,
+                    patientId = _currentMedical!!.patientId,
+                    general = general
+                )
+            }
+        }
+
+        return null
     }
 
 
