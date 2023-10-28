@@ -28,6 +28,7 @@ import com.example.healthcarecomp.databinding.FragmentScheduleBinding
 import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryRecyclerViewAdapter
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -65,9 +66,10 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 date_medical_examinaton = Date(
                     calendar?.get(Calendar.YEAR)!!.toInt(),
                     calendar?.get(Calendar.MONTH)!!.toInt(),
-                    calendar?.get(Calendar.DAY_OF_MONTH)!!.toInt()
+                    calendar?.get(Calendar.DAY_OF_MONTH)!!.toInt(),
                 ),
-                status_medical_schedule = "Đã Đặt Lịch"
+                status_medical_schedule = "Đã Đặt Lịch",
+                note = "Tôi bị đau bụng"
             )
         )
     }
