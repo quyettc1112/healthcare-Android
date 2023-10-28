@@ -46,7 +46,32 @@
             android:id="@+id/action_medicalHistoryFragment_to_navigation_home"
             app:destination="@id/navigation_home"
             app:exitAnim="@anim/zoom_out"/>
+        <action
+            android:id="@+id/action_medicalHistoryFragment_to_medicalRecordFragment"
+            app:destination="@id/medicalRecordFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
+    <fragment
+        android:id="@+id/medicalRecordFragment"
+        android:name="com.example.healthcarecomp.ui.medicalrecord.MedicalRecordFragment"
+        android:label="fragment_medical_record"
+        tools:layout="@layout/fragment_medical_record" >
+        <action
+            android:id="@+id/action_medicalRecordFragment_to_medicalHistoryFragment"
+            app:destination="@id/medicalHistoryFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
+        <argument
+            android:name="medicalRecordId"
+            app:argType="string" />
+
+    </fragment>
+
 
 
 </navigation>

@@ -59,7 +59,7 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
             patientId = "2222222",
             bodyTemperature = 37.7F,
             bloodPressure = 70,
-            healthRate = 110,
+            hearthRate = 110,
             bloodSugar = 28,
             general = "it is good",
             height = 170.7F,
@@ -68,7 +68,11 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
         }
 
         _recyclerViewAdapter = MedicalHistoryRecyclerViewAdapter()
-
+        //set on item to see detail
+        _recyclerViewAdapter.setOnItemDetailButtonClick {
+            val directions = MedicalHistoryFragmentDirections.actionMedicalHistoryFragmentToMedicalRecordFragment(it.id)
+            navigateToPage(directions)
+        }
 
         _binding.rvMedicalHistory.apply {
             adapter =_recyclerViewAdapter

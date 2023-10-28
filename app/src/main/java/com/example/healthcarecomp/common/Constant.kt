@@ -3,6 +3,17 @@ package com.example.healthcarecomp.common
 import com.example.healthcarecomp.R
 
 class Constant {
+    enum class MEDICAL_STATS {
+        HEARTH_RATE,
+        BLOOD_PRESSURE,
+        BLOOD_SUGAR,
+        BODY_TEMPERATURE,
+        HEIGHT,
+        WEIGHT
+    }
+
+
+
     companion object{
         val DEFAULT_ERROR_MESSAGE: String = "An error occurred"
         const val BASE_URL: String = "https://mockapi.io/projects/648fd2c81e6aa71680ca1f63"
@@ -11,7 +22,46 @@ class Constant {
         const val DOCTOR_TBL = "doctors"
         const val PATIENT_TBL = "patients"
         const val MEDICAL_HISTORY_TBL = "medical_history"
-        
+        const val DOCTOR_SECURITY_DOCTOR = "bomaylabacsi"
+
+
+        //constant setup stats display in medicalRecord recycler view
+        val MEDICAL_RECORD_ICONS = listOf<Int>(
+            R.drawable.ic_favorite_24,
+            R.drawable.ic_favorite_24,
+            R.drawable.ic_favorite_24,
+            R.drawable.ic_favorite_24,
+            R.drawable.ic_favorite_24,
+            R.drawable.ic_favorite_24
+        )
+
+        val MEDICAL_RECORD_ICONS_BACKGROUND = listOf<Int>(
+            R.color.icon_bg_red_light,
+            R.color.icon_bg_red_light,
+            R.color.icon_bg_red_light,
+            R.color.icon_bg_red_light,
+            R.color.icon_bg_red_light,
+            R.color.icon_bg_red_light
+        )
+
+        val MEDICAL_RECORD_TITLE = listOf<String>(
+            "Hearth Rate",
+            "Blood Pressure",
+            "Blood Sugar",
+            "Body Temperature",
+            "height",
+            "weight"
+        )
+        val MEDICAL_RECORD_DIMENSION = listOf<String>(
+            "bpm",
+            "mg Hg",
+            "mg/dL",
+            "C",
+            "cm",
+            "kg"
+        )
+
+
 
 
         // Hàm này chạy tron MainActiity khi user là người dùng phổ thông
@@ -78,7 +128,7 @@ class Constant {
 
 
 
-        const val DOCTOR_SECURITY_DOCTOR = "bomaylabacsi"
+
     }
 
     class Item_recycleView(
@@ -87,6 +137,8 @@ class Constant {
         val nameIcon: String,
         val actionId:Int? = null
     )
+
+
 
 
 

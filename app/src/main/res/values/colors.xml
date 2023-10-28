@@ -33,4 +33,6 @@
 
     <color name="text_black_blue">#393557</color>
     <color name="bg_gray">#F5F5F9</color>
+    
+    <color name="icon_bg_red_light">#F5BBBB</color>
 </resources>

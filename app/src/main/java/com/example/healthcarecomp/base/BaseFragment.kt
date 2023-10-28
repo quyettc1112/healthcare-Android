@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.base
 
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.example.healthcarecomp.R
 
@@ -9,6 +10,10 @@ open class BaseFragment(view: Int) : Fragment(view) {
 
     protected fun navigateToPage(actionId: Int) {
         findNavController().navigate(actionId)
+    }
+
+    protected fun navigateToPage(direction: NavDirections){
+        findNavController().navigate(direction)
     }
 
     protected fun showLoading(isShow: Boolean) {
