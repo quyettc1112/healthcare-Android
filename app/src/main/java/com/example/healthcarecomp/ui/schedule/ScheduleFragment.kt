@@ -47,9 +47,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val binding = FragmentScheduleBinding.inflate(inflater, container, false)
-
 
         setDate(binding)
         binding.tvDayChoose.text = Calendar.getInstance().time.toString()
@@ -63,11 +61,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             Schedule(
                 doctorId = 1,
                 patientID = 1,
-                date_medical_examinaton = Date(
-                    calendar?.get(Calendar.YEAR)!!.toInt(),
-                    calendar?.get(Calendar.MONTH)!!.toInt(),
-                    calendar?.get(Calendar.DAY_OF_MONTH)!!.toInt(),
-                ),
+                date_medical_examinaton = calendar?.timeInMillis,
                 status_medical_schedule = "Đã Đặt Lịch",
                 note = "Tôi bị đau bụng"
             )

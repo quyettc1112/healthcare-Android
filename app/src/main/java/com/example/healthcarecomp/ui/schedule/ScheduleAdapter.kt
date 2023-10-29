@@ -1,5 +1,7 @@
 package com.example.healthcarecomp.ui.schedule
 
+import android.icu.util.Calendar
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -12,7 +14,10 @@ import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.data.model.Schedule
 
 import com.example.healthcarecomp.databinding.RvListScheduleBinding
+import okhttp3.internal.ignoreIoExceptions
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneOffset
 
 class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: String):  RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>()  {
 
@@ -20,31 +25,27 @@ class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: Strin
     inner class MainViewHolder(val itemBinding: RvListScheduleBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bindItem(Item: Schedule) {
-            itemBinding.tvMounthSchedule.text = getMonthName(Item.date_medical_examinaton?.month!!)
-            itemBinding.tvDaySchedule.text = Item.date_medical_examinaton?.date.toString()
-            //itemBinding.tvTimeMeettingSchedule
+            itemBinding.tvDaySchedule.text = toCalendarUtc(Item.date_medical_examinaton!!).get(Calendar.DAY_OF_MONTH).toString()
+            itemBinding.tvTimeMeettingSchedule.text = "${toCalendarUtc(Item.date_medical_examinaton!!).get(Calendar.HOUR_OF_DAY)}" +
+                                                      " : ${toCalendarUtc(Item.date_medical_examinaton!!).get(Calendar.MINUTE)} "
+
             itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
-            //itemBinding.tvTimeMeettingSchedule
         }
     }
 
-    fun getMonthName(month: Int): String {
-        val months = hashMapOf<Int, String>(
-            0 to "Jan",
-            1 to "Feb",
-            2 to "Mar",
-            3 to "Apr",
-            4 to "May",
-            5 to "Jun",
-            6 to "Jul",
-            7 to "Aug",
-            8 to "Sep",
-            9 to "Oct",
-            10 to "Nov",
-            11 to "Dec"
-        )
-        return months[month] ?: ""
+    fun toCalendarUtc(timestamp: Long): Calendar {
+        val instant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Instant.ofEpochMilli(timestamp)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        val utcDateTime = instant.atZone(ZoneOffset.UTC).toLocalDateTime()
+
+        val calendar = Calendar.getInstance()
+        calendar.set(utcDateTime.year, utcDateTime.monthValue, utcDateTime.dayOfMonth, utcDateTime.hour, utcDateTime.minute, utcDateTime.second)
+        return calendar
     }
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

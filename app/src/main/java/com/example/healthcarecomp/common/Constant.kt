@@ -2,6 +2,7 @@ package com.example.healthcarecomp.common
 
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.data.model.Schedule
+import java.util.Calendar
 import java.util.Date
 
 class Constant {
@@ -85,21 +86,12 @@ class Constant {
             val schedule1 = Schedule(
                 doctorId = 1,
                 patientID = 2,
-                date_medical_examinaton = Date(2023,10,20),
+                date_medical_examinaton = Calendar.getInstance().timeInMillis,
                 status_medical_schedule = "Đã hẹn"
             )
             scheduleList.add(schedule1)
             scheduleList.add(schedule1)
 
-            //  scheduleList.add(schedule1)
-
-//            val schedule2 = MedicalSchedule(
-//                doctorId = 2,
-//                patientID = 3,
-//                date_medical_examinaton = Calendar.getInstance().time,
-//                status_medical_schedule = "Chưa hẹn"
-//            )
-//            scheduleList.add(schedule2)
             return  scheduleList
         }
 
@@ -109,7 +101,7 @@ class Constant {
             val schedule1 = Schedule(
                 doctorId = 1,
                 patientID = 2,
-                date_medical_examinaton = Date(2023,10,26),
+                date_medical_examinaton = Calendar.getInstance().timeInMillis,
                 status_medical_schedule = "Đã hẹn"
             )
 
@@ -117,7 +109,7 @@ class Constant {
             val schedule2 = Schedule(
                 doctorId = 2,
                 patientID = 3,
-                date_medical_examinaton = Date(2023,10,26),
+                date_medical_examinaton = Calendar.getInstance().timeInMillis,
                 status_medical_schedule = "Chưa hẹn"
             )
 
