@@ -30,4 +30,8 @@ class MedicalHistoryUseCase @Inject constructor(
         medicalHistoryRepository.getAll(listener)
     }
 
+     fun onItemChange(itemId: String, listener: (Resource<MedicalRecord>) -> Unit) {
+        medicalHistoryRepository.onItemChange(itemId, listener)
+    }
+
 }

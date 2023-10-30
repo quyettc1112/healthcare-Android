@@ -6,6 +6,17 @@ import java.util.Calendar
 import java.util.Date
 
 class Constant {
+    enum class MEDICAL_STATS {
+        HEARTH_RATE,
+        BLOOD_PRESSURE,
+        BLOOD_SUGAR,
+        BODY_TEMPERATURE,
+        HEIGHT,
+        WEIGHT
+    }
+
+
+
     companion object{
         val DEFAULT_ERROR_MESSAGE: String = "An error occurred"
         const val BASE_URL: String = "https://mockapi.io/projects/648fd2c81e6aa71680ca1f63"
@@ -14,7 +25,21 @@ class Constant {
         const val DOCTOR_TBL = "doctors"
         const val PATIENT_TBL = "patients"
         const val MEDICAL_HISTORY_TBL = "medical_history"
-        
+        const val DOCTOR_SECURITY_DOCTOR = "bomaylabacsi"
+        const val userSPKey: String = "USER"
+
+
+        //constant setup stats display in medicalRecord
+        val MEDICAL_RECORD_DIMENSION = listOf<String>(
+            "bpm",
+            "mg Hg",
+            "mg/dL",
+            "C",
+            "cm",
+            "kg"
+        )
+
+
 
 
         // Hàm này chạy tron MainActiity khi user là người dùng phổ thông
@@ -132,8 +157,6 @@ class Constant {
 
 
 
-        const val DOCTOR_SECURITY_DOCTOR = "bomaylabacsi"
-        const val userSPKey: String = "USER"
     }
 
     enum class DoctorQuery(val queryField: String){
@@ -161,6 +184,8 @@ class Constant {
         val nameIcon: String,
         val actionId:Int? = null
     )
+
+
 
 
 

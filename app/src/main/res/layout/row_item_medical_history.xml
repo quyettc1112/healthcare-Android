@@ -54,10 +54,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center">
-               <ImageButton
-                   android:id="@+id/ibMedicalHistoryItemRight"
-                   android:layout_width="60dp"
-                   android:layout_height="60dp"
+               <ImageView
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
                    android:background="@android:color/transparent"
                    android:src="@drawable/ic_chevron_right_24"/>
 

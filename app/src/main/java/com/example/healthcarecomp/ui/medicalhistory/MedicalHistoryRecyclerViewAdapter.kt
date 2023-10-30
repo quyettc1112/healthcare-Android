@@ -24,7 +24,6 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
         val avatar = view.findViewById<ImageView>(R.id.ivMedicalHistoryItemAvatar)
         val doctorName = view.findViewById<TextView>(R.id.tvMedicalHistoryItemDoctorName)
         val date = view.findViewById<TextView>(R.id.tvMedicalHistoryItemDate)
-        val btnDetail = view.findViewById<ImageButton>(R.id.ibMedicalHistoryItemRight)
     }
 
     override fun onCreateViewHolder(
@@ -41,8 +40,16 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
         position: Int
     ) {
         val medicalRecord =  differ.currentList[position]
+        holder.itemView.setOnClickListener {
+            onDetailButtonClick?.let {
+                it(medicalRecord)
+            }
+        }
+
         holder.apply {
-            date.text = formatter.format(medicalRecord.date)
+            medicalRecord?.date?.let {
+                this.date.text = formatter.format(it)
+            }
         }
 
     }
