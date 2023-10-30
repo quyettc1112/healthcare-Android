@@ -226,6 +226,7 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
             R.id.tvSignUpLoginBtn -> {
                 navigateToPage(R.id.action_registerFragment_to_loginFragment)
             }
+
         }
     }
 

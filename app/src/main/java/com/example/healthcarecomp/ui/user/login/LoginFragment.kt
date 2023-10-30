@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.ui.user.login
 
 import android.content.Intent
+import android.content.IntentSender
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,10 +15,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
+import com.example.healthcarecomp.ui.activity.AuthActivity
 import com.example.healthcarecomp.ui.activity.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
 import dagger.hilt.android.AndroidEntryPoint
+
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -25,12 +28,14 @@ import kotlinx.coroutines.launch
 class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListener {
     private lateinit var _binding: FragmentLoginBinding
     private lateinit var _viewModel: LoginViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         _viewModel = ViewModelProvider(requireActivity()).get(LoginViewModel::class.java)
@@ -45,10 +50,12 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
     private fun setupUI() {
 
+
         //auto input phone
         arguments?.getString("phone")?.let {
             _binding.etLoginPhoneNumber.setText(it)
         }
+
 
         //set up display out line when user select role login
         _binding.ivLoginPatient.setOnClickListener(this)
@@ -62,6 +69,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         _binding.tvLoginForgotBnt.setOnClickListener(this)
 
     }
+
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -79,20 +87,26 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
             //
             R.id.btnLogin -> {
+
                 _viewModel.loginByPhone(
                     _binding.etLoginPhoneNumber.text.toString(),
                     _binding.etLoginPassword.text.toString()
                 )
 
+
+                openMainActivity()
+
             }
 
             R.id.ibLoginWithGoogle -> {
-                openMainActivity()
+                (requireActivity() as AuthActivity).loginWithGoogle()
             }
 
             R.id.tvLoginSignUpBtn -> {
                 navigateToPage(R.id.action_loginFragment_to_registerFragment)
             }
+
+
         }
     }
 
@@ -136,6 +150,5 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         startActivity(intent)
         requireActivity().finish()
     }
-
 
 }

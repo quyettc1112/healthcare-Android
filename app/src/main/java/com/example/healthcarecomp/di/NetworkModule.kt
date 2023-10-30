@@ -39,7 +39,6 @@ object NetworkModule {
         return retrofit.create(DoctorApi::class.java)
     }
 
-
     @Provides
     @Singleton
     @Named("MainSite")

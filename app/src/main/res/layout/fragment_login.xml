@@ -28,6 +28,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center">
                 <LinearLayout
+                    android:background="@drawable/img_high_light"
                     android:id="@+id/llLoginPatientBorder"
                     android:gravity="center"
                     android:layout_width="0dp"

@@ -19,7 +19,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="You Are"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -27,6 +32,7 @@
                 android:gravity="center">
                 <LinearLayout
                     android:id="@+id/llSignUpPatient"
+                    android:background="@drawable/img_high_light"
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -196,11 +202,13 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:id="@+id/tilSignUpDoctorCode"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 app:errorEnabled="true"
                 android:hint="@string/sign_up_doctor_code_hint"
                 app:endIconMode="password_toggle"
                 android:layout_height="wrap_content">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:visibility="gone"
                     android:id="@+id/etSignUpDoctorCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -236,24 +244,6 @@
                 android:paddingVertical="14dp"
                 android:backgroundTint="@color/purple_700"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sign_up_with_text"
-                android:gravity="center"
-                android:layout_marginTop="12dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                />
-
-            <ImageButton
-                android:contentDescription="sign up with google"
-                android:id="@+id/ibLoginWithGoogle"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/google_login"
-                android:background="@color/white"
-                android:layout_marginTop="12dp"
-                android:scaleType="fitCenter"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
