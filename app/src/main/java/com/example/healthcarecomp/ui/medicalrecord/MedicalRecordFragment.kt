@@ -78,10 +78,10 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
         _binding.ibMedicalRecordEdit.setOnClickListener {
             _medicalRecordViewModel.isEditMode.value = true
             it.visibility = View.GONE
-            _binding.btnMedicalRecordSave.visibility = View.VISIBLE
+            _binding.ibMedicalRecordSave.visibility = View.VISIBLE
         }
 
-        _binding.btnMedicalRecordSave.setOnClickListener {
+        _binding.ibMedicalRecordSave.setOnClickListener {
             val medical = takeStatsData()
             medical?.let {medical ->
                 _medicalRecordViewModel.upsertMedicalRecord(
@@ -90,6 +90,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
                 it.visibility = View.GONE
                 _binding.ibMedicalRecordEdit.visibility = View.VISIBLE
             }
+            _medicalRecordViewModel.isEditMode.value = false
         }
 
         _medicalRecordViewModel.upsertMedicalRecord.observe(viewLifecycleOwner, Observer {
@@ -106,7 +107,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
         /////////// update data when data change ///////////
 
         _medicalRecordViewModel.onItemDataChange(args.medicalRecordId) { resources ->
-            _medicalRecordViewModel.isEditMode.value = false
+            //_medicalRecordViewModel.isEditMode.value = false
             when(resources) {
                 is Resource.Success -> {
                     resources.data?.let {
