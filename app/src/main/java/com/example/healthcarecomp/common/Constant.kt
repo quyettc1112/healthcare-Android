@@ -158,7 +158,9 @@ class Constant {
         FIRST_NAME("firstName"),
         LAST_NAME("lastName"),
         GENDER("gender"),
-        PHONE("phone")
+        PHONE("phone"),
+        ID("id"),
+        AVATAR("avatar")
     }
 
     enum class PatientQuery(val queryField: String){
@@ -167,7 +169,9 @@ class Constant {
         FIRST_NAME("firstName"),
         LAST_NAME("lastName"),
         GENDER("gender"),
-        PHONE("phone")
+        PHONE("phone"),
+        ID("id"),
+        AVATAR("avatar")
     }
 
     class Item_recycleView(

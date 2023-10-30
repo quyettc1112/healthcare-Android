@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.ui.medicalhistory
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +12,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.healthcarecomp.R
+import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.MedicalRecord
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.collections.HashMap
 
 
 class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecyclerViewAdapter.MedicalHistoryViewHolder>() {
     val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.UK)
-
+    lateinit var doctorList : HashMap<String?,Doctor?>
 
     class MedicalHistoryViewHolder(view: View) : ViewHolder(view) {
         val avatar = view.findViewById<ImageView>(R.id.ivMedicalHistoryItemAvatar)
@@ -50,6 +53,10 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
         holder.apply {
             medicalRecord?.date?.let {
                 this.date.text = formatter.format(it)
+            }
+            val doctor = doctorList[medicalRecord.doctorId]
+            doctor?.let {
+                this.doctorName.text = it.firstName
             }
         }
 

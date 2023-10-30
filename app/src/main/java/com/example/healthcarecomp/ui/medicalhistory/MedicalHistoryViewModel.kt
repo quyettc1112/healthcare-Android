@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel
+import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,7 @@ class MedicalHistoryViewModel @Inject constructor(
 ): BaseViewModel() {
     var medicalHistoryList = MutableLiveData<Resource<MutableList<MedicalRecord>>>()
     var medicalAdded = MutableLiveData<Resource<MedicalRecord>>()
+    var doctorList = HashMap<String?, Doctor?>()
     init {
         loadMedicalRecord()
     }
@@ -28,8 +30,21 @@ class MedicalHistoryViewModel @Inject constructor(
         viewModelScope.launch {
             medicalHistoryList.value = Resource.Loading()
             medicalHistoryUseCase.getAllByPatientID("2222222") {
+                if(it is Resource.Success){
+                    val data = it.data
+                    data?.forEach {record ->
+                        doctorList.putIfAbsent(record.doctorId, null)
+                    }
+                    runBlocking {
+                        medicalHistoryUseCase.getDoctorById(doctorList){
+                            doctorList = it
+                        }
+                    }
+                }
                 medicalHistoryList.value = it
+
             }
+
         }
     }
 
