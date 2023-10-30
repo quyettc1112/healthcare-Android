@@ -21,7 +21,7 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.util.Locale
 
-class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: String):  RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>()  {
+class ScheduleAdapter( val kindOfSchdule: String):  RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>()  {
 
     var onItemClick: ((Schedule) -> Unit)? = null
     inner class MainViewHolder(val itemBinding: RvListScheduleBinding) :
@@ -83,7 +83,6 @@ class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: Strin
     }
     override fun getItemCount(): Int {
         if (kindOfSchdule.equals("Today")) return differ.currentList.size
-      //  if (kindOfSchdule.equals("UpComing")) return Constant.getScheduleUpComing().size
         return 0
     }
 
@@ -103,6 +102,10 @@ class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: Strin
             return oldItem == newItem
         }
     }
+
+    // differ này cho list các schedule today
     val differ = AsyncListDiffer(this, differCallBack)
+
+
 
 }

@@ -26,6 +26,7 @@ class ScheduleViewModel @Inject constructor(
         scheduleUseCase.onDataChange {
             update(it)
         }
+
     }
     fun update(data : Resource<MutableList<Schedule>>) {
         scheduleListToday.value = data
@@ -34,5 +35,6 @@ class ScheduleViewModel @Inject constructor(
     fun upsertSchedule(schedule: Schedule) = viewModelScope.launch {
         scheduleAdd.value = scheduleUseCase.upsertSchedule(schedule)
     }
+
 
 }
