@@ -25,33 +25,7 @@ class Constant {
         const val DOCTOR_SECURITY_DOCTOR = "bomaylabacsi"
 
 
-        //constant setup stats display in medicalRecord recycler view
-        val MEDICAL_RECORD_ICONS = listOf<Int>(
-            R.drawable.ic_favorite_24,
-            R.drawable.ic_favorite_24,
-            R.drawable.ic_favorite_24,
-            R.drawable.ic_favorite_24,
-            R.drawable.ic_favorite_24,
-            R.drawable.ic_favorite_24
-        )
-
-        val MEDICAL_RECORD_ICONS_BACKGROUND = listOf<Int>(
-            R.color.icon_bg_red_light,
-            R.color.icon_bg_red_light,
-            R.color.icon_bg_red_light,
-            R.color.icon_bg_red_light,
-            R.color.icon_bg_red_light,
-            R.color.icon_bg_red_light
-        )
-
-        val MEDICAL_RECORD_TITLE = listOf<String>(
-            "Hearth Rate",
-            "Blood Pressure",
-            "Blood Sugar",
-            "Body Temperature",
-            "height",
-            "weight"
-        )
+        //constant setup stats display in medicalRecord
         val MEDICAL_RECORD_DIMENSION = listOf<String>(
             "bpm",
             "mg Hg",
