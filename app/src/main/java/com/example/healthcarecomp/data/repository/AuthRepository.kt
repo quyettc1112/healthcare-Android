@@ -7,7 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 interface AuthRepository {
 
     var currentUser: User?
-    suspend fun loginByEmail(email: String, password: String): Resource<User>
+    suspend fun loginByEmail(email: String): Resource<User>
     suspend fun loginByPhone(phone: String, password: String): Resource<User>
 
     suspend fun signup(

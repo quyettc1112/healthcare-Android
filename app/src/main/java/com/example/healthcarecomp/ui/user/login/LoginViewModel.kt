@@ -18,6 +18,8 @@ class LoginViewModel @Inject constructor(
     private val _loginFlow = MutableStateFlow<Resource<User>?>(null)
     val loginFLow: StateFlow<Resource<User>?> = _loginFlow
 
+    val loginGGFlow = MutableStateFlow<Resource<User>?>(null)
+
     val currentUser: User? = loginUseCase.currentUser
 
     init {
@@ -32,5 +34,11 @@ class LoginViewModel @Inject constructor(
             val result = loginUseCase.loginByPhone(phone, password)
             _loginFlow.value = result
         }
+
+    fun loginByMail(email:String) = viewModelScope.launch {
+        loginGGFlow.value = Resource.Loading()
+        val result = loginUseCase.loginByMail(email)
+        loginGGFlow.value = result
+    }
 
 }

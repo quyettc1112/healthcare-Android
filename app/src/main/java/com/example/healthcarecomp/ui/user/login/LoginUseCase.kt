@@ -12,6 +12,10 @@ class LoginUseCase @Inject constructor(
         return authRepository.loginByPhone(phone, password)
     }
 
+    suspend fun loginByMail(email: String): Resource<User> {
+        return  authRepository.loginByEmail(email)
+    }
+
     val currentUser: User? = authRepository.currentUser
 
 }

@@ -33,5 +33,9 @@
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"/>
+        <argument
+            android:name="userGG"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>
