@@ -1,7 +1,6 @@
-package com.example.healthcarecomp.ui.user.login
+package com.example.healthcarecomp.ui.auth.login
 
 import android.content.Intent
-import android.content.IntentSender
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log

@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.ui.user.login
+package com.example.healthcarecomp.ui.auth.login
 
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel

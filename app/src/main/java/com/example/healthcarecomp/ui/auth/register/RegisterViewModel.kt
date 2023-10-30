@@ -1,12 +1,10 @@
-package com.example.healthcarecomp.ui.user.register
+package com.example.healthcarecomp.ui.auth.register
 
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.util.Resource
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

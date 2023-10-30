@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.ui.user.login
+package com.example.healthcarecomp.ui.auth.login
 
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.data.repository.AuthRepository
