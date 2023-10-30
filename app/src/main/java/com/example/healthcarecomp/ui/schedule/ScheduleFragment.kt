@@ -41,7 +41,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     val dateFormat = SimpleDateFormat("MMM dd yyyy HH:mm")
     private var isCanceled: Boolean = false
     private var isTimeCanceled: Boolean = false
-    val currentTime = Calendar.getInstance()
+    var currentTime = Calendar.getInstance()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -111,15 +111,17 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         )
         timePickerDialog.setOnCancelListener { isTimeCanceled = true }
         timePickerDialog.setOnDismissListener {
-            if (isTimeCanceled == false) {
-                Log.d("CheckMin", currentTime.get(Calendar.MINUTE).toString())
-                if (validationHour < Calendar.HOUR || (validationHour == Calendar.HOUR && validationMin < currentTime.get(Calendar.MINUTE))) {
+            currentTime = Calendar.getInstance()
+            if (isTimeCanceled == false && ( calendar?.get(Calendar.DAY_OF_MONTH) == currentTime.get(Calendar.DAY_OF_MONTH) )  ) {
+                if (validationHour.toInt() < currentTime.get(Calendar.HOUR_OF_DAY) ||
+                    (validationHour == currentTime.get(Calendar.HOUR_OF_DAY) && validationMin <currentTime.get(Calendar.MINUTE)   )) {
                     val confirmDialog = ConfirmDialog(
                         requireContext(),
                         object : ConfirmDialog.ConfirmCallback {
-                            override fun negativeAction() {}
+                            override fun negativeAction() {
+                            }
                             override fun positiveAction() {
-                                timePickerDialog.updateTime(currentTime.get(Calendar.HOUR), currentTime.get(Calendar.MINUTE))
+                                timePickerDialog.updateTime(currentTime.get(Calendar.HOUR_OF_DAY), currentTime.get(Calendar.MINUTE))
                                 timePickerDialog.show()
                             }
                         },
@@ -130,10 +132,11 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                     )
                     // Show the ConfirmDialog
                     confirmDialog.show()
-
-
                 } else ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
-            } else isTimeCanceled = false
+            } else  {
+                isTimeCanceled = false
+                ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
+            }
         }
         timePickerDialog.show()
 
