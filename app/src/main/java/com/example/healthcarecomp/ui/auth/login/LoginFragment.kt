@@ -14,11 +14,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
+import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
 import com.example.healthcarecomp.ui.activity.AuthActivity
 import com.example.healthcarecomp.ui.activity.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 import kotlinx.coroutines.flow.collectLatest
@@ -28,6 +32,7 @@ import kotlinx.coroutines.launch
 class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListener {
     private lateinit var _binding: FragmentLoginBinding
     private lateinit var _viewModel: LoginViewModel
+    private var _userGG: User? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,7 +100,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
             }
 
             R.id.ibLoginWithGoogle -> {
-                (requireActivity() as AuthActivity).loginWithGoogle()
+                loginWithGG()
             }
 
             R.id.tvLoginSignUpBtn -> {
@@ -104,6 +109,20 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
 
         }
+    }
+
+    private fun loginWithGG() {
+        Log.i("Err","call gg")
+        (requireActivity() as AuthActivity).loginWithGoogle(){
+            if(it == null) {
+                Toast.makeText(requireActivity(), "Have problem to login with google", Toast.LENGTH_SHORT).show()
+            }else{
+                Log.i("Err","user!=null")
+                _userGG = it
+                _viewModel.loginByMail(it.email!!)
+            }
+        }
+
     }
 
     private fun observeLoginState() {
@@ -133,6 +152,39 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
                                 Toast.LENGTH_SHORT
                             ).show()
                             openMainActivity()
+                        }
+
+                        else -> null
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                _viewModel.loginGGFlow?.collectLatest {
+                    _binding.pgLogin.visibility = View.GONE
+                    when (it) {
+                        is Resource.Success -> {
+                            val prefix = if (_viewModel.currentUser.isDoctor()) " Dr." else ""
+                            Toast.makeText(
+                                requireContext(),
+                                "Welcome$prefix ${_viewModel.currentUser?.firstName}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            openMainActivity()
+                        }
+
+                        is Resource.Loading -> {
+                            _binding.pgLogin.visibility = View.VISIBLE
+                        }
+
+                        is Resource.Error -> {
+                            val data = Gson().toJson(_userGG)
+                            val bundle = Bundle()
+                            bundle.putString("userGG", data)
+                            navigateToPage(R.id.action_loginFragment_to_registerFragment, bundle)
+                            _viewModel.loginGGFlow.value = null
                         }
 
                         else -> null

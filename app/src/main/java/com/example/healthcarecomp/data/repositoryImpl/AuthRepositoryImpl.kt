@@ -73,6 +73,41 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    private suspend fun queryUserByEmail(email: String): Resource<User> {
+        val doctorRef = fireBaseDatabase.reference.child(Constant.DoctorQuery.PATH.queryField)
+        val patientRef = fireBaseDatabase.reference.child(Constant.PatientQuery.PATH.queryField)
+
+        val doctorSnapshot =
+            doctorRef.orderByChild(Constant.DoctorQuery.EMAIL.queryField)
+                .equalTo(email)
+                .get().await()
+        val patientSnapshot =
+            patientRef.orderByChild(Constant.PatientQuery.EMAIL.queryField)
+                .equalTo(email)
+                .get().await()
+
+        if (doctorSnapshot.exists()) {
+            val doctor = doctorSnapshot.children.first().getValue(Doctor::class.java)
+            return if(doctor != null){
+                saveUser(doctor)
+                Resource.Success(doctor)
+            }else{
+                Resource.Unknown()
+            }
+
+        } else if (patientSnapshot.exists()) {
+            val patient = patientSnapshot.children.first().getValue(Patient::class.java)
+            return if (patient != null) {
+                saveUser(patient)
+                Resource.Success(patient)
+            } else {
+                Resource.Unknown()
+            }
+        } else {
+            return Resource.Error("Email does not exist")
+        }
+    }
+
     fun saveUser(user: User) {
         var sharePrefKey: String = Constant.USER_SHARE_PREF_KEY
         if(user.isDoctor()){
@@ -232,10 +267,14 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun loginByEmail(
-        email: String,
-        password: String,
+        email: String
     ): Resource<User> {
-        TODO("Not yet implemented")
+        return try {
+            queryUserByEmail(email)
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Error(e.localizedMessage)
+        }
     }
 
     override fun logout() {

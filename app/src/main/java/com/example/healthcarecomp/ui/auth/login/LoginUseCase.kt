@@ -13,4 +13,10 @@ class LoginUseCase @Inject constructor(
     }
 
     fun getLoggedInUser() = authRepository.getLoggedInUser()
+
+    suspend fun loginByMail(email: String): Resource<User> {
+        return  authRepository.loginByEmail(email)
+    }
+
+
 }
