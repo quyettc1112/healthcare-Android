@@ -130,7 +130,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
                             val prefix = if (_viewModel.getLoggedInUser().isDoctor()) " Dr." else ""
                             Toast.makeText(
                                 requireContext(),
-                                "Welcome$prefix ${_viewModel.getLoggedInUser()!!::class.java.simpleName}",
+                                "Welcome$prefix ${_viewModel.getLoggedInUser()?.firstName}",
                                 Toast.LENGTH_SHORT
                             ).show()
                             openMainActivity()
