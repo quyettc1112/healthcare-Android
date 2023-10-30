@@ -2,8 +2,8 @@ package com.example.healthcarecomp.ui.user.login
 
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel
+import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.util.Resource
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,10 +15,10 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase
 ) : BaseViewModel() {
 
-    private val _loginFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
-    val loginFLow: StateFlow<Resource<FirebaseUser>?> = _loginFlow
+    private val _loginFlow = MutableStateFlow<Resource<User>?>(null)
+    val loginFLow: StateFlow<Resource<User>?> = _loginFlow
 
-    val currentUser: FirebaseUser? = loginUseCase.currentUser
+    val currentUser: User? = loginUseCase.currentUser
 
     init {
         currentUser?.let {
@@ -26,10 +26,10 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun login(email: String, password: String) =
+    fun loginByPhone(phone: String, password: String) =
         viewModelScope.launch {
             _loginFlow.value = Resource.Loading()
-            val result = loginUseCase.login(email, password)
+            val result = loginUseCase.loginByPhone(phone, password)
             _loginFlow.value = result
         }
 

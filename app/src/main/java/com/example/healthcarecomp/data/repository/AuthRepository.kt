@@ -6,24 +6,20 @@ import com.google.firebase.auth.FirebaseUser
 
 interface AuthRepository {
 
-    var currentUser: FirebaseUser?
-    suspend fun login(email: String, password: String): Resource<FirebaseUser>
-    suspend fun signup(
-        email: String,
-        password: String,
-        confirmPassword: String
-    ): Resource<FirebaseUser>
+    var currentUser: User?
+    suspend fun loginByEmail(email: String, password: String): Resource<User>
+    suspend fun loginByPhone(phone: String, password: String): Resource<User>
 
     suspend fun signup(
-        phone: Int,
+        phone: String,
         password: String,
         confirmPassword: String,
         firstName: String,
         lastName: String,
-        email: String
+        email: String,
+        doctorCode: String?
     ): Resource<User>
 
-    suspend fun login(phone: Int, password: String): Resource<FirebaseUser>
 
     fun logout()
 }

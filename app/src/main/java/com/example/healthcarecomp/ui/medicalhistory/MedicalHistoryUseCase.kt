@@ -17,8 +17,17 @@ class MedicalHistoryUseCase @Inject constructor(
         return medicalHistoryRepository.remove(medicalRecord)
     }
 
-    fun onDataChange(listener: (Resource<MutableList<MedicalRecord>>) -> Unit) {
-        medicalHistoryRepository.onDataChange(listener)
+
+    suspend fun getAllByDoctorID(doctorID: String, listener: (Resource<MutableList<MedicalRecord>>) -> Unit){
+        medicalHistoryRepository.getAllByDoctorID(doctorID,listener)
+    }
+
+    suspend fun getAllByPatientID(patientID: String, listener: (Resource<MutableList<MedicalRecord>>) -> Unit) {
+        medicalHistoryRepository.getAllByPatientID(patientID, listener)
+    }
+
+    suspend fun getAll(listener: (Resource<MutableList<MedicalRecord>>) -> Unit){
+        medicalHistoryRepository.getAll(listener)
     }
 
 }

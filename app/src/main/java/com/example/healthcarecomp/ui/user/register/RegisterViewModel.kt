@@ -17,30 +17,23 @@ class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase
 ) : BaseViewModel() {
 
-
     private val _registerFlow = MutableStateFlow<Resource<User>?>(null)
     val registerFlow: StateFlow<Resource<User>?> = _registerFlow
 
-//    fun register(email: String, password: String, confirmPassword: String) {
-//        viewModelScope.launch {
-//            _registerFlow.value = Resource.Loading()
-//            val result = registerUseCase.signup(email, password, confirmPassword)
-//            _registerFlow.value = result
-//        }
-//    }
+    val validFormFlow = MutableStateFlow<Boolean>(false)
 
     fun register(
-        phone: Int,
+        phone: String,
         password: String,
         confirmPassword: String,
         firstName: String,
         lastName: String,
-        email: String
+        email: String,
+        doctorCode: String?
     ) {
         viewModelScope.launch {
             _registerFlow.value = Resource.Loading()
-//            delay(2000L)
-            val result = registerUseCase.signup(phone, password, confirmPassword, firstName, lastName, email)
+            val result = registerUseCase.signup(phone, password, confirmPassword, firstName, lastName, email, doctorCode)
             _registerFlow.value = result
         }
     }

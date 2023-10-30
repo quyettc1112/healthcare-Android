@@ -1,8 +1,8 @@
 package com.example.healthcarecomp.ui.user.register
 
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,20 +12,29 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
+import com.example.healthcarecomp.base.dialog.ConfirmDialog
 import com.example.healthcarecomp.databinding.FragmentRegisterBinding
+import com.example.healthcarecomp.ui.activity.AuthActivity
 import com.example.healthcarecomp.util.Resource
-import com.example.healthcarecomp.util.ValidationUtils
 import com.example.healthcarecomp.util.extension.afterTextChanged
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.example.healthcarecomp.util.ValidationUtils as ValidU
 
 @AndroidEntryPoint
 class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickListener {
     private lateinit var _binding: FragmentRegisterBinding
     lateinit var viewModel: RegisterViewModel
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,6 +59,31 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
+        observeRegisterState()
+        showDialog()
+
+    }
+
+    private fun showDialog() {
+
+        if (requireActivity() is AuthActivity) {
+            val confirmCallback = object : ConfirmDialog.ConfirmCallback {
+                override fun positiveAction() {
+                    Snackbar.make(requireView(), "Thank you", Snackbar.LENGTH_SHORT).show()
+                }
+                override fun negativeAction() {
+                }
+
+            }
+            val authActivity = requireActivity() as AuthActivity
+            authActivity.showConfirmDialog("Welcome to Health Care app",
+                "We need some of your information, we do not share user info",
+                "OK",
+                "Cancle",
+                "Yes",
+                confirmCallback
+                )
+        }
     }
 
     private fun setupUI() {
@@ -61,11 +95,10 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
         _binding.tvSignUpLoginBtn.setOnClickListener(this)
 
         // input validate
-
         _binding.etSignUpFirstName.apply {
             this.afterTextChanged {
                 error = when {
-                    it.length < 2 -> "First name is not valid"
+                    !ValidU.isValidFirstName(it) -> "First name must not be empty"
                     else -> null
                 }
             }
@@ -73,49 +106,62 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
         _binding.etSignUpLastName.apply {
             this.afterTextChanged {
                 error = when {
-                    it.length < 2 -> "Last name is not valid"
+                    !ValidU.isValidLastName(it) -> "Last name must be >= 2 characters"
                     else -> null
                 }
             }
         }
-        _binding.etSignUpPassword.apply {
+        _binding.etSignUpPasswordConfirm.apply {
             this.afterTextChanged {
                 error = when {
-                    it.length <= 6 -> "Password too short"
+                    !ValidU.isValidConfirmPassword(
+                        it,
+                        _binding.etSignUpPassword.text.toString()
+                    ) -> "Confirm password is not match"
+
                     else -> null
                 }
             }
         }
         _binding.etSignUpPhoneNumber.apply {
             this.afterTextChanged {
-                error = when {
-                    it.length !in 9..11 -> "Phone number is not valid"
-                    else -> null
+                try {
+                    error = when {
+                        !ValidU.isValidPhoneNumber(it) -> "Phone number is not valid"
+                        else -> null
+                    }
+                } catch (e: NumberFormatException) {
+                    e.printStackTrace()
+                    error = "Phone must be number"
+                }
+            }
+            _binding.etSignUpDoctorCode.apply {
+                this.afterTextChanged {
+                    error = when {
+                        !ValidU.isValidDoctorSecurityCode(it) -> "Doctor code is not valid"
+                        else -> null
+                    }
+                }
+            }
+            _binding.etSignUpEmail.apply {
+                afterTextChanged {
+                    error = if (!ValidU.validateEmail(it)) "Email format not valid"
+                    else null
+                }
+            }
+            _binding.etSignUpPassword.apply {
+                afterTextChanged {
+                    error = if (!ValidU.validatePassword(it)) {
+                        "Password length must >= 8 characters," +
+                                " has at least 1 uppercase, 1 digit, 1 special character"
+                    } else null
                 }
             }
         }
-        _binding.etSignUpDoctorCode.apply {
-            this.afterTextChanged {
-                error = when {
-                    it.length != 6 -> "Doctor code is not valid"
-                    else -> null
-                }
-            }
-        }
-        _binding.etSignUpEmail.apply {
-            afterTextChanged {
-                error = if (!ValidationUtils.validateEmail(it)) "Email format not valid"
-                else null
-            }
-        }
-        _binding.etSignUpPassword.apply {
-            afterTextChanged {
-                error = if (!ValidationUtils.validatePassword(it)) {
-                    "Password length must >= 8 characters," +
-                            " has at least 1 uppercase, 1 digit, 1 special character"
-                } else null
-            }
-        }
+    }
+
+    private fun isDoctorSignUp(): Boolean {
+        return _binding.etSignUpDoctorCode.visibility == View.VISIBLE
     }
 
     override fun onClick(v: View?) {
@@ -132,18 +178,49 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
                 _binding.llSignUpDoctor.setBackgroundColor(Color.TRANSPARENT)
                 _binding.etSignUpDoctorCode.visibility = View.GONE
                 _binding.tilSignUpDoctorCode.visibility = View.GONE
+                _binding.etSignUpDoctorCode.text = null
             }
 
             R.id.btnSignUp -> {
-                viewModel.register(
-                    email = _binding.etSignUpEmail.text.toString(),
-                    password = _binding.etSignUpPassword.text.toString(),
-                    confirmPassword = _binding.etSignUpPasswordConfirm.text.toString(),
-                    phone = _binding.etSignUpPhoneNumber.text.toString().toInt(),
-                    firstName = _binding.etSignUpFirstName.text.toString(),
-                    lastName = _binding.etSignUpPassword.text.toString()
-                )
-                observeRegisterState()
+                try {
+
+                    if (!(ValidU.isValidLastName(_binding.etSignUpLastName.text.toString())
+                                && ValidU.isValidFirstName(_binding.etSignUpFirstName.text.toString())
+                                && ValidU.isValidConfirmPassword(
+                            _binding.etSignUpPasswordConfirm.text.toString(),
+                            _binding.etSignUpPassword.text.toString()
+                        )
+                                && ValidU.isValidPhoneNumber(
+                            _binding.etSignUpPhoneNumber.text.toString()
+                        )
+                                && ValidU.validateEmail(_binding.etSignUpEmail.text.toString())
+                                && ValidU.validatePassword(_binding.etSignUpPassword.text.toString())
+                                && (ValidU.isValidDoctorSecurityCode(_binding.etSignUpDoctorCode.text.toString()) || !isDoctorSignUp())
+                                )
+                    ) {
+                        Snackbar.make(
+                            requireView(),
+                            "Please fill in correctly all field",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        var doctorCode: String? = _binding.etSignUpDoctorCode.text.toString()
+                        if (!isDoctorSignUp()) doctorCode = null
+
+                        viewModel.register(
+                            email = _binding.etSignUpEmail.text.toString(),
+                            password = _binding.etSignUpPassword.text.toString(),
+                            confirmPassword = _binding.etSignUpPasswordConfirm.text.toString(),
+                            phone = _binding.etSignUpPhoneNumber.text.toString(),
+                            firstName = _binding.etSignUpFirstName.text.toString(),
+                            lastName = _binding.etSignUpPassword.text.toString(),
+                            doctorCode = doctorCode
+                        )
+                    }
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
             R.id.tvSignUpLoginBtn -> {
@@ -156,8 +233,8 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
     private fun observeRegisterState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.registerFlow?.collectLatest{
-                    _binding.pgRegister.visibility = View.INVISIBLE
+                viewModel.registerFlow?.collectLatest {
+                    _binding.pgRegister.visibility = View.GONE
                     when (it) {
                         is Resource.Error -> {
                             Toast.makeText(
@@ -166,26 +243,30 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+
                         is Resource.Loading -> {
                             _binding.pgRegister.visibility = View.VISIBLE
                         }
+
                         is Resource.Success -> {
                             Toast.makeText(
                                 requireContext(),
-                                "Welcome ${viewModel.registerFlow.value.toString()}",
+                                "Sign up successfully please sign in",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            val phone = _binding.etSignUpPhoneNumber.text.toString()
+                            var bundle: Bundle = Bundle()
+                            bundle.putString("phone", phone)
+                            findNavController().navigate(R.id.action_registerFragment_to_loginFragment,bundle)
                         }
-                        else -> Toast.makeText(
-                            requireContext(),
-                            "Something go wrong",
-                            Toast.LENGTH_SHORT
-                        ).show()
+
+                        else -> null
                     }
                 }
             }
         }
     }
+
 
 
 }

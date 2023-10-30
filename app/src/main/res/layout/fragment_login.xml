@@ -147,6 +147,12 @@
             android:layout_gravity="right"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             android:text="@string/login_forgot_password_text"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pgLogin"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
         <LinearLayout
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
