@@ -3,7 +3,9 @@ package com.example.healthcarecomp.di
 import com.example.healthcarecomp.data.repository.AuthRepository
 import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.data.repository.MedicalHistoryRepository
+import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryUseCase
+import com.example.healthcarecomp.ui.schedule.ScheduleUseCase
 import com.example.healthcarecomp.ui.user.login.LoginUseCase
 import dagger.Module
 import dagger.Provides
@@ -26,5 +28,13 @@ object UseCaseModule {
     fun provideMedicalHistoryUseCase(medicalHistoryRepository: MedicalHistoryRepository): MedicalHistoryUseCase {
         return MedicalHistoryUseCase(medicalHistoryRepository)
     }
+
+    @Provides
+    @Singleton
+    fun provineScheduleUseCase(scheduleRepository: ScheduleRepository) : ScheduleUseCase {
+        return ScheduleUseCase(scheduleRepository)
+    }
+
+
 
 }

@@ -1,11 +1,22 @@
 package com.example.healthcarecomp.common
 
 import com.example.healthcarecomp.R
-import com.example.healthcarecomp.data.model.MedicalSchedule
+import com.example.healthcarecomp.data.model.Schedule
 import java.util.Calendar
 import java.util.Date
 
 class Constant {
+    enum class MEDICAL_STATS {
+        HEARTH_RATE,
+        BLOOD_PRESSURE,
+        BLOOD_SUGAR,
+        BODY_TEMPERATURE,
+        HEIGHT,
+        WEIGHT
+    }
+
+
+
     companion object{
         const val DEFAULT_ERROR_MESSAGE: String = "An error occurred"
         const val BASE_URL: String = "https://mockapi.io/projects/648fd2c81e6aa71680ca1f63"
@@ -14,7 +25,26 @@ class Constant {
         const val DOCTOR_TBL = "doctors"
         const val PATIENT_TBL = "patients"
         const val MEDICAL_HISTORY_TBL = "medical_history"
-        
+        const val DOCTOR_SECURITY_DOCTOR = "123"
+        const val USER_SHARE_PREF_KEY: String = "user"
+        const val DOCTOR_SHARE_PREF_KEY: String = "doctor"
+        const val PATIENT_SHARE_PREF_KEY: String = "patient"
+
+
+        //constant setup stats display in medicalRecord
+        val MEDICAL_RECORD_DIMENSION = listOf<String>(
+            "bpm",
+            "mg Hg",
+            "mg/dL",
+            "C",
+            "cm",
+            "kg"
+        )
+
+
+
+        const val SCHEDULE_TBL = "schedule"
+
 
 
         // Hàm này chạy tron MainActiity khi user là người dùng phổ thông
@@ -79,46 +109,36 @@ class Constant {
             return itemList
         }
 
+        fun getScheduleToday(): ArrayList<Schedule> {
+            val scheduleList = ArrayList<Schedule>()
 
-        fun getScheduleToday(): ArrayList<MedicalSchedule> {
-            val scheduleList = ArrayList<MedicalSchedule>()
-
-            val schedule1 = MedicalSchedule(
+            val schedule1 = Schedule(
                 doctorId = 1,
                 patientID = 2,
-                date_medical_examinaton = Date(2023,10,20),
+                date_medical_examinaton = Calendar.getInstance().timeInMillis,
                 status_medical_schedule = "Đã hẹn"
             )
             scheduleList.add(schedule1)
             scheduleList.add(schedule1)
 
-          //  scheduleList.add(schedule1)
-
-//            val schedule2 = MedicalSchedule(
-//                doctorId = 2,
-//                patientID = 3,
-//                date_medical_examinaton = Calendar.getInstance().time,
-//                status_medical_schedule = "Chưa hẹn"
-//            )
-//            scheduleList.add(schedule2)
             return  scheduleList
         }
 
-        fun getScheduleUpComing(): ArrayList<MedicalSchedule> {
-            val scheduleUpComingList = ArrayList<MedicalSchedule>()
+        fun getScheduleUpComing(): ArrayList<Schedule> {
+            val scheduleUpComingList = ArrayList<Schedule>()
 
-            val schedule1 = MedicalSchedule(
+            val schedule1 = Schedule(
                 doctorId = 1,
                 patientID = 2,
-                date_medical_examinaton = Date(2023,10,26),
+                date_medical_examinaton = Calendar.getInstance().timeInMillis,
                 status_medical_schedule = "Đã hẹn"
             )
 
 
-            val schedule2 = MedicalSchedule(
+            val schedule2 = Schedule(
                 doctorId = 2,
                 patientID = 3,
-                date_medical_examinaton = Date(2023,10,26),
+                date_medical_examinaton = Calendar.getInstance().timeInMillis,
                 status_medical_schedule = "Chưa hẹn"
             )
 
@@ -129,13 +149,6 @@ class Constant {
 
             return  scheduleUpComingList
         }
-
-
-
-        const val DOCTOR_SECURITY_DOCTOR = "123"
-        const val USER_SHARE_PREF_KEY: String = "user"
-        const val DOCTOR_SHARE_PREF_KEY: String = "doctor"
-        const val PATIENT_SHARE_PREF_KEY: String = "patient"
     }
 
     enum class DoctorQuery(val queryField: String){
@@ -163,6 +176,8 @@ class Constant {
         val nameIcon: String,
         val actionId:Int? = null
     )
+
+
 
 
 

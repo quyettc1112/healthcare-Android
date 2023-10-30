@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.data.model
 
+import java.io.Serializable
 import java.util.Date
 import java.util.UUID
 
@@ -11,8 +12,8 @@ data class MedicalRecord(
     val weight: Float? = null,
     val bloodPressure: Int? = null,
     val bloodSugar: Int? = null,
-    val healthRate: Int? = null,
+    val hearthRate: Int? = null,
     val general: String? = null,
     val date: Date? = null,
     val id: String = UUID.randomUUID().toString()
-)
+): Serializable

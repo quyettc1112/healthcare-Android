@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.medicalrecord.MedicalRecordFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
+        android:orientation="vertical"
+        android:background="@color/bg_gray">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ibMedicalRecordBack"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/baseline_arrow_back_24" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Medical Record"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+            <ImageButton
+                android:id="@+id/ibMedicalRecordEdit"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_edit_note_24" />
+
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:paddingHorizontal="10dp">
+
+            <LinearLayout
+                android:paddingVertical="32dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/shape_rouded_top_left_right">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:cardCornerRadius="12dp"
+                        android:elevation="16dp"
+                        android:layout_marginVertical="10dp"
+                        >
+                        <LinearLayout
+                            android:background="@color/bg_gray"
+                            android:paddingVertical="15dp"
+                            android:paddingHorizontal="20dp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="60dp"
+                                android:layout_height="60dp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="#F5BBBB"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/ic_favorite_24"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            <LinearLayout
+                                android:layout_marginLeft="20dp"
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="Hearth Rate"
+                                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:inputType="number"
+                                    android:id="@+id/etMedicalRecordHearthRate"
+                                    android:enabled="false"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:cardCornerRadius="12dp"
+                        android:elevation="16dp"
+                        android:layout_marginVertical="10dp"
+                        >
+                        <LinearLayout
+                            android:background="@color/bg_gray"
+                            android:paddingVertical="15dp"
+                            android:paddingHorizontal="20dp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="60dp"
+                                android:layout_height="60dp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="#F5BBBB"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/ic_favorite_24"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            <LinearLayout
+                                android:layout_marginLeft="20dp"
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="Blood Sugar"
+                                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etMedicalRecordBloodSugar"
+                                    android:inputType="number"
+                                    android:enabled="false"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:cardCornerRadius="12dp"
+                        android:elevation="16dp"
+                        android:layout_marginVertical="10dp"
+                        >
+                        <LinearLayout
+                            android:background="@color/bg_gray"
+                            android:paddingVertical="15dp"
+                            android:paddingHorizontal="20dp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="60dp"
+                                android:layout_height="60dp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="#F5BBBB"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/ic_favorite_24"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            <LinearLayout
+                                android:layout_marginLeft="20dp"
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="Body Temperature"
+                                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etMedicalRecordBodyTemperature"
+                                    android:enabled="false"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:cardCornerRadius="12dp"
+                        android:elevation="16dp"
+                        android:layout_marginVertical="10dp"
+                        >
+                        <LinearLayout
+                            android:background="@color/bg_gray"
+                            android:paddingVertical="15dp"
+                            android:paddingHorizontal="20dp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="60dp"
+                                android:layout_height="60dp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="#F5BBBB"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/ic_favorite_24"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            <LinearLayout
+                                android:layout_marginLeft="20dp"
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="Weight"
+                                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etMedicalRecordWeight"
+                                    android:enabled="false"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:cardCornerRadius="12dp"
+                        android:elevation="16dp"
+                        android:layout_marginVertical="10dp"
+                        >
+                        <LinearLayout
+                            android:background="@color/bg_gray"
+                            android:paddingVertical="15dp"
+                            android:paddingHorizontal="20dp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="60dp"
+                                android:layout_height="60dp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="#F5BBBB"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/ic_favorite_24"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            <LinearLayout
+                                android:layout_marginLeft="20dp"
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="Height"
+                                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etMedicalRecordHeight"
+                                    android:enabled="false"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:cardCornerRadius="12dp"
+                        android:elevation="16dp"
+                        android:layout_marginVertical="10dp"
+                        >
+                        <LinearLayout
+                            android:background="@color/bg_gray"
+                            android:paddingVertical="15dp"
+                            android:paddingHorizontal="20dp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="60dp"
+                                android:layout_height="60dp">
+
+                                <com.google.android.material.imageview.ShapeableImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="#F5BBBB"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/ic_favorite_24"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.5"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintVertical_bias="0.5" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            <LinearLayout
+                                android:layout_marginLeft="20dp"
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="Blood Pressure"
+                                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:inputType="number"
+                                    android:id="@+id/etMedicalRecordBloodPressure"
+                                    android:enabled="false"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilMedicalRecord"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                    app:prefixText="Note: "
+                    app:boxBackgroundColor="@color/bg_gray"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etMedicalRecordNote"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btnMedicalRecordSave"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="32dp"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:text="SAVE"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/pbMedicalRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+</androidx.constraintlayout.widget.ConstraintLayout>

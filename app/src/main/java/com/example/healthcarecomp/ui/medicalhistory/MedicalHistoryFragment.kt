@@ -31,14 +31,17 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         super.onCreateView(inflater, container, savedInstanceState)
+        super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentMedicalHistoryBinding.inflate(inflater, container, false)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 navigateToPage(R.id.action_medicalHistoryFragment_to_navigation_home)
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
         medicalHistoryViewModel = ViewModelProvider(this)[MedicalHistoryViewModel::class.java]
         return _binding.root
     }
@@ -53,25 +56,29 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
 
         _binding.btnMedicalHistoryAdd.setOnClickListener {
             val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
-        val medicalRecord = MedicalRecord(
-            date = simpleDateFormat.parse("23/11/2023")
-            , doctorId = "11111111",
-            patientId = "2222222",
-            bodyTemperature = 37.7F,
-            bloodPressure = 70,
-            healthRate = 110,
-            bloodSugar = 28,
-            general = "it is good",
-            height = 170.7F,
-            weight = 71.0F)
-        medicalHistoryViewModel.upsertMedialRecord(medicalRecord)
+            val medicalRecord = MedicalRecord(
+                date = simpleDateFormat.parse("23/11/2023")
+                , doctorId = "11111111",
+                patientId = "2222222",
+                bodyTemperature = 37.7F,
+                bloodPressure = 70,
+                hearthRate = 110,
+                bloodSugar = 28,
+                general = "it is good",
+                height = 170.7F,
+                weight = 71.0F)
+            medicalHistoryViewModel.upsertMedialRecord(medicalRecord)
         }
 
         _recyclerViewAdapter = MedicalHistoryRecyclerViewAdapter()
-
+        //set on item to see detail
+        _recyclerViewAdapter.setOnItemDetailButtonClick {
+            val directions = MedicalHistoryFragmentDirections.actionMedicalHistoryFragmentToMedicalRecordFragment(it.id)
+            navigateToPage(directions)
+        }
 
         _binding.rvMedicalHistory.apply {
-            adapter =_recyclerViewAdapter
+            adapter = _recyclerViewAdapter
             layoutManager = LinearLayoutManager(requireActivity())
         }
         _binding.ibMedicalHistoryBack.setOnClickListener {
@@ -129,7 +136,6 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
     private fun hindLoadingBar(){
         _binding.pbMedicalHistory.visibility = View.INVISIBLE
     }
-
 
 
 }
