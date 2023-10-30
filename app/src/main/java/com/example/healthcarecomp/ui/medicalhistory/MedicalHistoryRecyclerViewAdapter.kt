@@ -40,6 +40,7 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
         position: Int
     ) {
         val medicalRecord =  differ.currentList[position]
+
         holder.itemView.setOnClickListener {
             onDetailButtonClick?.let {
                 it(medicalRecord)
