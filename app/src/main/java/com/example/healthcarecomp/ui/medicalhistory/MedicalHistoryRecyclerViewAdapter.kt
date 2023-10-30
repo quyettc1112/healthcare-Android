@@ -41,8 +41,10 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
         position: Int
     ) {
         val medicalRecord =  differ.currentList[position]
-        holder.apply {
-            date.text = formatter.format(medicalRecord.date)
+        medicalRecord?.date?.let {
+            holder.apply {
+                date.text = formatter.format(medicalRecord.date)
+            }
         }
 
     }
