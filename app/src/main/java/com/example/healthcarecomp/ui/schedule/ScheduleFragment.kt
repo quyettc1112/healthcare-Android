@@ -9,11 +9,8 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
+import androidx.databinding.adapters.ToolbarBindingAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
+import com.example.healthcarecomp.base.dialog.ErrorDialog
 import com.example.healthcarecomp.common.Adapter.ItemActitivyHomeAdapter
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Schedule
@@ -40,8 +38,10 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     private lateinit var scheduleViewModel: ScheduleViewModel
     private lateinit var _recyclerViewAdapter: ScheduleAdapter
     private var calendar = Calendar.getInstance()
+    val dateFormat = SimpleDateFormat("MMM dd yyyy HH:mm")
     private var isCanceled: Boolean = false
     private var isTimeCanceled: Boolean = false
+    val currentTime = Calendar.getInstance()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,6 +69,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     }
 
     private fun setDate(binding: FragmentScheduleBinding) {
+        // Lấy ngày giờ hiện tại
         binding.btnShowDatePicker.setOnClickListener {
             // Tạo đối tượng DatePickerDialog
             val datePickerDialog = DatePickerDialog(
@@ -88,14 +89,19 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                     setTime(setTime, binding)
                 } else isCanceled = false
             }
+            datePickerDialog.datePicker.minDate = currentTime.timeInMillis
             datePickerDialog.show()
         }
     }
 
     private fun setTime(calendar: Calendar?, binding: FragmentScheduleBinding) {
+        var validationHour = 0
+        var validationMin = 0
         val timePickerDialog = TimePickerDialog(
             requireContext(),
             { _, hourOfDay, minute ->
+                validationHour = hourOfDay
+                validationMin = minute
                 calendar?.set(Calendar.HOUR_OF_DAY, hourOfDay)
                 calendar?.set(Calendar.MINUTE, minute)
             },
@@ -106,7 +112,27 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         timePickerDialog.setOnCancelListener { isTimeCanceled = true }
         timePickerDialog.setOnDismissListener {
             if (isTimeCanceled == false) {
-                ConfirmDialog(calendar, binding)
+                Log.d("CheckMin", currentTime.get(Calendar.MINUTE).toString())
+                if (validationHour < Calendar.HOUR || (validationHour == Calendar.HOUR && validationMin < currentTime.get(Calendar.MINUTE))) {
+                    val confirmDialog = ConfirmDialog(
+                        requireContext(),
+                        object : ConfirmDialog.ConfirmCallback {
+                            override fun negativeAction() {}
+                            override fun positiveAction() {
+                                timePickerDialog.updateTime(currentTime.get(Calendar.HOUR), currentTime.get(Calendar.MINUTE))
+                                timePickerDialog.show()
+                            }
+                        },
+                        title = "Error",
+                        message ="Cannot Choose Time In The Past",
+                        positiveButtonTitle = "Again",
+                        negativeButtonTitle = "Cancel"
+                    )
+                    // Show the ConfirmDialog
+                    confirmDialog.show()
+
+
+                } else ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
             } else isTimeCanceled = false
         }
         timePickerDialog.show()
@@ -124,24 +150,16 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             when(it) {
                 is Resource.Success -> _recyclerViewAdapter.differ.submitList(it.data)
                 else -> {}
-
             }
         })
-
-
-//        val adapter_upcoming = ScheduleAdapter(Constant.getScheduleUpComing(), "UpComing")
-//        binding.rvListUpcomingSchedule.adapter = adapter_upcoming
     }
-
-    fun ConfirmDialog(calendar: Calendar?, binding: FragmentScheduleBinding) {
-
+    fun ConfirmDialog(calendar: Calendar?, binding: FragmentScheduleBinding, message: String) {
         val confirmDialog = ConfirmDialog(
             requireContext(),
             object : ConfirmDialog.ConfirmCallback {
                 override fun negativeAction() {
                     // Do something when user dont want to schedule
                 }
-
                 override fun positiveAction() {
                     binding.tvDayChoose.text = calendar?.time.toString()
                     planSchedule(calendar)
@@ -150,7 +168,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             // Set the title of the ConfirmDialog
             title = "Confirm",
             // Set the message of the ConfirmDialog
-            message = "Are you sure you want to proceed?",
+            message =message,
             // Set the positive button title of the ConfirmDialog
             positiveButtonTitle = "Yes",
             // Set the negative button title of the ConfirmDialog
@@ -159,6 +177,8 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         // Show the ConfirmDialog
         confirmDialog.show()
     }
+
+
 
 }
 

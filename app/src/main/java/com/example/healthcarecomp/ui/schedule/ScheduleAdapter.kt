@@ -2,6 +2,7 @@ package com.example.healthcarecomp.ui.schedule
 
 import android.icu.util.Calendar
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -18,6 +19,7 @@ import okhttp3.internal.ignoreIoExceptions
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneOffset
+import java.util.Locale
 
 class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: String):  RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>()  {
 
@@ -25,27 +27,47 @@ class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: Strin
     inner class MainViewHolder(val itemBinding: RvListScheduleBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bindItem(Item: Schedule) {
-            itemBinding.tvDaySchedule.text = toCalendarUtc(Item.date_medical_examinaton!!).get(Calendar.DAY_OF_MONTH).toString()
-            itemBinding.tvTimeMeettingSchedule.text = "${toCalendarUtc(Item.date_medical_examinaton!!).get(Calendar.HOUR_OF_DAY)}" +
-                                                      " : ${toCalendarUtc(Item.date_medical_examinaton!!).get(Calendar.MINUTE)} "
-
+            val month = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.MONTH)
+            itemBinding.tvMounthSchedule.text = getMonthName(month)
+            itemBinding.tvDaySchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.DAY_OF_MONTH).toString()
+            itemBinding.tvTimeMeettingSchedule.text = convertTimestampToCalendar_SimpleTimeFormat(Item.date_medical_examinaton!!)
+            itemBinding.tvYearSchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.YEAR).toString()
             itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
         }
     }
-
-    fun toCalendarUtc(timestamp: Long): Calendar {
-        val instant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Instant.ofEpochMilli(timestamp)
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
-        val utcDateTime = instant.atZone(ZoneOffset.UTC).toLocalDateTime()
-
-        val calendar = Calendar.getInstance()
-        calendar.set(utcDateTime.year, utcDateTime.monthValue, utcDateTime.dayOfMonth, utcDateTime.hour, utcDateTime.minute, utcDateTime.second)
-        return calendar
+    fun getMonthName(month: Int): String {
+        val months = hashMapOf<Int, String>(
+            0 to "Jany",
+            1 to "Feb",
+            2 to "Mar",
+            3 to "Apr",
+            4 to "May",
+            5 to "Jun",
+            6 to "Jul",
+            7 to "Aug",
+            8 to "Sep",
+            9 to "Oct",
+            10 to "Nov",
+            11 to "Dec"
+        )
+        return months[month] ?: ""
     }
 
+    fun convertTimestampToCalendar(timestamp: Long): Calendar {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timestamp
+        return calendar
+    }
+    fun convertTimestampToCalendar_SimpleTimeFormat(timestamp: Long): String {
+
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timestamp
+        val dateFormat = SimpleDateFormat("HH:mm")
+        var AM_PM = ""
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 12) AM_PM = " AM" else AM_PM =" PM"
+        return dateFormat.format(calendar.time) + AM_PM
+
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -77,12 +99,9 @@ class ScheduleAdapter(val scheduleList: List<Schedule>, val kindOfSchdule: Strin
         override fun areItemsTheSame(oldItem: Schedule, newItem: Schedule): Boolean {
             return oldItem.id == newItem.id
         }
-
         override fun areContentsTheSame(oldItem: Schedule, newItem: Schedule): Boolean {
             return oldItem == newItem
         }
-
-
     }
     val differ = AsyncListDiffer(this, differCallBack)
 

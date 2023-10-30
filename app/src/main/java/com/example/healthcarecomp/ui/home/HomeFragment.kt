@@ -30,9 +30,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         setUpAnimationMenu(binding)
 
         setUpRecycleView(binding)
-
-
-
         return binding.root
     }
 
@@ -45,7 +42,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             binding.btnMenuOptionUserHome.startAnimation(rotateAnimation)
         }
     }
-
     private fun setUpRecycleView(binding: FragmentHomeBinding) {
         val adapter = ItemActitivyHomeAdapter(Constant.getItemListForRecycleView_UserHome())
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 2,  GridLayoutManager.HORIZONTAL, false)
