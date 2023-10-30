@@ -12,6 +12,5 @@ class LoginUseCase @Inject constructor(
         return authRepository.loginByPhone(phone, password)
     }
 
-    val currentUser: User? = authRepository.currentUser
-
+    fun getLoggedInUser() = authRepository.getLoggedInUser()
 }

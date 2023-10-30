@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,10 +93,6 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
                     _binding.etLoginPhoneNumber.text.toString(),
                     _binding.etLoginPassword.text.toString()
                 )
-
-
-                openMainActivity()
-
             }
 
             R.id.ibLoginWithGoogle -> {
@@ -129,10 +126,11 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
                         }
 
                         is Resource.Success -> {
-                            val prefix = if (_viewModel.currentUser.isDoctor()) " Dr." else ""
+                            Log.d("Auth",_viewModel.getLoggedInUser().toString())
+                            val prefix = if (_viewModel.getLoggedInUser().isDoctor()) " Dr." else ""
                             Toast.makeText(
                                 requireContext(),
-                                "Welcome$prefix ${_viewModel.currentUser?.firstName}",
+                                "Welcome$prefix ${_viewModel.getLoggedInUser()!!::class.java.simpleName}",
                                 Toast.LENGTH_SHORT
                             ).show()
                             openMainActivity()

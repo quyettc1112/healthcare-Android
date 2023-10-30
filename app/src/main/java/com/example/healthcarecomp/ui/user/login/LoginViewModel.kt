@@ -18,11 +18,11 @@ class LoginViewModel @Inject constructor(
     private val _loginFlow = MutableStateFlow<Resource<User>?>(null)
     val loginFLow: StateFlow<Resource<User>?> = _loginFlow
 
-    val currentUser: User? = loginUseCase.currentUser
+    fun getLoggedInUser() = loginUseCase.getLoggedInUser()
 
     init {
-        currentUser?.let {
-            _loginFlow.value = Resource.Success(currentUser)
+        getLoggedInUser()?.let {
+            _loginFlow.value = Resource.Success(getLoggedInUser()!!)
         }
     }
 
