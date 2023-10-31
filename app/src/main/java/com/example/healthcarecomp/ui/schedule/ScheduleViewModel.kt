@@ -18,11 +18,13 @@ class ScheduleViewModel @Inject constructor(
 
     // Create a list of schedule today
     var scheduleListToday = MutableLiveData<Resource<MutableList<Schedule>>>()
+    var scheduleListUpComing = MutableLiveData<Resource<MutableList<Schedule>>>()
     var scheduleAdd = MutableLiveData<Resource<Schedule>>()
 
     // hàm khởi tạo
     init {
         scheduleListToday.value = Resource.Loading()
+        scheduleListUpComing.value = Resource.Loading()
         scheduleUseCase.onDataChange {
             update(it)
         }
@@ -30,6 +32,7 @@ class ScheduleViewModel @Inject constructor(
     }
     fun update(data : Resource<MutableList<Schedule>>) {
         scheduleListToday.value = data
+        scheduleListUpComing.value = data
     }
 
     fun upsertSchedule(schedule: Schedule) = viewModelScope.launch {

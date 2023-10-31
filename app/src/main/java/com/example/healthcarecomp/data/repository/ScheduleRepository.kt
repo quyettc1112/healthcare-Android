@@ -8,6 +8,8 @@ interface ScheduleRepository {
 
     suspend fun upsert(schedule: Schedule): Resource<Schedule>
 
+    suspend fun remove(schedule: Schedule): Resource<Schedule>
+
     fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit)
 
     fun bindChildEvent()
