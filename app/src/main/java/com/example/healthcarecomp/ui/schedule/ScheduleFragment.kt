@@ -75,7 +75,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         scheduleViewModel.upsertSchedule(
             Schedule(
                 doctorId = "cbf1d2ea-0249-452e-bd4e-7db757ad6f4c",
-                patientID = "0fc296b0-945d-4cb1-b06f-82241b1fc1ba",
+                patientID = "1a04ee07-5909-4471-b767-a62f8c1e99d1",
                 date_medical_examinaton = calendar?.timeInMillis,
                 status_medical_schedule = "Đã Đặt Lịch",
                 note = "Tôi bị đau bụng",
@@ -184,7 +184,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                             val converter = convertTimestampToCalendar(it.date_medical_examinaton!!)
                             if (converter.get(Calendar.YEAR) == currentday.get(Calendar.YEAR) &&
                                 converter.get(Calendar.DAY_OF_YEAR) == currentday.get(Calendar.DAY_OF_YEAR) &&
-                                it.patientID.equals("0fc296b0-945d-4cb1-b06f-82241b1fc1ba")
+                                it.patientID.equals("1a04ee07-5909-4471-b767-a62f8c1e99d1")
                             ) return@filter true
                             return@filter false
                         } as ArrayList<Schedule>)
