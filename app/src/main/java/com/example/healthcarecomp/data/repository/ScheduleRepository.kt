@@ -13,4 +13,6 @@ interface ScheduleRepository {
     fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit)
 
     fun bindChildEvent()
+
+    fun getScheduleByPatientPhone(phone : String, listener: (Resource<MutableList<Schedule>>) -> Unit) : Resource<Schedule>
 }

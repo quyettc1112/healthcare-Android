@@ -48,16 +48,24 @@ class ScheduleRepositoryImpl @Inject constructor(
         return result
     }
 
+    override fun getScheduleByPatientPhone(
+        phone: String,
+        listener: (Resource<MutableList<Schedule>>) -> Unit
+    ): Resource<Schedule> {
+        TODO("Not yet implemented")
+    }
+
     override fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit) {
         _onChildAddedListener = listener
         onDataChange()
     }
-    private fun onDataChange(){
+
+    private fun onDataChange() {
 
         _dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val list = mutableListOf<Schedule>()
-                snapshot.children.forEach {data ->
+                snapshot.children.forEach { data ->
                     val mr = data.getValue(Schedule::class.java)
                     mr?.let {
                         list.add(it)
@@ -65,6 +73,7 @@ class ScheduleRepositoryImpl @Inject constructor(
                     _onChildAddedListener?.let { it(Resource.Success(list)) }
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
 
             }
@@ -72,8 +81,9 @@ class ScheduleRepositoryImpl @Inject constructor(
         })
     }
 
+
     override fun bindChildEvent() {
-        _dbRef.addChildEventListener(object  : ChildEventListener {
+        _dbRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 onDataChange()
             }
@@ -97,4 +107,6 @@ class ScheduleRepositoryImpl @Inject constructor(
 
         })
     }
+
+
 }

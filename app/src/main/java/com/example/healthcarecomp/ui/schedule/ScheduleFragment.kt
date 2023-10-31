@@ -74,11 +74,11 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
         scheduleViewModel.upsertSchedule(
             Schedule(
-                doctorId = 1,
-                patientID = 1,
+                doctorId = "cbf1d2ea-0249-452e-bd4e-7db757ad6f4c",
+                patientID = "0fc296b0-945d-4cb1-b06f-82241b1fc1ba",
                 date_medical_examinaton = calendar?.timeInMillis,
                 status_medical_schedule = "Đã Đặt Lịch",
-                note = "Tôi bị đau bụng"
+                note = "Tôi bị đau bụng",
             )
         )
     }
