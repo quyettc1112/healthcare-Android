@@ -60,7 +60,6 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel):  RecyclerView.A
         return calendar
     }
     fun convertTimestampToCalendar_SimpleTimeFormat(timestamp: Long): String {
-
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = timestamp
         val dateFormat = SimpleDateFormat("HH:mm")

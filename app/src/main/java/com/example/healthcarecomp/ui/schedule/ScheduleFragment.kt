@@ -188,7 +188,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                             ) return@filter true
                             return@filter false
                         } as ArrayList<Schedule>)
-                        _recyclerViewAdapter.sortDifferByDateTime()
                     }
                 }
 
@@ -210,7 +209,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         scheduleViewModel.scheduleListUpComing.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Resource.Success -> {
-                        _recyclerViewAdapter_UpComing.differ.submitList(it.data?.toList())
+                    _recyclerViewAdapter_UpComing.differ.submitList(it.data?.toList())
                 }
 
                 else -> {}

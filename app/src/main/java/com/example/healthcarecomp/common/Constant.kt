@@ -107,6 +107,11 @@ class Constant {
             return itemList
         }
 
+        fun convertTimestampToCalendar(timestamp: Long): android.icu.util.Calendar {
+            val calendar = android.icu.util.Calendar.getInstance()
+            calendar.timeInMillis = timestamp
+            return calendar
+        }
 
 
 

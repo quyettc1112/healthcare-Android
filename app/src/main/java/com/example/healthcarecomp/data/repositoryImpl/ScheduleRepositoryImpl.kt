@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
+import java.util.Calendar
 import javax.inject.Inject
 
 class ScheduleRepositoryImpl @Inject constructor(
@@ -51,14 +52,18 @@ class ScheduleRepositoryImpl @Inject constructor(
         return result
     }
     override fun getScheduleByPatientID(patientID: String, listener: (Resource<MutableList<Schedule>>) -> Unit) {
-        val query: Query = _dbRef.orderByChild("patientID").equalTo("0fc296b0-945d-4cb1-b06f-82241b1fc1ba")
+        val query: Query = _dbRef.orderByChild("patientID").equalTo("1a04ee07-5909-4471-b767-a62f8c1e99d1")
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val list = mutableListOf<Schedule>()
                 snapshot.children.forEach {data ->
                     val schedule = data.getValue(Schedule::class.java)
-                    schedule?.let {
-                        list.add(it)
+                    val currentDay = Calendar.getInstance()
+                    if (Constant.convertTimestampToCalendar(schedule?.date_medical_examinaton!!).get(Calendar.DAY_OF_YEAR)
+                        > currentDay.get(Calendar.DAY_OF_YEAR)){
+                        schedule?.let {
+                            list.add(it)
+                        }
                     }
                 }
                 listener?.let {
