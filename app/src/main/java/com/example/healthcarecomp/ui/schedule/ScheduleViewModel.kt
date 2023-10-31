@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.ui.schedule
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel
@@ -24,15 +25,26 @@ class ScheduleViewModel @Inject constructor(
     // hàm khởi tạo
     init {
         scheduleListToday.value = Resource.Loading()
-        scheduleListUpComing.value = Resource.Loading()
+        loadTodayScheduleByPatientID()
         scheduleUseCase.onDataChange {
             update(it)
         }
 
     }
+
+    fun loadTodayScheduleByPatientID() {
+        viewModelScope.launch {
+            scheduleListUpComing.value = Resource.Loading()
+            scheduleUseCase.getAllScheduleByPatientID("0fc296b0-945d-4cb1-b06f-82241b1fc1ba"){
+                scheduleListUpComing.value = it
+
+            }
+        }
+    }
+
     fun update(data : Resource<MutableList<Schedule>>) {
         scheduleListToday.value = data
-        scheduleListUpComing.value = data
+        //scheduleListUpComing.value = data
     }
 
     fun upsertSchedule(schedule: Schedule) = viewModelScope.launch {

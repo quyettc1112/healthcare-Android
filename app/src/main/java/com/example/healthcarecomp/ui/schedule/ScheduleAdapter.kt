@@ -87,7 +87,6 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel):  RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        sortDifferByDateTime()
         val Item = differ.currentList[position]
         holder.bindItem(Item)
         holder.itemView.setOnClickListener {
@@ -129,7 +128,6 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel):  RecyclerView.A
             newList.removeAt(position)
             differ.submitList(newList)
             scheduleViewModel.removeSchedule(differ.currentList[position])
-            sortDifferByDateTime()
         }
 
     }

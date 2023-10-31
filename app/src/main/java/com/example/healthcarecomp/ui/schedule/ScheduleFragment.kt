@@ -183,12 +183,15 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                             val currentday = Calendar.getInstance()
                             val converter = convertTimestampToCalendar(it.date_medical_examinaton!!)
                             if (converter.get(Calendar.YEAR) == currentday.get(Calendar.YEAR) &&
-                                converter.get(Calendar.DAY_OF_YEAR) == currentday.get(Calendar.DAY_OF_YEAR)
-                            )return@filter true
+                                converter.get(Calendar.DAY_OF_YEAR) == currentday.get(Calendar.DAY_OF_YEAR) &&
+                                it.patientID.equals("0fc296b0-945d-4cb1-b06f-82241b1fc1ba")
+                            ) return@filter true
                             return@filter false
                         } as ArrayList<Schedule>)
+                        _recyclerViewAdapter.sortDifferByDateTime()
                     }
                 }
+
                 else -> {}
             }
         })
@@ -196,7 +199,10 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
     }
 
-    private fun setUpUI_UpComing(binding: FragmentScheduleBinding, scheduleViewModel: ScheduleViewModel) {
+    private fun setUpUI_UpComing(
+        binding: FragmentScheduleBinding,
+        scheduleViewModel: ScheduleViewModel
+    ) {
         _recyclerViewAdapter_UpComing = ScheduleAdapter(scheduleViewModel)
         binding.rvListUpcomingSchedule.apply {
             adapter = _recyclerViewAdapter_UpComing
@@ -204,17 +210,9 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         scheduleViewModel.scheduleListUpComing.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Resource.Success -> {
-                    Handler(Looper.getMainLooper()).post {
-                        _recyclerViewAdapter_UpComing.differ.submitList(it.data?.filter {
-                            val currentday = Calendar.getInstance()
-                            val converter = convertTimestampToCalendar(it.date_medical_examinaton!!)
-                            if (converter.get(Calendar.YEAR) == currentday.get(Calendar.YEAR) &&
-                                converter.get(Calendar.DAY_OF_YEAR) > currentday.get(Calendar.DAY_OF_YEAR)
-                            )return@filter true
-                            return@filter false
-                        } as ArrayList<Schedule>)
-                    }
+                        _recyclerViewAdapter_UpComing.differ.submitList(it.data?.toList())
                 }
+
                 else -> {}
             }
         })

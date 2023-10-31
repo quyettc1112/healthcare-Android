@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.ui.schedule
 
+import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.util.Resource
@@ -22,6 +23,10 @@ class ScheduleUseCase @Inject  constructor(
 
     fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit) {
         scheduleRepository.onDataChange(listener)
+    }
+
+    suspend fun getAllScheduleByPatientID(patientID: String, listener: (Resource<MutableList<Schedule>>) -> Unit){
+        return scheduleRepository.getScheduleByPatientID(patientID, listener)
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.data.repository
 
 
+import com.example.healthcarecomp.data.model.Patient
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.util.Resource
 
@@ -14,5 +15,5 @@ interface ScheduleRepository {
 
     fun bindChildEvent()
 
-    fun getScheduleByPatientPhone(phone : String, listener: (Resource<MutableList<Schedule>>) -> Unit) : Resource<Schedule>
+    fun getScheduleByPatientID(patientID : String, listener: (Resource<MutableList<Schedule>>) -> Unit)
 }

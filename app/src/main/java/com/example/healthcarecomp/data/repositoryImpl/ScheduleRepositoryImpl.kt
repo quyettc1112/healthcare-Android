@@ -1,6 +1,8 @@
 package com.example.healthcarecomp.data.repositoryImpl
 
+import android.util.Log
 import com.example.healthcarecomp.common.Constant
+import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.util.Resource
@@ -8,6 +10,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import javax.inject.Inject
 
@@ -47,13 +50,30 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         return result
     }
+    override fun getScheduleByPatientID(patientID: String, listener: (Resource<MutableList<Schedule>>) -> Unit) {
+        val query: Query = _dbRef.orderByChild("patientID").equalTo("0fc296b0-945d-4cb1-b06f-82241b1fc1ba")
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val list = mutableListOf<Schedule>()
+                snapshot.children.forEach {data ->
+                    val schedule = data.getValue(Schedule::class.java)
+                    schedule?.let {
+                        list.add(it)
+                    }
+                }
+                listener?.let {
+                    it(Resource.Success(list))
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                listener(Resource.Error(error.message))
+            }
 
-    override fun getScheduleByPatientPhone(
-        phone: String,
-        listener: (Resource<MutableList<Schedule>>) -> Unit
-    ): Resource<Schedule> {
-        TODO("Not yet implemented")
+        })
+
     }
+
+
 
     override fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit) {
         _onChildAddedListener = listener
@@ -61,7 +81,6 @@ class ScheduleRepositoryImpl @Inject constructor(
     }
 
     private fun onDataChange() {
-
         _dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val list = mutableListOf<Schedule>()
@@ -107,6 +126,8 @@ class ScheduleRepositoryImpl @Inject constructor(
 
         })
     }
+
+
 
 
 }
