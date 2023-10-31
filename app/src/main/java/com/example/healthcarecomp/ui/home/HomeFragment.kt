@@ -57,8 +57,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         binding.rvItemUserHome.adapter = adapter
         adapter.onItemClick = {
 //            Toast.makeText(requireContext(), "Click", Toast.LENGTH_SHORT).show()
-            it.actionId?.let {
-                navigateToPage(it)
+            it.actionId?.let {action ->
+                if(it.bundle!=null){
+                    navigateToPage(action, it.bundle)
+                }else{
+                    navigateToPage(action)
+                }
             }
         }
 

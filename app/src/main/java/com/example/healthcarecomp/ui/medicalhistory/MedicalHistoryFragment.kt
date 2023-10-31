@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
+import com.example.healthcarecomp.common.Constant.Companion.PATIENT_MEDICAL_HISTORY_KEY
 import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.databinding.FragmentMedicalHistoryBinding
 import com.example.healthcarecomp.util.Resource
@@ -32,6 +33,7 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+        // handle back press
         _binding = FragmentMedicalHistoryBinding.inflate(inflater, container, false)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -42,7 +44,11 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
             viewLifecycleOwner,
             onBackPressedCallback
         )
+        //set up view model
         medicalHistoryViewModel = ViewModelProvider(this)[MedicalHistoryViewModel::class.java]
+        val id = arguments?.getString(PATIENT_MEDICAL_HISTORY_KEY)
+        medicalHistoryViewModel.invoke(id!!)
+
         return _binding.root
     }
 
@@ -61,7 +67,7 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
                 , doctorId = "cbf1d2ea-0249-452e-bd4e-7db757ad6f4c",
                 patientId = "2222222",
                 bodyTemperature = 37.7F,
-                bloodPressure = 70,
+                bloodPressure = "60/90",
                 hearthRate = 110,
                 bloodSugar = 28,
                 general = "it is good",
@@ -73,7 +79,7 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
         _recyclerViewAdapter = MedicalHistoryRecyclerViewAdapter()
         //set on item to see detail
         _recyclerViewAdapter.setOnItemDetailButtonClick {
-            val directions = MedicalHistoryFragmentDirections.actionMedicalHistoryFragmentToMedicalRecordFragment(it.id)
+            val directions = MedicalHistoryFragmentDirections.actionMedicalHistoryFragmentToMedicalRecordFragment(it.id,it.patientId)
             navigateToPage(directions)
         }
 
@@ -88,18 +94,14 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
         medicalHistoryViewModel.medicalAdded.observe(viewLifecycleOwner, Observer {
             when(it) {
                 is Resource.Success -> {
-                    Log.e("lol", "add done")
                 }
                 is Resource.Error -> {
-                    Log.e("lol", "add err: ${it.message}")
                 }
 
                 is Resource.Loading -> {
-                    Log.e("lol", "add loading")
                 }
 
                 else -> {
-                    Log.e("lol", "add unkown")
                 }
             }
         })
@@ -114,16 +116,13 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
 
                 is Resource.Loading -> {
                     showLoadingBar()
-                    Log.e("lol", "loading")
                 }
 
                 is Resource.Error -> {
                     hindLoadingBar()
-                    Log.e("Medical History Fragment", it.message!!)
                 }
 
                 else -> {
-                    Log.e("lol", "unknow")
                 }
             }
         })

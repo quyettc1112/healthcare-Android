@@ -70,4 +70,33 @@ object ValidationUtils{
         return confirmPassword.equals(password)
     }
 
+    fun isValidWeight(weight: String): Boolean{
+        val weight = weight.trim().toFloatOrNull()
+        return weight != null && weight in Constant.MEDICAL.FLOAT.WEIGHT.range
+    }
+
+    fun isValidHeight(height: String): Boolean{
+        val height = height.trim().toFloatOrNull()
+        return height != null && height in Constant.MEDICAL.FLOAT.HEIGHT.range
+    }
+
+    fun isValidBodyTemperature(bodyTemperature: String): Boolean{
+        val bodyTemperature = bodyTemperature.trim().toFloatOrNull()
+        return bodyTemperature != null && bodyTemperature in Constant.MEDICAL.FLOAT.BODY_TEMPERATURE.range
+    }
+
+    fun isValidHearthRate(hearthRate: String): Boolean{
+        val hearthRate = hearthRate.trim().toIntOrNull()
+        return hearthRate != null && hearthRate in Constant.MEDICAL.INT.HEARTH_RATE.range
+    }
+
+    fun isValidBloodSugar(bloodSugar: String): Boolean {
+        val bloodSugar = bloodSugar.trim().toIntOrNull()
+        return bloodSugar != null && bloodSugar in Constant.MEDICAL.INT.BLOOD_SUGAR.range
+    }
+
+    fun isValidBloodPressure(bloodPressure: String): Boolean {
+        return Constant.MEDICAL.STRING.BLOOD_PRESSURE.regex.matches(bloodPressure.trim())
+    }
+
 }
