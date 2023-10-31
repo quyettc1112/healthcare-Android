@@ -16,9 +16,14 @@ class ScheduleUseCase @Inject  constructor(
         return scheduleRepository.upsert(schedule)
     }
 
+    suspend fun removeSchedule(schedule: Schedule): Resource<Schedule> {
+        return scheduleRepository.remove(schedule)
+    }
+
     fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit) {
         scheduleRepository.onDataChange(listener)
     }
+
 
 
 }

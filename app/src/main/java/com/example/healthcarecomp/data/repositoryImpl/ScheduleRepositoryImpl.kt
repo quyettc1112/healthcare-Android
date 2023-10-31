@@ -34,6 +34,20 @@ class ScheduleRepositoryImpl @Inject constructor(
         return result
     }
 
+    override suspend fun remove(schedule: Schedule): Resource<Schedule> {
+        var result: Resource<Schedule> = Resource.Loading()
+        _dbRef
+            .child(schedule.id!!)
+            .removeValue()
+            .addOnCompleteListener {
+                result = Resource.Success(schedule)
+            }
+            .addOnFailureListener {
+                result = Resource.Error(it.message)
+            }
+        return result
+    }
+
     override fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit) {
         _onChildAddedListener = listener
         onDataChange()

@@ -39,5 +39,9 @@ class ScheduleViewModel @Inject constructor(
         scheduleAdd.value = scheduleUseCase.upsertSchedule(schedule)
     }
 
+    fun removeSchedule(schedule: Schedule) = viewModelScope.launch {
+        scheduleUseCase.removeSchedule(schedule)
+    }
+
 
 }

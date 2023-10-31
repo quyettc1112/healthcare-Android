@@ -5,8 +5,10 @@ import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.R
 
@@ -21,8 +23,7 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.util.Locale
 
-class ScheduleAdapter():  RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>()  {
-
+class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel):  RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>()  {
     var onItemClick: ((Schedule) -> Unit)? = null
     inner class MainViewHolder(val itemBinding: RvListScheduleBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -73,7 +74,7 @@ class ScheduleAdapter():  RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>()
         parent: ViewGroup,
         viewType: Int
     ): MainViewHolder {
-        return MainViewHolder(
+          return MainViewHolder(
             RvListScheduleBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -86,11 +87,13 @@ class ScheduleAdapter():  RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>()
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
+        sortDifferByDateTime()
         val Item = differ.currentList[position]
         holder.bindItem(Item)
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(Item)
         }
+
     }
 
     private val differCallBack = object : DiffUtil.ItemCallback<Schedule>() {
@@ -104,7 +107,34 @@ class ScheduleAdapter():  RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>()
 
     // differ này cho list các schedule today
     val differ = AsyncListDiffer(this, differCallBack)
+    fun sortDifferByDateTime() {
+        val sortedScheduleList = differ.currentList.sortedBy { it.date_medical_examinaton }
+        differ.submitList(sortedScheduleList)
+    }
 
 
+    inner class SimpleCallBack: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.adapterPosition
+            val newList = mutableListOf<Schedule>()
+            newList.addAll(differ.currentList)
+            newList.removeAt(position)
+            differ.submitList(newList)
+            scheduleViewModel.removeSchedule(differ.currentList[position])
+            sortDifferByDateTime()
+        }
+
+    }
+    fun getSimpleCallBack() :SimpleCallBack{
+        return SimpleCallBack()
+    }
 
 }

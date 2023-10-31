@@ -4,6 +4,8 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -14,6 +16,7 @@ import androidx.databinding.adapters.ToolbarBindingAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
@@ -26,6 +29,8 @@ import com.example.healthcarecomp.databinding.FragmentScheduleBinding
 import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryRecyclerViewAdapter
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.awaitCancellation
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -37,7 +42,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
     private lateinit var scheduleViewModel: ScheduleViewModel
     private lateinit var _recyclerViewAdapter: ScheduleAdapter
-    private lateinit var _recyclerViewAdapterUpComing: ScheduleAdapter
+    private lateinit var _recyclerViewAdapter_UpComing: ScheduleAdapter
 
 
     private var calendar = Calendar.getInstance()
@@ -46,8 +51,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
     private var isCanceled: Boolean = false
     private var isTimeCanceled: Boolean = false
-
-
 
 
     var currentTime = Calendar.getInstance()
@@ -125,11 +128,12 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         timePickerDialog.setOnDismissListener {
             currentTime = Calendar.getInstance()
             if (isTimeCanceled == false && (calendar?.get(Calendar.DAY_OF_MONTH)
-                        == currentTime.get(Calendar.DAY_OF_MONTH))) {
-
+                        == currentTime.get(Calendar.DAY_OF_MONTH))
+            ) {
                 if (validationHour.toInt() < currentTime.get(Calendar.HOUR_OF_DAY) ||
                     (validationHour == currentTime.get(Calendar.HOUR_OF_DAY)
-                            && validationMin < currentTime.get(Calendar.MINUTE))) {
+                            && validationMin < currentTime.get(Calendar.MINUTE))
+                ) {
                     val confirmDialog = ConfirmDialog(
                         requireContext(),
                         object : ConfirmDialog.ConfirmCallback {
@@ -149,74 +153,75 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                     )
                     // Show the ConfirmDialog
                     confirmDialog.show()
-                } else ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
+                } else ConfirmDialog(
+                    calendar,
+                    binding,
+                    "You will meet doctor at \n ${dateFormat.format(calendar?.time)}"
+                )
             } else {
                 isTimeCanceled = false
-                ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
+                ConfirmDialog(
+                    calendar,
+                    binding,
+                    "You will meet doctor at \n ${dateFormat.format(calendar?.time)}"
+                )
             }
         }
         timePickerDialog.show()
     }
 
     private fun setUpUI(binding: FragmentScheduleBinding, scheduleViewModel: ScheduleViewModel) {
-
-        _recyclerViewAdapter = ScheduleAdapter()
+        _recyclerViewAdapter = ScheduleAdapter(scheduleViewModel)
         binding.rvListTodaySchedule.apply {
             adapter = _recyclerViewAdapter
         }
         scheduleViewModel.scheduleListToday.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Resource.Success -> {
-                    val todaySchedules = it.data?.filter { schedule ->
-                        val calendar =
-                            convertTimestampToCalendar(schedule.date_medical_examinaton!!)
-                        val currentday = Calendar.getInstance()
-                        if (calendar.get(Calendar.YEAR) == currentday.get(Calendar.YEAR) &&
-                            calendar.get(Calendar.DAY_OF_YEAR) == currentday.get(Calendar.DAY_OF_YEAR)
-                        ) {
-                            return@filter true
-                        }
-                        return@filter false
-                    } as ArrayList<Schedule>
-                    _recyclerViewAdapter.differ.submitList(todaySchedules)
+                    Handler(Looper.getMainLooper()).post {
+                        _recyclerViewAdapter.differ.submitList(it.data?.filter {
+                            val currentday = Calendar.getInstance()
+                            val converter = convertTimestampToCalendar(it.date_medical_examinaton!!)
+                            if (converter.get(Calendar.YEAR) == currentday.get(Calendar.YEAR) &&
+                                converter.get(Calendar.DAY_OF_YEAR) == currentday.get(Calendar.DAY_OF_YEAR)
+                            )return@filter true
+                            return@filter false
+                        } as ArrayList<Schedule>)
+                    }
                 }
                 else -> {}
             }
         })
-
-        _recyclerViewAdapter.onItemClick = {
-            it.id.let {
-                Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
-
-            }
-        }
+        val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
+        itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
     }
-    private fun setUpUI_UpComing(binding: FragmentScheduleBinding, scheduleViewModel: ScheduleViewModel) {
 
-        _recyclerViewAdapterUpComing = ScheduleAdapter()
+    private fun setUpUI_UpComing(binding: FragmentScheduleBinding, scheduleViewModel: ScheduleViewModel) {
+        _recyclerViewAdapter_UpComing = ScheduleAdapter(scheduleViewModel)
         binding.rvListUpcomingSchedule.apply {
-            adapter = _recyclerViewAdapterUpComing
+            adapter = _recyclerViewAdapter_UpComing
         }
         scheduleViewModel.scheduleListUpComing.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Resource.Success -> {
-                    val upComingSchedules = it.data?.filter { schedule ->
-                        val calendar =
-                            convertTimestampToCalendar(schedule.date_medical_examinaton!!)
-                        val currentday = Calendar.getInstance()
-                        if (calendar.get(Calendar.YEAR) == currentday.get(Calendar.YEAR) &&
-                            calendar.get(Calendar.DAY_OF_YEAR) > currentday.get(Calendar.DAY_OF_YEAR)
-                        ) {
-                            return@filter true
-                        }
-                        return@filter false
-                    } as ArrayList<Schedule>
-                    _recyclerViewAdapterUpComing.differ.submitList(upComingSchedules)
+                    Handler(Looper.getMainLooper()).post {
+                        _recyclerViewAdapter_UpComing.differ.submitList(it.data?.filter {
+                            val currentday = Calendar.getInstance()
+                            val converter = convertTimestampToCalendar(it.date_medical_examinaton!!)
+                            if (converter.get(Calendar.YEAR) == currentday.get(Calendar.YEAR) &&
+                                converter.get(Calendar.DAY_OF_YEAR) > currentday.get(Calendar.DAY_OF_YEAR)
+                            )return@filter true
+                            return@filter false
+                        } as ArrayList<Schedule>)
+                    }
                 }
                 else -> {}
             }
         })
+        val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter_UpComing.getSimpleCallBack())
+        itemTouchHelper.attachToRecyclerView(binding.rvListUpcomingSchedule)
     }
+
 
     fun ConfirmDialog(calendar: Calendar?, binding: FragmentScheduleBinding, message: String) {
         val confirmDialog = ConfirmDialog(
@@ -236,11 +241,15 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         confirmDialog.show()
     }
 
-
     fun convertTimestampToCalendar(timestamp: Long): android.icu.util.Calendar {
         val calendar = android.icu.util.Calendar.getInstance()
         calendar.timeInMillis = timestamp
         return calendar
+    }
+
+    override fun onDestroy() {
+
+        super.onDestroy()
     }
 
 
