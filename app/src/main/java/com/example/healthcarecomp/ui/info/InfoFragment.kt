@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
-import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentInfoBinding
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.ui.activity.main.MainViewModel
@@ -45,12 +43,12 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
 
     private fun setEvents(){
         _binding.fabEdit.setOnClickListener {
-            while (_binding.)
+
         }
     }
 
     private fun setObservers(){
-        mainViewModel.user.observe(viewLifecycleOwner, Observer {
+        mainViewModel.currentUser.observe(viewLifecycleOwner, Observer {
             _binding.run{
                 etInfoFirstName.setText(it?.firstName)
                 etInfoLastName.setText(it?.lastName)

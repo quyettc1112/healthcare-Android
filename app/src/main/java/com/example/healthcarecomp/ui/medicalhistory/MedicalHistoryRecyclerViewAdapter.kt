@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.ui.medicalhistory
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.Glide
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.MedicalRecord
@@ -22,6 +24,7 @@ import kotlin.collections.HashMap
 class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecyclerViewAdapter.MedicalHistoryViewHolder>() {
     val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.UK)
     lateinit var doctorList : HashMap<String?,Doctor?>
+    private lateinit var _context: Context
 
     class MedicalHistoryViewHolder(view: View) : ViewHolder(view) {
         val avatar = view.findViewById<ImageView>(R.id.ivMedicalHistoryItemAvatar)
@@ -33,8 +36,9 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
         parent: ViewGroup,
         viewType: Int
     ): MedicalHistoryRecyclerViewAdapter.MedicalHistoryViewHolder {
+        _context = parent.context
         return MedicalHistoryViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.row_item_medical_history, parent, false)
+            LayoutInflater.from(_context).inflate(R.layout.row_item_medical_history, parent, false)
         )
     }
 
@@ -56,7 +60,8 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
             }
             val doctor = doctorList[medicalRecord.doctorId]
             doctor?.let {
-                this.doctorName.text = it.firstName
+                this.doctorName.text = "Dr.${it.firstName} ${it.lastName}"
+                Glide.with(_context).load(it.avatar).placeholder(R.drawable.default_user_avt).into(holder.avatar)
             }
         }
 
