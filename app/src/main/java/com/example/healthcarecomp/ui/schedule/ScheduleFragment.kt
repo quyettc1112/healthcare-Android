@@ -11,6 +11,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import android.widget.Toast
 import androidx.databinding.adapters.ToolbarBindingAdapter
 import androidx.lifecycle.Observer
@@ -44,6 +45,8 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     private lateinit var _recyclerViewAdapter: ScheduleAdapter
     private lateinit var _recyclerViewAdapter_UpComing: ScheduleAdapter
 
+    private lateinit var currentList: List<Schedule>
+
 
     private var calendar = Calendar.getInstance()
 
@@ -70,8 +73,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
         super.onViewCreated(view, savedInstanceState)
 
     }
@@ -134,48 +135,21 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         timePickerDialog.setOnCancelListener { isTimeCanceled = true }
         timePickerDialog.setOnDismissListener {
             currentTime = Calendar.getInstance()
-            if (isTimeCanceled == false && (calendar?.get(Calendar.DAY_OF_MONTH)
-                        == currentTime.get(Calendar.DAY_OF_MONTH))
-            ) {
-                if (validationHour.toInt() < currentTime.get(Calendar.HOUR_OF_DAY) ||
-                    (validationHour == currentTime.get(Calendar.HOUR_OF_DAY)
-                            && validationMin < currentTime.get(Calendar.MINUTE))
-                ) {
-                    val confirmDialog = ConfirmDialog(
-                        requireContext(),
-                        object : ConfirmDialog.ConfirmCallback {
-                            override fun negativeAction() {}
-                            override fun positiveAction() {
-                                timePickerDialog.updateTime(
-                                    currentTime.get(Calendar.HOUR_OF_DAY),
-                                    currentTime.get(Calendar.MINUTE)
-                                )
-                                timePickerDialog.show()
-                            }
-                        },
-                        title = "Error",
-                        message = "Cannot Choose Time In The Past",
-                        positiveButtonTitle = "Again",
-                        negativeButtonTitle = "Cancel"
-                    )
-                    // Show the ConfirmDialog
-                    confirmDialog.show()
-                } else ConfirmDialog(
-                    calendar,
-                    binding,
-                    "You will meet doctor at \n ${dateFormat.format(calendar?.time)}"
-                )
+            if (checkDayPicker(calendar)) {
+                if (checkMinTimeValidation(validationHour, validationMin) ) {
+                    errorDialog(timePickerDialog)
+                } else ConfirmDialog(calendar, binding,
+                    "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
             } else {
                 when(isTimeCanceled) {
-                    true -> {
-                        isTimeCanceled = false
-                    }
+                    true -> { isTimeCanceled = false }
                     false -> {
-                        ConfirmDialog(
-                            calendar,
-                            binding,
-                            "You will meet doctor at \n ${dateFormat.format(calendar?.time)}"
-                        )
+                        if (checkDuplicate(currentList, calendar!!) == true) {
+                            Toast.makeText(requireContext(), "Dupplicate", Toast.LENGTH_SHORT).show()
+                        } else {
+                            ConfirmDialog(calendar, binding,
+                                "You will meet doctor22222 at \n ${dateFormat.format(calendar?.time)}")
+                        }
                     }
                 }
             }
@@ -183,20 +157,53 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         timePickerDialog.show()
     }
 
+    private fun checkMinTimeValidation(validationHour: Int, validationMin: Int) =
+        validationHour.toInt() < currentTime.get(Calendar.HOUR_OF_DAY) ||
+                (validationHour == currentTime.get(Calendar.HOUR_OF_DAY)
+                        && validationMin < currentTime.get(Calendar.MINUTE))
+
+    private fun checkDayPicker(calendar: Calendar?) =
+        isTimeCanceled == false && (calendar?.get(Calendar.DAY_OF_MONTH)
+                == currentTime.get(Calendar.DAY_OF_MONTH))
+
+    private fun errorDialog(timePickerDialog: TimePickerDialog) {
+        val confirmDialog = ConfirmDialog(
+            requireContext(),
+            object : ConfirmDialog.ConfirmCallback {
+                override fun negativeAction() {}
+                override fun positiveAction() {
+                    timePickerDialog.updateTime(
+                        currentTime.get(Calendar.HOUR_OF_DAY),
+                        currentTime.get(Calendar.MINUTE)
+                    )
+                    timePickerDialog.show()
+                }
+            },
+            title = "Error",
+            message = "Cannot Choose Time In The Past",
+            positiveButtonTitle = "Again",
+            negativeButtonTitle = "Cancel"
+        )
+        // Show the ConfirmDialog
+        confirmDialog.show()
+    }
+
     private fun setUpUI(binding: FragmentScheduleBinding, scheduleViewModel: ScheduleViewModel) {
         _recyclerViewAdapter = ScheduleAdapter(scheduleViewModel)
+
         binding.rvListTodaySchedule.apply {
             adapter = _recyclerViewAdapter
         }
         scheduleViewModel.scheduleListToday.observe(viewLifecycleOwner, Observer {
             when (it) {
-                is Resource.Success -> {
-                        _recyclerViewAdapter.differ.submitList(it.data?.toList())
+                is Resource.Success -> { _recyclerViewAdapter.differ.submitList(it.data?.toList())
+                    currentList = _recyclerViewAdapter.differ.currentList?.toList()!!
                 }
                 else -> {}
             }
 
         })
+
         val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
         itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
     }
@@ -211,10 +218,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         }
         scheduleViewModel.scheduleListUpComing.observe(viewLifecycleOwner, Observer {
             when (it) {
-                is Resource.Success -> {
-                    _recyclerViewAdapter_UpComing.differ.submitList(it.data?.toList())
-                }
-
+                is Resource.Success -> { _recyclerViewAdapter_UpComing.differ.submitList(it.data?.toList()) }
                 else -> {}
             }
         })
@@ -240,6 +244,21 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         )
         confirmDialog.show()
     }
+
+    fun checkDuplicate(list: List<Schedule>, date: Calendar): Boolean {
+        Log.d("Checkdate",  date.get(Calendar.DAY_OF_YEAR).toString())
+        for (item in list) {
+            val checkday = Constant.convertTimestampToCalendar(item.date_medical_examinaton!!)
+            Log.d("Checkdate_2",  checkday.get(Calendar.DAY_OF_YEAR).toString())
+            if (checkday.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR)) {
+                return true
+            }
+        }
+        return false
+    }
+
+
+
 
 
 
