@@ -47,6 +47,15 @@ class ScheduleViewModel @Inject constructor(
             }
         }
     }
+    fun getListToday(): List<Schedule> {
+        return scheduleListToday.value?.data?.toList()!!
+
+    }
+
+    fun getListTodayUPComing(): List<Schedule> {
+        return scheduleListUpComing.value?.data?.toList()!!
+
+    }
 
     fun loadUpComingcheduleByPatientID(patientID : String, condition: String){
         viewModelScope.launch {

@@ -121,7 +121,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 if (checkMinTimeValidation(validationHour, validationMin) ) {
                     errorDialog(timePickerDialog,  "Cannot Choose Time In The Past")
                 } else {
-                    if (checkDuplicate_TodayList(currentList_Today, calendar!!) == true) {
+                    if (checkDuplicate_TodayList(scheduleViewModel.getListToday(), calendar!!) == true) {
                         errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
                     } else ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
                 }
@@ -129,7 +129,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 when(isTimeCanceled) {
                     true -> { isTimeCanceled = false }
                     false -> {
-                        if (checkDuplicate_ForUpComingList(currentList_UpComing, calendar!!) == true) {
+                        if (checkDuplicate_ForUpComingList(scheduleViewModel.getListTodayUPComing(), calendar!!) == true) {
                             errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
                         } else {
                             ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}") }
