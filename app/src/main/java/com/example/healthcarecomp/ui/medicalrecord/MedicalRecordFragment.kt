@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.ui.medicalrecord
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +14,13 @@ import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.databinding.FragmentMedicalRecordBinding
+import com.example.healthcarecomp.ui.activity.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.afterTextChanged
+import com.example.healthcarecomp.util.extension.isDoctor
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 import com.example.healthcarecomp.util.ValidationUtils as ValidU
 
 @AndroidEntryPoint
@@ -25,6 +29,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
     private val args: MedicalRecordFragmentArgs by navArgs()
     private lateinit var _medicalRecordViewModel: MedicalRecordViewModel
     private var _currentMedical: MedicalRecord? = null
+    private var _parent: MainActivity? = null
 
 
     companion object {
@@ -54,14 +59,16 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
             viewLifecycleOwner,
             onBackPressedCallback
         )
+
         _medicalRecordViewModel = ViewModelProvider(this)[MedicalRecordViewModel::class.java]
+
+        _parent = requireActivity() as MainActivity
         return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
-
     }
 
 
@@ -75,70 +82,77 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
             navigateToPage(R.id.action_medicalRecordFragment_to_medicalHistoryFragment, bundle)
         }
 
-        ////////////////// Handle event when click save & edit button ///////////////
+        _medicalRecordViewModel.currentMedicalRecordId = args.medicalRecordId
 
+        if (_parent?.currentUser.isDoctor()) {
+            applyDoctorRole()
+        } else {
+            applyPatientRole()
+        }
+
+        observeDataChange()
+
+    }
+
+    private fun applyPatientRole() {
+        _binding.ibMedicalRecordEdit.visibility = View.GONE
+        _binding.ibMedicalRecordSave.visibility = View.GONE
+    }
+
+    private fun applyDoctorRole() {
+
+        if (!isAddNew() && _parent?.currentUser?.id.equals(args.medicalDoctorId)) {
+            _binding.ibMedicalRecordEdit.visibility = View.VISIBLE
+        } else {
+            _binding.ibMedicalRecordEdit.visibility = View.GONE
+        }
+        Log.i("iii", "u: ${_parent?.currentUser?.id}, ${args.medicalDoctorId}")
         _binding.ibMedicalRecordEdit.setOnClickListener {
-            _medicalRecordViewModel.isEditMode.value = true
-            it.visibility = View.GONE
-            _binding.ibMedicalRecordSave.visibility = View.VISIBLE
+            btnEditClickAction()
         }
         _binding.ibMedicalRecordSave.setOnClickListener {
-            val medical = takeStatsData()
-            medical?.let { medical ->
-                _medicalRecordViewModel.upsertMedicalRecord(
-                    medical
-                )
-                it.visibility = View.GONE
-                _binding.ibMedicalRecordEdit.visibility = View.VISIBLE
-                _medicalRecordViewModel.isEditMode.value = false
-            }
+            btnSaveClickAction()
+            observeEditMode()
         }
-        //
-        _medicalRecordViewModel.onItemDataChange(args.medicalRecordId!!) { resources ->
-            when(resources){
-                is Resource.Success -> {
-                    resources.data?.let {
-                        _currentMedical = it
-                    }
-                    resources.data?.height?.let {
-                        val text = "$it $HEIGHT"
-                        _binding.etMedicalRecordHeight.setText(text)
-                    }
-                    resources.data?.weight?.let {
-                        val text = "$it $WEIGHT"
-                        _binding.etMedicalRecordWeight.setText(text)
-                    }
-                    resources.data?.general?.let {
-                        _binding.etMedicalRecordNote.setText(it)
-                    }
-                    resources.data?.bloodPressure?.let {
-                        val text = "$it $BLOOD_PRESSURE"
-                        _binding.etMedicalRecordBloodPressure.setText(text)
-                    }
-                    resources.data?.bloodSugar?.let {
-                        val text = "$it $BLOOD_SUGAR"
-                        _binding.etMedicalRecordBloodSugar.setText(text)
-                    }
-                    resources.data?.hearthRate?.let {
-                        val text = "$it $HEART_RATE"
-                        _binding.etMedicalRecordHearthRate.setText(text)
-                    }
-                    resources.data?.bodyTemperature?.let {
-                        val text = "$it $BODY_TEMPERATURE"
-                        _binding.etMedicalRecordBodyTemperature.setText(text)
-                    }
-                }
-                else -> {
-
-                }
-            }
+        if (isAddNew()) {
+            btnEditClickAction()
         }
 
+        setupValidation()
+        observeEditMode()
+    }
 
-            /////////// validation for input field //////////
+    private fun isAddNew(): Boolean {
+        return _medicalRecordViewModel.currentMedicalRecordId == null
+    }
+
+
+    private fun btnSaveClickAction() {
+        val medical = takeStatsData()
+        _medicalRecordViewModel.currentMedicalRecordId = medical?.id
+        medical?.let { medical ->
+            _currentMedical = medical
+            _medicalRecordViewModel.upsertMedicalRecord(
+                medical
+            )
+            _binding.ibMedicalRecordSave.visibility = View.GONE
+            _binding.ibMedicalRecordEdit.visibility = View.VISIBLE
+            _medicalRecordViewModel.isEditMode.value = false
+        }
+    }
+
+    private fun btnEditClickAction() {
+        _medicalRecordViewModel.isEditMode.value = true
+        _binding.ibMedicalRecordEdit.visibility = View.GONE
+        _binding.ibMedicalRecordSave.visibility = View.VISIBLE
+    }
+
+    private fun setupValidation() {
+        /////////// validation for input field //////////
         _binding.etMedicalRecordHeight.apply {
-            if (_medicalRecordViewModel.isEditMode.value!!) {
-                this.afterTextChanged {
+
+            this.afterTextChanged {
+                if (_medicalRecordViewModel.isEditMode.value!!) {
                     error = when {
                         ValidU.isValidHeight(it) -> null
                         else -> "Height must be in range ${Constant.MEDICAL.FLOAT.HEIGHT.range}"
@@ -202,8 +216,9 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
                 }
             }
         }
+    }
 
-
+    private fun observeEditMode() {
         ////////// observe edit or not /////////////
         _medicalRecordViewModel.isEditMode.observe(viewLifecycleOwner, Observer {
             _binding.etMedicalRecordNote.isEnabled = it
@@ -247,8 +262,49 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
 
 
         })
+    }
 
+    private fun observeDataChange() {
+        _medicalRecordViewModel.onItemDataChange() { resources ->
+            when (resources) {
+                is Resource.Success -> {
+                    resources.data?.let {
+                        _currentMedical = it
+                    }
+                    resources.data?.height?.let {
+                        val text = "$it $HEIGHT"
+                        _binding.etMedicalRecordHeight.setText(text)
+                    }
+                    resources.data?.weight?.let {
+                        val text = "$it $WEIGHT"
+                        _binding.etMedicalRecordWeight.setText(text)
+                    }
+                    resources.data?.general?.let {
+                        _binding.etMedicalRecordNote.setText(it)
+                    }
+                    resources.data?.bloodPressure?.let {
+                        val text = "$it $BLOOD_PRESSURE"
+                        _binding.etMedicalRecordBloodPressure.setText(text)
+                    }
+                    resources.data?.bloodSugar?.let {
+                        val text = "$it $BLOOD_SUGAR"
+                        _binding.etMedicalRecordBloodSugar.setText(text)
+                    }
+                    resources.data?.hearthRate?.let {
+                        val text = "$it $HEART_RATE"
+                        _binding.etMedicalRecordHearthRate.setText(text)
+                    }
+                    resources.data?.bodyTemperature?.let {
+                        val text = "$it $BODY_TEMPERATURE"
+                        _binding.etMedicalRecordBodyTemperature.setText(text)
+                    }
+                }
 
+                else -> {
+
+                }
+            }
+        }
     }
 
     //////////// take data from view /////////////
@@ -261,6 +317,10 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
         val bloodSugar = _binding.etMedicalRecordBloodSugar.text.toString()
         val bodyTemperature = _binding.etMedicalRecordBodyTemperature.text.toString()
         val general = _binding.etMedicalRecordNote.text.toString()
+        val id = _medicalRecordViewModel.currentMedicalRecordId ?: UUID.randomUUID().toString()
+        val doctorId = _parent?.currentUser?.id
+        val patientId = args.patientId
+        val timestamp = _currentMedical?.timestamps ?: System.currentTimeMillis()
 
         if (ValidU.isValidWeight(weight) && ValidU.isValidHeight(height)
             && ValidU.isValidHearthRate(hearthRate) && ValidU.isValidBloodSugar(bloodSugar)
@@ -275,13 +335,15 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
                 bloodPressure = bloodPressure,
                 bloodSugar = bloodSugar.toIntOrNull(),
                 bodyTemperature = bodyTemperature.toFloatOrNull(),
-                id = _currentMedical!!.id,
-                doctorId = _currentMedical!!.doctorId,
-                patientId = _currentMedical!!.patientId,
-                general = general
+                id = id,
+                doctorId = doctorId,
+                patientId = patientId,
+                general = general,
+                timestamps = timestamp
             )
         } else {
-            Snackbar.make(requireView(), "Please fill correct all field!", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(requireView(), "Please fill correct all field!", Snackbar.LENGTH_SHORT)
+                .show()
         }
 
         return null

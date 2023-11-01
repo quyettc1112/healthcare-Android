@@ -76,6 +76,10 @@
         <argument android:name="PatientId"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="medicalDoctorId"
+            app:argType="string"
+            app:nullable="true" />
 
     </fragment>
 

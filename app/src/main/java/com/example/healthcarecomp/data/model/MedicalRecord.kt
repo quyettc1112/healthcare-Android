@@ -14,6 +14,6 @@ data class MedicalRecord(
     val bloodSugar: Int? = null,
     val hearthRate: Int? = null,
     val general: String? = null,
-    val date: Date? = null,
+    val timestamps: Long? = null,
     val id: String = UUID.randomUUID().toString()
 ): Serializable

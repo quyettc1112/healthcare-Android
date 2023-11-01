@@ -78,7 +78,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                     if(parent?.currentUser.isPatient()){
                         bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,parent?.currentUser?.id)
                     }else{
-                        bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,"2222222")
+                        bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,"1a04ee07-5909-4471-b767-a62f8c1e99d1")
                     }
                     navigateToPage(action, bundle)
                 }

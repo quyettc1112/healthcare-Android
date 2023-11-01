@@ -17,6 +17,7 @@ import com.example.healthcarecomp.R
 import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.MedicalRecord
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import kotlin.collections.HashMap
 
@@ -55,8 +56,8 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
         }
 
         holder.apply {
-            medicalRecord?.date?.let {
-                this.date.text = formatter.format(it)
+            medicalRecord?.timestamps?.let {
+                this.date.text = formatter.format(Date(it))
             }
             val doctor = doctorList[medicalRecord.doctorId]
             doctor?.let {
