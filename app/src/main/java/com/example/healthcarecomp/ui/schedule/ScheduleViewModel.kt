@@ -34,9 +34,7 @@ class ScheduleViewModel @Inject constructor(
         //authRepository.getLoggedInUser()?.isDoctor()
         loadTodayScheduleByPatientID(patientID!!, "Today")
         loadUpComingcheduleByPatientID(patientID!!, "UpComing")
-        scheduleUseCase.onDataChange {
-            update(it)
-        }
+
     }
 
     fun loadTodayScheduleByPatientID(patientID : String, condition: String) {
@@ -59,14 +57,7 @@ class ScheduleViewModel @Inject constructor(
                 }
             }
         }
-
     }
-
-    fun update(data : Resource<MutableList<Schedule>>) {
-        //scheduleListToday.value = data
-       //scheduleListUpComing.value = data
-    }
-
 
     fun upsertSchedule(schedule: Schedule) = viewModelScope.launch {
         scheduleAdd.value = scheduleUseCase.upsertSchedule(schedule)

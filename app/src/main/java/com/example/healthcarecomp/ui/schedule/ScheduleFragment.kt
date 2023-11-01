@@ -166,12 +166,18 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                     "You will meet doctor at \n ${dateFormat.format(calendar?.time)}"
                 )
             } else {
-                isTimeCanceled = false
-                ConfirmDialog(
-                    calendar,
-                    binding,
-                    "You will meet doctor at \n ${dateFormat.format(calendar?.time)}"
-                )
+                when(isTimeCanceled) {
+                    true -> {
+                        isTimeCanceled = false
+                    }
+                    false -> {
+                        ConfirmDialog(
+                            calendar,
+                            binding,
+                            "You will meet doctor at \n ${dateFormat.format(calendar?.time)}"
+                        )
+                    }
+                }
             }
         }
         timePickerDialog.show()
@@ -186,7 +192,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             when (it) {
                 is Resource.Success -> {
                         _recyclerViewAdapter.differ.submitList(it.data?.toList())
-
                 }
                 else -> {}
             }
