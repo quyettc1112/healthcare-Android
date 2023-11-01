@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.base
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -10,6 +11,10 @@ open class BaseFragment(view: Int) : Fragment(view) {
 
     protected fun navigateToPage(actionId: Int) {
         findNavController().navigate(actionId)
+    }
+
+    protected fun navigateToPage(actionId: Int, bundle: Bundle) {
+        findNavController().navigate(actionId, bundle)
     }
 
     protected fun navigateToPage(direction: NavDirections){

@@ -58,7 +58,7 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
             val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
             val medicalRecord = MedicalRecord(
                 date = simpleDateFormat.parse("23/11/2023")
-                , doctorId = "11111111",
+                , doctorId = "cbf1d2ea-0249-452e-bd4e-7db757ad6f4c",
                 patientId = "2222222",
                 bodyTemperature = 37.7F,
                 bloodPressure = 70,
@@ -108,6 +108,7 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
             when(it) {
                 is Resource.Success -> {
                     hindLoadingBar()
+                    _recyclerViewAdapter.doctorList = medicalHistoryViewModel.doctorList
                     _recyclerViewAdapter.differ.submitList(it.data?.toList())
                 }
 

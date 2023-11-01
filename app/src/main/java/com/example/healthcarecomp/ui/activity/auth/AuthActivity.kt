@@ -8,11 +8,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseActivity
 import com.example.healthcarecomp.ui.activity.main.MainActivity
+import com.example.healthcarecomp.data.model.User
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -26,6 +28,7 @@ class AuthActivity : BaseActivity() {
     private lateinit var oneTapClient: SignInClient
     private lateinit var signInRequest: BeginSignInRequest
     private lateinit var auth: FirebaseAuth
+    private lateinit var googleLoginListener: ((User?) -> Unit)
 
     companion object {
         const val REQ_ONE_TAP = 1
@@ -57,7 +60,8 @@ class AuthActivity : BaseActivity() {
 
     }
 
-    fun loginWithGoogle(){
+    fun loginWithGoogle(listener: (User?) -> Unit) {
+        googleLoginListener = listener
         oneTapClient.beginSignIn(signInRequest)
             .addOnSuccessListener(this) { result ->
                 try {
@@ -72,13 +76,9 @@ class AuthActivity : BaseActivity() {
                 Log.e(TAG, e.localizedMessage)
 
             }
+
     }
 
-    private fun openMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -93,9 +93,45 @@ class AuthActivity : BaseActivity() {
                             auth.signInWithCredential(firebaseCredential)
                                 .addOnCompleteListener { task ->
                                     if(task.isSuccessful) {
-                                        val user = auth.currentUser
-                                        Log.d(TAG,"Login user name: ${user?.displayName}")
-                                        openMainActivity()
+                                        val loginUser = auth.currentUser
+                                        var user: User? = null
+                                        loginUser?.let {
+                                            var firstName = ""
+                                            var lastName = ""
+                                            if(loginUser.displayName!!.contains(" ")){
+                                                val nameParts = loginUser.displayName!!.split("\\s+".toRegex())
+                                                when(nameParts.size){
+                                                    1 -> {
+                                                        firstName = nameParts[0]
+                                                        lastName = nameParts[0]
+                                                    }
+                                                    2 -> {
+                                                        firstName = nameParts[0]
+                                                        lastName = nameParts[1]
+                                                    }
+                                                    3 -> {
+                                                        firstName = nameParts[0]
+                                                        lastName = "${nameParts[1]} ${nameParts[2]}"
+                                                    }
+                                                    4 -> {
+                                                        firstName = "${nameParts[0]} ${nameParts[1]}"
+                                                        lastName = "${nameParts[2]} ${nameParts[3]}"
+                                                    }
+                                                    else -> {
+                                                        firstName = nameParts[0]
+                                                        lastName = "${nameParts[1]} ${nameParts[2]}"
+                                                    }
+                                                }
+                                            }
+                                            user = User(
+                                                email = loginUser?.email,
+                                                phone = loginUser?.phoneNumber,
+                                                firstName = firstName,
+                                                lastName = lastName
+                                            )
+                                        }
+                                        googleLoginListener(user)
+
                                     }else{
                                         Log.w(TAG, "SignIn With Credential failed", task.exception)
                                     }
