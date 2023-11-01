@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.ui.activity
+package com.example.healthcarecomp.ui.activity.main
 
 import android.app.ActionBar
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ListView
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.healthcarecomp.R
@@ -19,12 +21,16 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
     private var loadingLayout: FrameLayout? = null
+     val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-       // loadingLayout = findViewById(R.id.loadingLayout)
+
+
+
         setupBottomNav()
+        setObservers()
     }
 
     override fun showLoading(isShow: Boolean) {
@@ -39,7 +45,9 @@ class MainActivity : BaseActivity() {
 
     }
 
+    fun setObservers(){
 
+    }
 
 
 

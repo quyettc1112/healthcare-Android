@@ -4,6 +4,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="transparent">#00FFFFFF</color>
+
     <color name="primaryColor">#ff6c2f</color>
     <color name="primaryLightColor">#ff9e5d</color>
     <color name="primaryDarkColor">#c53a00</color>
@@ -36,4 +38,8 @@
 
     <color name="card_recaycle">#fdfdff</color>
     <color name="icon_bg_red_light">#F5BBBB</color>
+    <color name="light_blue_400">#FF29B6F6</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="gray_400">#FFBDBDBD</color>
+    <color name="gray_600">#FF757575</color>
 </resources>

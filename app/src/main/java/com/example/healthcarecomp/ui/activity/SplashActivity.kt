@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.healthcarecomp.R
+import com.example.healthcarecomp.ui.activity.auth.AuthActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
 import java.util.TimerTask

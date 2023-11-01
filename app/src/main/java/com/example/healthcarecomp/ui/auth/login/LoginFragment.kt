@@ -15,8 +15,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
-import com.example.healthcarecomp.ui.activity.AuthActivity
-import com.example.healthcarecomp.ui.activity.MainActivity
+import com.example.healthcarecomp.ui.activity.auth.AuthActivity
+import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,18 +44,19 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
-        observeLoginState()
+        setUI()
+        setEvents()
+        setObservers()
     }
 
-    private fun setupUI() {
-
-
+    private fun setUI(){
         //auto input phone
         arguments?.getString("phone")?.let {
             _binding.etLoginPhoneNumber.setText(it)
         }
+    }
 
+    private fun setEvents() {
 
         //set up display out line when user select role login
         _binding.ivLoginPatient.setOnClickListener(this)
@@ -106,7 +107,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         }
     }
 
-    private fun observeLoginState() {
+    private fun setObservers() {
+        //Observe login state
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 _viewModel.loginFLow?.collectLatest {

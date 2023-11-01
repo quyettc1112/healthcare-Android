@@ -53,7 +53,6 @@ class AuthRepositoryImpl @Inject constructor(
             val retrievedPassword = doctor?.password
             if (!retrievedPassword.isNullOrEmpty() && retrievedPassword.equals(password)) {
                 saveUser(doctor)
-//                currentUser = doctor
                 return Resource.Success(doctor)
             } else {
                 return Resource.Error("Password incorrect")
@@ -63,7 +62,6 @@ class AuthRepositoryImpl @Inject constructor(
             val retrievedPassword = patient?.password
             if (!retrievedPassword.isNullOrEmpty() && retrievedPassword.equals(password)) {
                 saveUser(patient)
-//                currentUser = patient
                 return Resource.Success(patient)
             } else {
                 return Resource.Error("Password incorrect")
@@ -105,36 +103,6 @@ class AuthRepositoryImpl @Inject constructor(
     override fun isLoggedIn(): Boolean {
         return currentUser != null
     }
-
-//    override suspend fun signup(
-//        email: String,
-//        password: String,
-//        confirmPassword: String
-//    ): Resource<FirebaseUser> {
-//        return if (!password.equals(confirmPassword)) {
-//            Resource.Error("Password does not match")
-//        } else if (!ValidationUtils.validateEmail(email)) {
-//            Resource.Error("Email format is not correct")
-//        } else if (!ValidationUtils.validatePassword(password)) {
-//            Resource.Error(
-//                "Password length must >= 8 characters," +
-//                        " has at least 1 uppercase, 1 digit, 1 special character"
-//            )
-//        } else {
-//            try {
-//                val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-//                result?.user?.updateProfile(
-//                    UserProfileChangeRequest.Builder().setDisplayName(email).build()
-//                )?.await()
-//                currentUser = result.user!!
-//                Resource.Success(result.user!!)
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                Resource.Error(e.message)
-//            }
-//        }
-//
-//    }
 
     override suspend fun signup(
         phone: String,
