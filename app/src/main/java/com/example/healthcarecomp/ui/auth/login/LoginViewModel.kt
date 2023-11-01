@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.ui.user.login
+package com.example.healthcarecomp.ui.auth.login
 
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel
@@ -18,11 +18,14 @@ class LoginViewModel @Inject constructor(
     private val _loginFlow = MutableStateFlow<Resource<User>?>(null)
     val loginFLow: StateFlow<Resource<User>?> = _loginFlow
 
-    val currentUser: User? = loginUseCase.currentUser
+    fun getLoggedInUser() = loginUseCase.getLoggedInUser()
+
+    val loginGGFlow = MutableStateFlow<Resource<User>?>(null)
+
 
     init {
-        currentUser?.let {
-            _loginFlow.value = Resource.Success(currentUser)
+        getLoggedInUser()?.let {
+            _loginFlow.value = Resource.Success(getLoggedInUser()!!)
         }
     }
 
@@ -32,5 +35,11 @@ class LoginViewModel @Inject constructor(
             val result = loginUseCase.loginByPhone(phone, password)
             _loginFlow.value = result
         }
+
+    fun loginByMail(email:String) = viewModelScope.launch {
+        loginGGFlow.value = Resource.Loading()
+        val result = loginUseCase.loginByMail(email)
+        loginGGFlow.value = result
+    }
 
 }

@@ -18,15 +18,17 @@ class Constant {
 
 
     companion object{
-        val DEFAULT_ERROR_MESSAGE: String = "An error occurred"
+        const val DEFAULT_ERROR_MESSAGE: String = "An error occurred"
         const val BASE_URL: String = "https://mockapi.io/projects/648fd2c81e6aa71680ca1f63"
         const val APP_DATABASE_NAME = "app_db"
         const val FIREBASE_DATABASE_URL = "https://healtcarecomp-default-rtdb.asia-southeast1.firebasedatabase.app/"
         const val DOCTOR_TBL = "doctors"
         const val PATIENT_TBL = "patients"
         const val MEDICAL_HISTORY_TBL = "medical_history"
-        const val DOCTOR_SECURITY_DOCTOR = "bomaylabacsi"
-        const val userSPKey: String = "USER"
+        const val DOCTOR_SECURITY_DOCTOR = "123"
+        const val USER_SHARE_PREF_KEY: String = "user"
+        const val DOCTOR_SHARE_PREF_KEY: String = "doctor"
+        const val PATIENT_SHARE_PREF_KEY: String = "patient"
 
 
         //constant setup stats display in medicalRecord
@@ -107,15 +109,46 @@ class Constant {
             return itemList
         }
 
-        fun convertTimestampToCalendar(timestamp: Long): android.icu.util.Calendar {
-            val calendar = android.icu.util.Calendar.getInstance()
-            calendar.timeInMillis = timestamp
-            return calendar
+        fun getScheduleToday(): ArrayList<Schedule> {
+            val scheduleList = ArrayList<Schedule>()
+
+            val schedule1 = Schedule(
+                doctorId = 1,
+                patientID = 2,
+                date_medical_examinaton = Calendar.getInstance().timeInMillis,
+                status_medical_schedule = "Đã hẹn"
+            )
+            scheduleList.add(schedule1)
+            scheduleList.add(schedule1)
+
+            return  scheduleList
         }
 
+        fun getScheduleUpComing(): ArrayList<Schedule> {
+            val scheduleUpComingList = ArrayList<Schedule>()
+
+            val schedule1 = Schedule(
+                doctorId = 1,
+                patientID = 2,
+                date_medical_examinaton = Calendar.getInstance().timeInMillis,
+                status_medical_schedule = "Đã hẹn"
+            )
 
 
+            val schedule2 = Schedule(
+                doctorId = 2,
+                patientID = 3,
+                date_medical_examinaton = Calendar.getInstance().timeInMillis,
+                status_medical_schedule = "Chưa hẹn"
+            )
 
+            scheduleUpComingList.add(schedule1)
+            scheduleUpComingList.add(schedule1)
+            scheduleUpComingList.add(schedule1)
+            scheduleUpComingList.add(schedule2)
+
+            return  scheduleUpComingList
+        }
     }
 
     enum class DoctorQuery(val queryField: String){

@@ -2,12 +2,16 @@ package com.example.healthcarecomp.data.repository
 
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.util.Resource
-import com.google.firebase.auth.FirebaseUser
 
 interface AuthRepository {
 
+    fun getLoggedInUser(): User?
+
+    fun isLoggedIn(): Boolean
+
     var currentUser: User?
-    suspend fun loginByEmail(email: String, password: String): Resource<User>
+    suspend fun loginByEmail(email: String): Resource<User>
+
     suspend fun loginByPhone(phone: String, password: String): Resource<User>
 
     suspend fun signup(

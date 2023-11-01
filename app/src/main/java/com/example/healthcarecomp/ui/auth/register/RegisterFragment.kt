@@ -1,8 +1,7 @@
-package com.example.healthcarecomp.ui.user.register
+package com.example.healthcarecomp.ui.auth.register
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +15,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
+import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentRegisterBinding
 import com.example.healthcarecomp.ui.activity.AuthActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseUser
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.example.healthcarecomp.util.ValidationUtils as ValidU
@@ -60,7 +59,27 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         observeRegisterState()
+        setupGGLogin()
         showDialog()
+
+    }
+
+    private fun setupGGLogin(){
+        val userdata = arguments?.getString("userGG")
+        userdata?.let {
+            val user = Gson().fromJson(userdata, User::class.java)
+            _binding.etSignUpFirstName.setText(user?.firstName)
+            _binding.etSignUpLastName.setText(user?.lastName)
+            _binding.etSignUpEmail.setText(user?.email)
+            _binding.etSignUpEmail.isEnabled = false
+            user?.phone.let {
+                if(!user?.phone.isNullOrEmpty()){
+                    _binding.etSignUpPhoneNumber.setText(user.phone)
+                }
+            }
+
+
+        }
 
     }
 

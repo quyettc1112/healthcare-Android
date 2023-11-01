@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.ui.user.login
+package com.example.healthcarecomp.ui.auth.login
 
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.data.repository.AuthRepository
@@ -12,6 +12,11 @@ class LoginUseCase @Inject constructor(
         return authRepository.loginByPhone(phone, password)
     }
 
-    val currentUser: User? = authRepository.currentUser
+    fun getLoggedInUser() = authRepository.getLoggedInUser()
+
+    suspend fun loginByMail(email: String): Resource<User> {
+        return  authRepository.loginByEmail(email)
+    }
+
 
 }

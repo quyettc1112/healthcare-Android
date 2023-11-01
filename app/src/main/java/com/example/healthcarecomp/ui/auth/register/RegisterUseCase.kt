@@ -1,9 +1,8 @@
-package com.example.healthcarecomp.ui.user.register
+package com.example.healthcarecomp.ui.auth.register
 
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.data.repository.AuthRepository
 import com.example.healthcarecomp.util.Resource
-import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
 class RegisterUseCase @Inject constructor(

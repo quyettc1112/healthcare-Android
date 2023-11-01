@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.data.repositoryImpl
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.Patient
@@ -9,8 +10,9 @@ import com.example.healthcarecomp.data.repository.AuthRepository
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.ValidationUtils
 import com.example.healthcarecomp.util.ValidationUtils.isValidDoctorSecurityCode
+import com.example.healthcarecomp.util.extension.isDoctor
+import com.example.healthcarecomp.util.extension.isPatient
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.getValue
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.tasks.await
@@ -22,7 +24,7 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override var currentUser: User? = null
-        get() = getUser()
+        get() = getLoggedInUser()
 
     override suspend fun loginByPhone(email: String, password: String): Resource<User> {
         return try {
@@ -51,6 +53,7 @@ class AuthRepositoryImpl @Inject constructor(
             val retrievedPassword = doctor?.password
             if (!retrievedPassword.isNullOrEmpty() && retrievedPassword.equals(password)) {
                 saveUser(doctor)
+//                currentUser = doctor
                 return Resource.Success(doctor)
             } else {
                 return Resource.Error("Password incorrect")
@@ -60,6 +63,7 @@ class AuthRepositoryImpl @Inject constructor(
             val retrievedPassword = patient?.password
             if (!retrievedPassword.isNullOrEmpty() && retrievedPassword.equals(password)) {
                 saveUser(patient)
+//                currentUser = patient
                 return Resource.Success(patient)
             } else {
                 return Resource.Error("Password incorrect")
@@ -69,26 +73,71 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    fun saveUser(user: User) {
-        val gson = Gson()
-        val userJson = gson.toJson(user)
+    private suspend fun queryUserByEmail(email: String): Resource<User> {
+        val doctorRef = fireBaseDatabase.reference.child(Constant.DoctorQuery.PATH.queryField)
+        val patientRef = fireBaseDatabase.reference.child(Constant.PatientQuery.PATH.queryField)
 
-        sharePreference.edit().putString(Constant.userSPKey, userJson).apply()
+        val doctorSnapshot =
+            doctorRef.orderByChild(Constant.DoctorQuery.EMAIL.queryField)
+                .equalTo(email)
+                .get().await()
+        val patientSnapshot =
+            patientRef.orderByChild(Constant.PatientQuery.EMAIL.queryField)
+                .equalTo(email)
+                .get().await()
+
+        if (doctorSnapshot.exists()) {
+            val doctor = doctorSnapshot.children.first().getValue(Doctor::class.java)
+            return if(doctor != null){
+                saveUser(doctor)
+                Resource.Success(doctor)
+            }else{
+                Resource.Unknown()
+            }
+
+        } else if (patientSnapshot.exists()) {
+            val patient = patientSnapshot.children.first().getValue(Patient::class.java)
+            return if (patient != null) {
+                saveUser(patient)
+                Resource.Success(patient)
+            } else {
+                Resource.Unknown()
+            }
+        } else {
+            return Resource.Error("Email does not exist")
+        }
     }
 
-    fun getUser(): User? {
-        val userJson = sharePreference.getString(Constant.userSPKey, null)
-
-        if (userJson != null) {
-            val gson = Gson()
-            val type = object : TypeToken<User>() {}.type
-            return gson.fromJson(userJson, type)
+    fun saveUser(user: User) {
+        var sharePrefKey: String = Constant.USER_SHARE_PREF_KEY
+        if(user.isDoctor()){
+            sharePrefKey = Constant.DOCTOR_SHARE_PREF_KEY
+        }else if(user.isPatient()){
+            sharePrefKey = Constant.PATIENT_SHARE_PREF_KEY
         }
+        val gson = Gson()
+        val userJson = gson.toJson(user)
+        Log.d("Auth",userJson)
+        sharePreference.edit().putString(sharePrefKey, userJson).apply()
+    }
 
+    override fun getLoggedInUser(): User? {
+        val patientJson = sharePreference.getString(Constant.PATIENT_SHARE_PREF_KEY, null)
+        val doctorJson = sharePreference.getString(Constant.DOCTOR_SHARE_PREF_KEY, null)
+        Log.d("AuthUser",patientJson?:doctorJson?:"")
+        if (patientJson != null) {
+            val gson = Gson()
+            val type = object : TypeToken<Patient>() {}.type
+            return gson.fromJson(patientJson, type)
+        } else if(doctorJson != null){
+            val gson = Gson()
+            val type = object : TypeToken<Doctor>() {}.type
+            return gson.fromJson(doctorJson, type)
+        }
         return null
     }
 
-    fun isLoggedIn(): Boolean {
+    override fun isLoggedIn(): Boolean {
         return currentUser != null
     }
 
@@ -218,10 +267,14 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun loginByEmail(
-        email: String,
-        password: String,
+        email: String
     ): Resource<User> {
-        TODO("Not yet implemented")
+        return try {
+            queryUserByEmail(email)
+        }catch (e: Exception){
+            e.printStackTrace()
+            Resource.Error(e.localizedMessage)
+        }
     }
 
     override fun logout() {
