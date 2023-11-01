@@ -51,33 +51,71 @@ class ScheduleRepositoryImpl @Inject constructor(
             }
         return result
     }
-    override fun getScheduleByPatientID(patientID: String, listener: (Resource<MutableList<Schedule>>) -> Unit) {
-        val query: Query = _dbRef.orderByChild("patientID").equalTo("1a04ee07-5909-4471-b767-a62f8c1e99d1")
+
+    override fun getScheduleByPatientID_Today(
+        patientID: String,
+        condition: String,
+        listener: (Resource<MutableList<Schedule>>) -> Unit
+    ) {
+        val query: Query =
+            _dbRef.orderByChild("patientID").equalTo("1a04ee07-5909-4471-b767-a62f8c1e99d1")
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val list = mutableListOf<Schedule>()
-                snapshot.children.forEach {data ->
+                snapshot.children.forEach { data ->
                     val schedule = data.getValue(Schedule::class.java)
                     val currentDay = Calendar.getInstance()
-                    if (Constant.convertTimestampToCalendar(schedule?.date_medical_examinaton!!).get(Calendar.DAY_OF_YEAR)
-                        > currentDay.get(Calendar.DAY_OF_YEAR)){
-                        schedule?.let {
-                            list.add(it)
-                        }
+                    if (Constant.convertTimestampToCalendar(schedule?.date_medical_examinaton!!)
+                            .get(Calendar.DAY_OF_YEAR)
+                        == currentDay.get(Calendar.DAY_OF_YEAR) && condition.equals("Today")
+                    ) {
+                        schedule?.let { list.add(it) }
                     }
                 }
                 listener?.let {
+                    list.sortBy { it.date_medical_examinaton }
                     it(Resource.Success(list))
                 }
             }
+
+            override fun onCancelled(error: DatabaseError) {
+                listener(Resource.Error(error.message))
+            }
+        })
+    }
+
+    override fun getScheduleByPatientID_UpComing(
+        patientID: String,
+        condition: String,
+        listener: (Resource<MutableList<Schedule>>) -> Unit
+    ) {
+        val query: Query =
+            _dbRef.orderByChild("patientID").equalTo("1a04ee07-5909-4471-b767-a62f8c1e99d1")
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val list = mutableListOf<Schedule>()
+                snapshot.children.forEach { data ->
+                    val schedule = data.getValue(Schedule::class.java)
+                    val currentDay = Calendar.getInstance()
+                    if (Constant.convertTimestampToCalendar(schedule?.date_medical_examinaton!!)
+                            .get(Calendar.DAY_OF_YEAR)
+                        > currentDay.get(Calendar.DAY_OF_YEAR) && condition.equals("UpComing")
+                    ) {
+                        schedule?.let { list.add(it) }
+                    }
+                }
+                listener?.let {
+                    list.sortBy { it.date_medical_examinaton }
+                    it(Resource.Success(list))
+                }
+            }
+
             override fun onCancelled(error: DatabaseError) {
                 listener(Resource.Error(error.message))
             }
 
         })
-
     }
-
 
 
     override fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit) {
@@ -131,8 +169,6 @@ class ScheduleRepositoryImpl @Inject constructor(
 
         })
     }
-
-
 
 
 }

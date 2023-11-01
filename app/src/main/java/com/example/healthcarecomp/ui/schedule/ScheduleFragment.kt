@@ -69,6 +69,13 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
 
     private fun planSchedule(calendar: Calendar?) {
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
@@ -178,21 +185,12 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         scheduleViewModel.scheduleListToday.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Resource.Success -> {
-                    Handler(Looper.getMainLooper()).post {
-                        _recyclerViewAdapter.differ.submitList(it.data?.filter {
-                            val currentday = Calendar.getInstance()
-                            val converter = convertTimestampToCalendar(it.date_medical_examinaton!!)
-                            if (converter.get(Calendar.YEAR) == currentday.get(Calendar.YEAR) &&
-                                converter.get(Calendar.DAY_OF_YEAR) == currentday.get(Calendar.DAY_OF_YEAR) &&
-                                it.patientID.equals("1a04ee07-5909-4471-b767-a62f8c1e99d1")
-                            ) return@filter true
-                            return@filter false
-                        } as ArrayList<Schedule>)
-                    }
-                }
+                        _recyclerViewAdapter.differ.submitList(it.data?.toList())
 
+                }
                 else -> {}
             }
+
         })
         val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
         itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
@@ -238,16 +236,8 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         confirmDialog.show()
     }
 
-    fun convertTimestampToCalendar(timestamp: Long): android.icu.util.Calendar {
-        val calendar = android.icu.util.Calendar.getInstance()
-        calendar.timeInMillis = timestamp
-        return calendar
-    }
 
-    override fun onDestroy() {
 
-        super.onDestroy()
-    }
 
 
 }

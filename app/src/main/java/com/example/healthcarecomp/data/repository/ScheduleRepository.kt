@@ -4,6 +4,7 @@ package com.example.healthcarecomp.data.repository
 import com.example.healthcarecomp.data.model.Patient
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.util.Resource
+import java.util.concurrent.locks.Condition
 
 interface ScheduleRepository {
 
@@ -15,5 +16,6 @@ interface ScheduleRepository {
 
     fun bindChildEvent()
 
-    fun getScheduleByPatientID(patientID : String, listener: (Resource<MutableList<Schedule>>) -> Unit)
+    fun  getScheduleByPatientID_Today(patientID : String, condition: String, listener: (Resource<MutableList<Schedule>>) -> Unit)
+    fun  getScheduleByPatientID_UpComing(patientID : String, condition: String, listener: (Resource<MutableList<Schedule>>) -> Unit)
 }

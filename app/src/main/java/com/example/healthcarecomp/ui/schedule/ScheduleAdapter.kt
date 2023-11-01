@@ -1,5 +1,12 @@
 package com.example.healthcarecomp.ui.schedule
 
+import android.content.res.Resources
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Color.RED
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.drawable.Drawable
 import android.icu.util.Calendar
 import android.os.Build
 import android.util.Log
@@ -15,6 +22,7 @@ import com.example.healthcarecomp.R
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.data.model.Schedule
+import com.example.healthcarecomp.databinding.DialogConfirmBinding
 
 import com.example.healthcarecomp.databinding.RvListScheduleBinding
 import okhttp3.internal.ignoreIoExceptions
@@ -73,6 +81,7 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel):  RecyclerView.A
         parent: ViewGroup,
         viewType: Int
     ): MainViewHolder {
+       // sortDifferByDateTime()
           return MainViewHolder(
             RvListScheduleBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -86,6 +95,7 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel):  RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
+       // sortDifferByDateTime()
         val Item = differ.currentList[position]
         holder.bindItem(Item)
         holder.itemView.setOnClickListener {
@@ -105,10 +115,6 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel):  RecyclerView.A
 
     // differ này cho list các schedule today
     val differ = AsyncListDiffer(this, differCallBack)
-    fun sortDifferByDateTime() {
-        val sortedScheduleList = differ.currentList.sortedBy { it.date_medical_examinaton }
-        differ.submitList(sortedScheduleList)
-    }
 
 
     inner class SimpleCallBack: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
@@ -122,11 +128,21 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel):  RecyclerView.A
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.adapterPosition
-            val newList = mutableListOf<Schedule>()
-            newList.addAll(differ.currentList)
-            newList.removeAt(position)
-            differ.submitList(newList)
             scheduleViewModel.removeSchedule(differ.currentList[position])
+
+        }
+
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+
         }
 
     }
