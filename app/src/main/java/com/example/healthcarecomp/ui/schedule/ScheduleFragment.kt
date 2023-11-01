@@ -2,41 +2,23 @@ package com.example.healthcarecomp.ui.schedule
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.DialogInterface
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
-import android.widget.Toast
-import androidx.databinding.adapters.ToolbarBindingAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
-import com.example.healthcarecomp.base.dialog.ErrorDialog
-import com.example.healthcarecomp.common.Adapter.ItemActitivyHomeAdapter
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.databinding.FragmentScheduleBinding
-import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryRecyclerViewAdapter
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.awaitCancellation
-import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
-import java.util.UUID
 
 @AndroidEntryPoint
 class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
@@ -77,7 +59,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         super.onViewCreated(view, savedInstanceState)
 
     }
-
 
     private fun planSchedule(calendar: Calendar?) {
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
