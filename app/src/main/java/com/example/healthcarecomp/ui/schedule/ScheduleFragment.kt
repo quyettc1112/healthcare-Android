@@ -45,7 +45,8 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     private lateinit var _recyclerViewAdapter: ScheduleAdapter
     private lateinit var _recyclerViewAdapter_UpComing: ScheduleAdapter
 
-    private lateinit var currentList: List<Schedule>
+    private lateinit var currentList_UpComing: List<Schedule>
+    private lateinit var currentList_Today: List<Schedule>
 
 
     private var calendar = Calendar.getInstance()
@@ -137,25 +138,50 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             currentTime = Calendar.getInstance()
             if (checkDayPicker(calendar)) {
                 if (checkMinTimeValidation(validationHour, validationMin) ) {
-                    errorDialog(timePickerDialog)
-                } else ConfirmDialog(calendar, binding,
-                    "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
+                    errorDialog(timePickerDialog,  "Cannot Choose Time In The Past")
+                } else {
+                    if (checkDuplicate_TodayList(currentList_Today, calendar!!) == true) {
+                        errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
+                    } else ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
+                }
             } else {
                 when(isTimeCanceled) {
                     true -> { isTimeCanceled = false }
                     false -> {
-                        if (checkDuplicate(currentList, calendar!!) == true) {
-                            Toast.makeText(requireContext(), "Dupplicate", Toast.LENGTH_SHORT).show()
+                        if (checkDuplicate_ForUpComingList(currentList_UpComing, calendar!!) == true) {
+                            errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
                         } else {
-                            ConfirmDialog(calendar, binding,
-                                "You will meet doctor22222 at \n ${dateFormat.format(calendar?.time)}")
-                        }
+                            ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}") }
                     }
                 }
             }
         }
         timePickerDialog.show()
     }
+
+    fun checkDuplicate_ForUpComingList(list: List<Schedule>, date: Calendar): Boolean {
+        for (item in list) {
+            val checkday = Constant.convertTimestampToCalendar(item.date_medical_examinaton!!)
+            if (checkday.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR) &&
+                checkday.get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
+                checkday.get(Calendar.HOUR_OF_DAY) == date.get(Calendar.HOUR_OF_DAY)
+            ) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun checkDuplicate_TodayList(list: List<Schedule>, date: Calendar): Boolean {
+        for (item in list) {
+            val checkday = Constant.convertTimestampToCalendar(item.date_medical_examinaton!!)
+            if (checkday.get(Calendar.HOUR_OF_DAY) == date.get(Calendar.HOUR_OF_DAY)) {
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun checkMinTimeValidation(validationHour: Int, validationMin: Int) =
         validationHour.toInt() < currentTime.get(Calendar.HOUR_OF_DAY) ||
@@ -166,7 +192,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         isTimeCanceled == false && (calendar?.get(Calendar.DAY_OF_MONTH)
                 == currentTime.get(Calendar.DAY_OF_MONTH))
 
-    private fun errorDialog(timePickerDialog: TimePickerDialog) {
+    private fun errorDialog(timePickerDialog: TimePickerDialog, message: String) {
         val confirmDialog = ConfirmDialog(
             requireContext(),
             object : ConfirmDialog.ConfirmCallback {
@@ -180,7 +206,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 }
             },
             title = "Error",
-            message = "Cannot Choose Time In The Past",
+            message = message,
             positiveButtonTitle = "Again",
             negativeButtonTitle = "Cancel"
         )
@@ -196,12 +222,13 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         }
         scheduleViewModel.scheduleListToday.observe(viewLifecycleOwner, Observer {
             when (it) {
-                is Resource.Success -> { _recyclerViewAdapter.differ.submitList(it.data?.toList())
-                    currentList = _recyclerViewAdapter.differ.currentList?.toList()!!
+                is Resource.Success -> {
+                    _recyclerViewAdapter.differ.submitList(it.data?.toList())
+                    currentList_Today = _recyclerViewAdapter.differ.currentList?.toList()!!
                 }
+
                 else -> {}
             }
-
         })
 
         val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
@@ -218,7 +245,12 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         }
         scheduleViewModel.scheduleListUpComing.observe(viewLifecycleOwner, Observer {
             when (it) {
-                is Resource.Success -> { _recyclerViewAdapter_UpComing.differ.submitList(it.data?.toList()) }
+                is Resource.Success -> {
+                    _recyclerViewAdapter_UpComing.differ.submitList(it.data?.toList())
+                    currentList_UpComing =
+                        _recyclerViewAdapter_UpComing.differ.currentList?.toList()!!
+                }
+
                 else -> {}
             }
         })
@@ -244,24 +276,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         )
         confirmDialog.show()
     }
-
-    fun checkDuplicate(list: List<Schedule>, date: Calendar): Boolean {
-        Log.d("Checkdate",  date.get(Calendar.DAY_OF_YEAR).toString())
-        for (item in list) {
-            val checkday = Constant.convertTimestampToCalendar(item.date_medical_examinaton!!)
-            Log.d("Checkdate_2",  checkday.get(Calendar.DAY_OF_YEAR).toString())
-            if (checkday.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR)) {
-                return true
-            }
-        }
-        return false
-    }
-
-
-
-
-
-
 
 
 }
