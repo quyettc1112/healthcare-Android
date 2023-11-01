@@ -8,32 +8,47 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.common.Adapter.ItemActitivyHomeAdapter
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.databinding.FragmentHomeBinding
+import com.example.healthcarecomp.ui.activity.MainActivity
+import com.example.healthcarecomp.ui.activity.MainViewModel
+import com.example.healthcarecomp.util.extension.isDoctor
+import com.example.healthcarecomp.util.extension.isPatient
 
 
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
-
-
+    private lateinit var binding:FragmentHomeBinding
+    private var parent: MainActivity? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        setUpAnimationMenu(binding)
-
-        setUpRecycleView(binding)
-
-
-
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        parent = requireActivity() as? MainActivity
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpAnimationMenu(binding)
+        setUpRecycleView(binding)
+        parent?.let {
+            it.mainViewModel?.currentUser?.observe(viewLifecycleOwner, Observer {
+                binding.tvUsernameUserHome.text = it?.firstName
+                Glide.with(this).load(it?.avatar).placeholder(R.drawable.default_user_avt).into(binding.ivUseravtUserHome)
+            })
+        }
+
     }
 
     private fun setUpAnimationMenu(binding: FragmentHomeBinding) {
@@ -58,11 +73,16 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         adapter.onItemClick = {
 //            Toast.makeText(requireContext(), "Click", Toast.LENGTH_SHORT).show()
             it.actionId?.let {action ->
-                if(it.bundle!=null){
-                    navigateToPage(action, it.bundle)
-                }else{
-                    navigateToPage(action)
+                val bundle = Bundle()
+                parent?.let {
+                    if(parent?.currentUser.isPatient()){
+                        bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,parent?.currentUser?.id)
+                    }else{
+                        bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,"2222222")
+                    }
+                    navigateToPage(action, bundle)
                 }
+
             }
         }
 

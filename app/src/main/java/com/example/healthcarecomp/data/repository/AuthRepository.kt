@@ -24,6 +24,7 @@ interface AuthRepository {
         doctorCode: String?
     ): Resource<User>
 
+    suspend fun onUserChange(user: User, listener: (Resource<User>) -> Unit)
 
     fun logout()
 }

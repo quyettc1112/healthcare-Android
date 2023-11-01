@@ -13,6 +13,7 @@ import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.databinding.FragmentMedicalRecordBinding
+import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -92,7 +93,49 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
                 _medicalRecordViewModel.isEditMode.value = false
             }
         }
-        /////////// validation for input field //////////
+        //
+        _medicalRecordViewModel.onItemDataChange(args.medicalRecordId!!) { resources ->
+            when(resources){
+                is Resource.Success -> {
+                    resources.data?.let {
+                        _currentMedical = it
+                    }
+                    resources.data?.height?.let {
+                        val text = "$it $HEIGHT"
+                        _binding.etMedicalRecordHeight.setText(text)
+                    }
+                    resources.data?.weight?.let {
+                        val text = "$it $WEIGHT"
+                        _binding.etMedicalRecordWeight.setText(text)
+                    }
+                    resources.data?.general?.let {
+                        _binding.etMedicalRecordNote.setText(it)
+                    }
+                    resources.data?.bloodPressure?.let {
+                        val text = "$it $BLOOD_PRESSURE"
+                        _binding.etMedicalRecordBloodPressure.setText(text)
+                    }
+                    resources.data?.bloodSugar?.let {
+                        val text = "$it $BLOOD_SUGAR"
+                        _binding.etMedicalRecordBloodSugar.setText(text)
+                    }
+                    resources.data?.hearthRate?.let {
+                        val text = "$it $HEART_RATE"
+                        _binding.etMedicalRecordHearthRate.setText(text)
+                    }
+                    resources.data?.bodyTemperature?.let {
+                        val text = "$it $BODY_TEMPERATURE"
+                        _binding.etMedicalRecordBodyTemperature.setText(text)
+                    }
+                }
+                else -> {
+
+                }
+            }
+        }
+
+
+            /////////// validation for input field //////////
         _binding.etMedicalRecordHeight.apply {
             if (_medicalRecordViewModel.isEditMode.value!!) {
                 this.afterTextChanged {
@@ -238,7 +281,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
                 general = general
             )
         } else {
-            Snackbar.make(requireView(), "Please fill in all field!", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(requireView(), "Please fill correct all field!", Snackbar.LENGTH_SHORT).show()
         }
 
         return null

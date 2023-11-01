@@ -44,9 +44,8 @@ class Constant {
         // Hàm này chạy tron MainActiity khi user là người dùng phổ thông
         fun getItemListForRecycleView_UserHome():  ArrayList<Item_recycleView>  {
             val itemList = ArrayList<Item_recycleView>()
-            val bundle1 = Bundle()
-            bundle1.putString(PATIENT_MEDICAL_HISTORY_KEY,"2222222")
-            val it1 = Item_recycleView(1, R.drawable.baseline_incomplete_circle_24 , "Medical History", R.id.action_navigation_home_to_medicalHistoryFragment,bundle1)
+
+            val it1 = Item_recycleView(1, R.drawable.baseline_incomplete_circle_24 , "Medical History", R.id.action_navigation_home_to_medicalHistoryFragment)
             itemList.add(it1)
             val it2 = Item_recycleView(2, R.drawable.baseline_incomplete_circle_24 , "QR Scan")
             itemList.add(it1)
@@ -174,8 +173,7 @@ class Constant {
         val idIcon: Int,
         val imageIcon: Int,
         val nameIcon: String,
-        val actionId:Int? = null,
-        val bundle: Bundle? = null
+        val actionId:Int? = null
     )
 
 
