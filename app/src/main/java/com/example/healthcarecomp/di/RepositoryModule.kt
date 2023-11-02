@@ -1,10 +1,12 @@
 package com.example.healthcarecomp.di
 
 import com.example.healthcarecomp.data.repository.AuthRepository
+import com.example.healthcarecomp.data.repository.ChatRoomRepository
 import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.data.repository.MedicalHistoryRepository
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.data.repositoryImpl.AuthRepositoryImpl
+import com.example.healthcarecomp.data.repositoryImpl.ChatRoomRepositoryImpl
 import com.example.healthcarecomp.data.repositoryImpl.DoctorRepositoryImpl
 import com.example.healthcarecomp.data.repositoryImpl.MedicalHistoryRepositoryImpl
 import com.example.healthcarecomp.data.repositoryImpl.ScheduleRepositoryImpl
@@ -35,4 +37,8 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindScheduleRepository(scheduleRepositoryImpl: ScheduleRepositoryImpl): ScheduleRepository
 
+
+    @Binds
+    @Singleton
+    abstract fun bindChatRoomRepository(chatRoomRepositoryImpl: ChatRoomRepositoryImpl): ChatRoomRepository
 }

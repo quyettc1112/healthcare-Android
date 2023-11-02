@@ -169,6 +169,16 @@ class Constant {
         AVATAR("avatar")
     }
 
+    enum class ChatRoomQuery(val queryField: String){
+        PATH("chat_room"),
+        FIRST_USER_ID("firstUserId"),
+        SECOND_USER_ID("secondUserId"),
+        LAST_ACTIVE_TIME("lastActiveTime"),
+        CHAT_SEEN("chatSeen"),
+        ID("id")
+
+    }
+
     class Item_recycleView(
         val idIcon: Int,
         val imageIcon: Int,

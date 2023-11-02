@@ -1,12 +1,14 @@
 package com.example.healthcarecomp.di
 
 import com.example.healthcarecomp.data.repository.AuthRepository
+import com.example.healthcarecomp.data.repository.ChatRoomRepository
 import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.data.repository.MedicalHistoryRepository
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryUseCase
 import com.example.healthcarecomp.ui.schedule.ScheduleUseCase
 import com.example.healthcarecomp.ui.auth.login.LoginUseCase
+import com.example.healthcarecomp.ui.chat.ChatUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,6 +37,12 @@ object UseCaseModule {
         return ScheduleUseCase(scheduleRepository)
     }
 
+
+    @Provides
+    @Singleton
+    fun provideChatRoomUseCase(chatRoomRepository: ChatRoomRepository) : ChatUseCase {
+        return ChatUseCase(chatRoomRepository)
+    }
 
 
 }
