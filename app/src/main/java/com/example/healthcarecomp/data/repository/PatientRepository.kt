@@ -1,4 +1,6 @@
 package com.example.healthcarecomp.data.repository
 
-interface PatientRepository {
+import com.example.healthcarecomp.data.model.Patient
+
+interface PatientRepository : BaseRepository<Patient> {
 }

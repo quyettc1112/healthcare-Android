@@ -98,7 +98,7 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
             authActivity.showConfirmDialog("Welcome to Health Care app",
                 "We need some of your information, we do not share user info",
                 "OK",
-                "Cancle",
+                "Cancel",
                 "Yes",
                 confirmCallback
                 )

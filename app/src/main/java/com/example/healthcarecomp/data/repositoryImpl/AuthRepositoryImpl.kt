@@ -12,10 +12,8 @@ import com.example.healthcarecomp.util.ValidationUtils
 import com.example.healthcarecomp.util.ValidationUtils.isValidDoctorSecurityCode
 import com.example.healthcarecomp.util.extension.isDoctor
 import com.example.healthcarecomp.util.extension.isPatient
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
@@ -125,6 +123,20 @@ class AuthRepositoryImpl @Inject constructor(
         sharePreference.edit().putString(sharePrefKey, userJson).apply()
     }
 
+    fun removeUser(user: User) {
+        var sharePrefKey: String = Constant.USER_SHARE_PREF_KEY
+        if (user.isDoctor()) {
+            sharePrefKey = Constant.DOCTOR_SHARE_PREF_KEY
+        } else if (user.isPatient()) {
+            sharePrefKey = Constant.PATIENT_SHARE_PREF_KEY
+        }
+        val gson = Gson()
+        val userJson = gson.toJson(user)
+        Log.d("Auth", userJson)
+        sharePreference.edit().remove(sharePrefKey).apply()
+    }
+
+
     override fun getLoggedInUser(): User? {
         val patientJson = sharePreference.getString(Constant.PATIENT_SHARE_PREF_KEY, null)
         val doctorJson = sharePreference.getString(Constant.DOCTOR_SHARE_PREF_KEY, null)
@@ -220,12 +232,12 @@ class AuthRepositoryImpl @Inject constructor(
             fireBaseDatabase.reference.child(Constant.PatientQuery.PATH.queryField)
         }
 
-        ref.child(user.id).addValueEventListener(object :ValueEventListener{
+        ref.child(user.id).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user = snapshot.getValue(clazz)
-                val resource = if(user == null){
+                val resource = if (user == null) {
                     Resource.Error<User>("user not exist")
-                }else{
+                } else {
                     Resource.Success(user)
                 }
                 listener?.let {
@@ -286,6 +298,10 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun logout() {
-        TODO("Not yet implemented")
+        if (currentUser != null) {
+            removeUser(currentUser!!)
+            currentUser = null
+        }
+
     }
 }

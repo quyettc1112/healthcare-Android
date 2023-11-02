@@ -70,7 +70,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             it.actionId?.let {action ->
                 val bundle = Bundle()
                 parent?.let {
-                    if(parent?.currentUser.isPatient()){
+                    if(parent?.currentUser!!.isPatient()){
                         bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,parent?.currentUser?.id)
                     }else{
                         bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,"2222222")

@@ -10,30 +10,38 @@ import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
 import javax.inject.Inject
 
-class BaseRepositoryImpl<T> @Inject constructor(
-    private val firebaseRef: DatabaseReference,
+open class BaseRepositoryImpl<T> @Inject constructor(
+    open val firebaseRef: DatabaseReference
 ) : BaseRepository<T> {
-    private val TAG = "BaseRepositoryImpl"
-    lateinit var tableName: String
 
-    operator fun invoke(tableName: String) {
+     var tableName: String? = null
+     var entityClass: Class<T>? = null
+
+    operator fun invoke(
+        tableName: String,
+        entityClass: Class<T>
+    ) {
         this.tableName = tableName
+        this.entityClass = entityClass
     }
 
-    private val _dbRef = firebaseRef.child(tableName)
+    private val TAG = "BaseRepositoryImpl"
+    val _dbRef = tableName?.let { firebaseRef.child(it) }
 
     override suspend fun getAll(
-        listener: (Resource<MutableList<T>>) -> Unit, entityClass: Class<T>
+        listener: (Resource<MutableList<T>>) -> Unit
     ) {
         val query = _dbRef
-        fetchData(query, listener, entityClass)
+        if (query != null) {
+            fetchData(query, listener)
+        }
     }
 
     override suspend fun upsert(entity: T, id: String): Resource<T> {
         var result: Resource<T> = Resource.Unknown()
-        _dbRef.child(id).setValue(entity).addOnCompleteListener {
+        _dbRef?.child(id)?.setValue(entity)?.addOnCompleteListener {
             result = Resource.Success(entity)
-        }.addOnFailureListener {
+        }?.addOnFailureListener {
             result = Resource.Error(it.message)
         }
         Log.e(TAG, "upsert")
@@ -42,27 +50,29 @@ class BaseRepositoryImpl<T> @Inject constructor(
 
     override suspend fun remove(entity: T, id: String): Resource<T> {
         var result: Resource<T> = Resource.Unknown()
-        _dbRef.child(id).removeValue().addOnCompleteListener {
+        _dbRef?.child(id)?.removeValue()?.addOnCompleteListener {
             result = Resource.Success(entity)
-        }.addOnFailureListener {
+        }?.addOnFailureListener {
             result = Resource.Error(it.message)
         }
         return result
     }
 
     override fun onItemChange(
-        itemId: String, listener: (Resource<T>) -> Unit, entityClass: Class<T>
+        listener: (Resource<T>) -> Unit, id: String
     ) {
-        val query = _dbRef.child(itemId)
-        itemFetchData(query, listener, entityClass)
+        val query = _dbRef?.child(id)
+        if (query != null) {
+            itemFetchData(query, listener)
+        }
     }
 
     private fun itemFetchData(
-        query: Query, listener: (Resource<T>) -> Unit, entityClass: Class<T>
+        query: Query, listener: (Resource<T>) -> Unit
     ) {
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val item = snapshot.getValue(entityClass)
+                val item = snapshot.getValue(entityClass!!)
                 listener?.let {
                     item?.let {
                         listener(Resource.Success(it))
@@ -79,13 +89,13 @@ class BaseRepositoryImpl<T> @Inject constructor(
     }
 
     private fun fetchData(
-        query: Query, listener: (Resource<MutableList<T>>) -> Unit, entityClass: Class<T>
+        query: Query, listener: (Resource<MutableList<T>>) -> Unit
     ) {
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val list = mutableListOf<T>()
                 snapshot.children.forEach { data ->
-                    val item = data.getValue(entityClass)
+                    val item = data.getValue(entityClass!!)
                     item?.let {
                         list.add(it)
                     }
