@@ -47,13 +47,13 @@ class ScheduleViewModel @Inject constructor(
             }
         }
     }
-    fun getListToday(): List<Schedule> {
-        return scheduleListToday.value?.data?.toList()!!
+    fun getListToday(): List<Schedule>? {
+        return scheduleListToday.value?.data?.toList()
 
     }
 
-    fun getListTodayUPComing(): List<Schedule> {
-        return scheduleListUpComing.value?.data?.toList()!!
+    fun getListTodayUPComing(): List<Schedule>?{
+        return scheduleListUpComing.value?.data?.toList()
 
     }
 

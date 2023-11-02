@@ -3,6 +3,7 @@ package com.example.healthcarecomp.ui.schedule
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,12 +52,17 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         setDate(binding)
         binding.tvDayChoose.text = Calendar.getInstance().time.toString()
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
+
         setUpUI(binding, scheduleViewModel)
         setUpUI_UpComing(binding, scheduleViewModel)
+
+
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
 
     }
@@ -122,7 +128,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 if (checkMinTimeValidation(validationHour, validationMin) ) {
                     errorDialog(timePickerDialog,  "Cannot Choose Time In The Past")
                 } else {
-                    if (checkDuplicate(scheduleViewModel.getListToday(), calendar!!) == true) {
+                    if (checkDuplicate(scheduleViewModel.getListToday()!!, calendar!!) == true) {
                         errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
                     } else ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
                 }
@@ -130,7 +136,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 when(isTimeCanceled) {
                     true -> { isTimeCanceled = false }
                     false -> {
-                        if (checkDuplicate(scheduleViewModel.getListTodayUPComing(), calendar!!) == true) {
+                        if (checkDuplicate(scheduleViewModel.getListTodayUPComing()!!, calendar!!) == true) {
                             errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
                         } else {
                             ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}") }
@@ -200,15 +206,11 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                     _recyclerViewAdapter.differ.submitList(it.data?.toList())
                     currentList_Today = _recyclerViewAdapter.differ.currentList?.toList()!!
                 }
-
                 else -> {}
             }
         })
-
         val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
         itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
-
-
     }
 
     private fun setUpUI_UpComing(
@@ -226,16 +228,15 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                     currentList_UpComing =
                         _recyclerViewAdapter_UpComing.differ.currentList?.toList()!!
                 }
-
                 else -> {}
             }
         })
         val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter_UpComing.getSimpleCallBack())
         itemTouchHelper.attachToRecyclerView(binding.rvListUpcomingSchedule)
 
-        if (_recyclerViewAdapter.differ.currentList.isEmpty() &&
-            _recyclerViewAdapter_UpComing.differ.currentList.isEmpty()) {
-            Toast.makeText(requireContext(), "Have No Schedule", Toast.LENGTH_SHORT).show()
+        if (scheduleViewModel.getListToday().isNullOrEmpty() &&
+            scheduleViewModel.getListTodayUPComing().isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "You have no Schedule", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -72,11 +72,17 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         // sortDifferByDateTime()
         val Item = differ.currentList[position]
+
+        if (differ.currentList.find { it.id.equals("None") } != null) {
+            holder.nonList()
+            //notifyDataSetChanged()
+        }
+        else {
             holder.bindItem(Item)
             holder.itemView.setOnClickListener {
                 onItemClick?.invoke(Item)
             }
-
+        }
 
     }
 
