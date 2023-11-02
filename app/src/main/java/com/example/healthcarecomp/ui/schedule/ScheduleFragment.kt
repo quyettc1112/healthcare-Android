@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -121,7 +122,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 if (checkMinTimeValidation(validationHour, validationMin) ) {
                     errorDialog(timePickerDialog,  "Cannot Choose Time In The Past")
                 } else {
-                    if (checkDuplicate_TodayList(scheduleViewModel.getListToday(), calendar!!) == true) {
+                    if (checkDuplicate(scheduleViewModel.getListToday(), calendar!!) == true) {
                         errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
                     } else ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
                 }
@@ -129,7 +130,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 when(isTimeCanceled) {
                     true -> { isTimeCanceled = false }
                     false -> {
-                        if (checkDuplicate_ForUpComingList(scheduleViewModel.getListTodayUPComing(), calendar!!) == true) {
+                        if (checkDuplicate(scheduleViewModel.getListTodayUPComing(), calendar!!) == true) {
                             errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
                         } else {
                             ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}") }
@@ -140,23 +141,13 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         timePickerDialog.show()
     }
 
-    fun checkDuplicate_ForUpComingList(list: List<Schedule>, date: Calendar): Boolean {
-        for (item in list) {
-            val checkday = Constant.convertTimestampToCalendar(item.date_medical_examinaton!!)
-            if (checkday.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR) &&
-                checkday.get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
-                checkday.get(Calendar.HOUR_OF_DAY) == date.get(Calendar.HOUR_OF_DAY)
-            ) {
-                return true
-            }
-        }
-        return false
-    }
 
-    fun checkDuplicate_TodayList(list: List<Schedule>, date: Calendar): Boolean {
+    fun checkDuplicate(list: List<Schedule>, date: Calendar): Boolean {
         for (item in list) {
             val checkday = Constant.convertTimestampToCalendar(item.date_medical_examinaton!!)
-            if (checkday.get(Calendar.HOUR_OF_DAY) == date.get(Calendar.HOUR_OF_DAY)) {
+            if (checkday.get(Calendar.HOUR_OF_DAY) == date.get(Calendar.HOUR_OF_DAY) &&
+                checkday.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR) &&
+                checkday.get(Calendar.YEAR) == date.get(Calendar.YEAR)) {
                 return true
             }
         }
@@ -170,8 +161,9 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                         && validationMin < currentTime.get(Calendar.MINUTE))
 
     private fun checkDayPicker(calendar: Calendar?) =
-        isTimeCanceled == false && (calendar?.get(Calendar.DAY_OF_MONTH)
-                == currentTime.get(Calendar.DAY_OF_MONTH))
+        isTimeCanceled == false &&
+        (calendar?.get(Calendar.DAY_OF_YEAR) == currentTime.get(Calendar.DAY_OF_YEAR)) &&
+        (calendar?.get(Calendar.YEAR) == currentTime.get(Calendar.YEAR))
 
     private fun errorDialog(timePickerDialog: TimePickerDialog, message: String) {
         val confirmDialog = ConfirmDialog(
@@ -198,6 +190,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     private fun setUpUI(binding: FragmentScheduleBinding, scheduleViewModel: ScheduleViewModel) {
         _recyclerViewAdapter = ScheduleAdapter(scheduleViewModel)
 
+
         binding.rvListTodaySchedule.apply {
             adapter = _recyclerViewAdapter
         }
@@ -214,6 +207,8 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
         val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
         itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
+
+
     }
 
     private fun setUpUI_UpComing(
@@ -237,6 +232,11 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         })
         val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter_UpComing.getSimpleCallBack())
         itemTouchHelper.attachToRecyclerView(binding.rvListUpcomingSchedule)
+
+        if (_recyclerViewAdapter.differ.currentList.isEmpty() &&
+            _recyclerViewAdapter_UpComing.differ.currentList.isEmpty()) {
+            Toast.makeText(requireContext(), "Have No Schedule", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
