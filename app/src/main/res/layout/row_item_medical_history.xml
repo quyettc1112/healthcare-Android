@@ -18,13 +18,12 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.google.android.material.imageview.ShapeableImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivMedicalHistoryItemAvatar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_margin="10dp"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
                 android:src="@color/white"
+                android:layout_margin="8dp"
                 />
             <LinearLayout
                 android:orientation="vertical"

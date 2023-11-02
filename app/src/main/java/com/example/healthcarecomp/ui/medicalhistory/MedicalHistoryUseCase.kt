@@ -1,13 +1,16 @@
 package com.example.healthcarecomp.ui.medicalhistory
 
+import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.MedicalRecord
+import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.data.repository.MedicalHistoryRepository
 import com.example.healthcarecomp.data.repositoryImpl.MedicalHistoryRepositoryImpl
 import com.example.healthcarecomp.util.Resource
 import javax.inject.Inject
 
 class MedicalHistoryUseCase @Inject constructor(
-    private val medicalHistoryRepository: MedicalHistoryRepository
+    private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val doctorRepository: DoctorRepository
 )  {
     suspend fun upsertMedicalRecord(medicalRecord: MedicalRecord): Resource<MedicalRecord>{
        return medicalHistoryRepository.upsert(medicalRecord)
@@ -34,4 +37,7 @@ class MedicalHistoryUseCase @Inject constructor(
         medicalHistoryRepository.onItemChange(itemId, listener)
     }
 
+    suspend fun getDoctorById(doctorKeys: (HashMap<String?, Doctor?>),listener: (HashMap<String?, Doctor?>) -> Unit){
+        doctorRepository.getDoctorById(doctorKeys,listener)
+    }
 }

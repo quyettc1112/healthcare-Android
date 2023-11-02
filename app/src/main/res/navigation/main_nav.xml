@@ -53,6 +53,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="patientID"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/medicalRecordFragment"
@@ -68,7 +71,15 @@
             app:popExitAnim="@anim/slide_out_left"/>
         <argument
             android:name="medicalRecordId"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
+        <argument android:name="PatientId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="medicalDoctorId"
+            app:argType="string"
+            app:nullable="true" />
 
     </fragment>
 

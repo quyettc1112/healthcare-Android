@@ -10,10 +10,10 @@ data class MedicalRecord(
     val bodyTemperature: Float? = null,
     val height: Float? = null,
     val weight: Float? = null,
-    val bloodPressure: Int? = null,
+    val bloodPressure: String? = null,
     val bloodSugar: Int? = null,
     val hearthRate: Int? = null,
     val general: String? = null,
-    val date: Date? = null,
+    val timestamps: Long? = null,
     val id: String = UUID.randomUUID().toString()
 ): Serializable

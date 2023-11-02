@@ -112,12 +112,10 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
     }
 
     private fun loginWithGG() {
-        Log.i("Err","call gg")
         (requireActivity() as AuthActivity).loginWithGoogle(){
             if(it == null) {
                 Toast.makeText(requireActivity(), "Have problem to login with google", Toast.LENGTH_SHORT).show()
             }else{
-                Log.i("Err","user!=null")
                 _userGG = it
                 _viewModel.loginByMail(it.email!!)
             }

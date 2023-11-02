@@ -34,11 +34,19 @@
                 android:text="Medical Record"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
             <ImageButton
+                android:id="@+id/ibMedicalRecordSave"
+                android:visibility="gone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_save_24" />
+            <ImageButton
                 android:id="@+id/ibMedicalRecordEdit"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_edit_note_24" />
+
 
 
         </LinearLayout>
@@ -83,7 +91,7 @@
                                 <com.google.android.material.imageview.ShapeableImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:src="#F5BBBB"
+                                    android:src="#EDB8CA"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
@@ -101,7 +109,8 @@
                                     app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.5" />
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:tint="#E91E63" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -153,7 +162,7 @@
                                 <com.google.android.material.imageview.ShapeableImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:src="#F5BBBB"
+                                    android:src="#CDB5F8"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
@@ -165,13 +174,14 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/ic_favorite_24"
+                                    android:src="@drawable/baseline_bloodtype_24"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.5" />
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:tint="#8C5AE8" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -223,7 +233,7 @@
                                 <com.google.android.material.imageview.ShapeableImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:src="#F5BBBB"
+                                    android:src="#EDDBC1"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
@@ -235,12 +245,13 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/ic_favorite_24"
+                                    android:src="@drawable/baseline_thermostat_24"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="#FF9800"
                                     app:layout_constraintVertical_bias="0.5" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -292,7 +303,7 @@
                                 <com.google.android.material.imageview.ShapeableImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:src="#F5BBBB"
+                                    android:src="#9BE39E"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
@@ -304,13 +315,14 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/ic_favorite_24"
+                                    android:src="@drawable/baseline_scale_24"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.5" />
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:tint="#4CAF50" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -361,7 +373,7 @@
                                 <com.google.android.material.imageview.ShapeableImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:src="#F5BBBB"
+                                    android:src="#B2D4EF"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
@@ -373,13 +385,14 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/ic_favorite_24"
+                                    android:src="@drawable/baseline_height_24"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.5" />
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:tint="#2196F3"/>
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -430,7 +443,7 @@
                                 <com.google.android.material.imageview.ShapeableImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:src="#F5BBBB"
+                                    android:src="#FFDEDC"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
@@ -442,13 +455,14 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/ic_favorite_24"
+                                    android:src="@drawable/baseline_tire_repair_24"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.5"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.5" />
+                                    app:layout_constraintVertical_bias="0.5"
+                                    app:tint="#F44336" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -468,7 +482,7 @@
                                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
                                 <com.google.android.material.textfield.TextInputEditText
-                                    android:inputType="number"
+
                                     android:id="@+id/etMedicalRecordBloodPressure"
                                     android:enabled="false"
                                     android:layout_width="match_parent"
@@ -494,15 +508,6 @@
                         android:layout_height="wrap_content"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
-                    android:id="@+id/btnMedicalRecordSave"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginHorizontal="32dp"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:text="SAVE"
-                    android:visibility="gone"/>
             </LinearLayout>
 
         </ScrollView>

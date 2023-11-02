@@ -17,7 +17,7 @@ class MedicalRecordViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val upsertMedicalRecord = MutableLiveData<Resource<MedicalRecord>>()
-    val medicalRecord = MutableLiveData<Resource<MedicalRecord>>()
+    var currentMedicalRecordId: String? = null
     val isEditMode = MutableLiveData<Boolean>()
 
     init {
@@ -25,8 +25,11 @@ class MedicalRecordViewModel @Inject constructor(
     }
 
 
-    fun onItemDataChange(itemId: String, listener: (Resource<MedicalRecord>) -> Unit) {
-        medicalHistoryUseCase.onItemChange(itemId, listener)
+    fun onItemDataChange(listener: (Resource<MedicalRecord>) -> Unit) {
+        currentMedicalRecordId?.let {
+            medicalHistoryUseCase.onItemChange(currentMedicalRecordId!!, listener)
+        }
+
     }
 
     fun upsertMedicalRecord(medicalRecord: MedicalRecord) = viewModelScope.launch{

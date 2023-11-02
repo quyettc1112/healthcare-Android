@@ -49,11 +49,10 @@
             android:layout_height="0dp"
             android:layout_marginTop="32dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_rouded_top_left_right"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="30dp">
+            android:background="@drawable/shape_rouded_top_left_right">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:paddingHorizontal="10dp"
                 android:id="@+id/rvMedicalHistory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -64,6 +63,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnMedicalHistoryAdd"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"

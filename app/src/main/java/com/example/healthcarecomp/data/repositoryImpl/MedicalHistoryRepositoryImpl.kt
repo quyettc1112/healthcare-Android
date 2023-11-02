@@ -106,6 +106,9 @@ class MedicalHistoryRepositoryImpl @Inject constructor(
 
                 }
                 listener?.let {
+                    list.sortByDescending {
+                        it.timestamps
+                    }
                     it(Resource.Success(list))
                 }
             }
