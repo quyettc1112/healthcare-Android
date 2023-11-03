@@ -17,7 +17,7 @@ import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentRegisterBinding
-import com.example.healthcarecomp.ui.activity.AuthActivity
+import com.example.healthcarecomp.ui.activity.auth.AuthActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import com.google.android.material.snackbar.Snackbar
@@ -98,7 +98,7 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
             authActivity.showConfirmDialog("Welcome to Health Care app",
                 "We need some of your information, we do not share user info",
                 "OK",
-                "Cancle",
+                "Cancel",
                 "Yes",
                 confirmCallback
                 )
@@ -232,7 +232,7 @@ class RegisterFragment : BaseFragment(R.layout.fragment_register), View.OnClickL
                             confirmPassword = _binding.etSignUpPasswordConfirm.text.toString(),
                             phone = _binding.etSignUpPhoneNumber.text.toString(),
                             firstName = _binding.etSignUpFirstName.text.toString(),
-                            lastName = _binding.etSignUpPassword.text.toString(),
+                            lastName = _binding.etSignUpLastName.text.toString(),
                             doctorCode = doctorCode
                         )
                     }

@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.ui.activity
+package com.example.healthcarecomp.ui.activity.main
 
 import android.app.ActionBar
 import android.os.Bundle
@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
     private var loadingLayout: FrameLayout? = null
+
     val mainViewModel: MainViewModel by viewModels()
     var currentUser: User? = null
 
@@ -34,9 +35,8 @@ class MainActivity : BaseActivity() {
             currentUser = it
         })
         setContentView(R.layout.activity_main)
-       // loadingLayout = findViewById(R.id.loadingLayout)
         setupBottomNav()
-
+        setObservers()
     }
 
     override fun showLoading(isShow: Boolean) {
@@ -51,7 +51,9 @@ class MainActivity : BaseActivity() {
 
     }
 
+    fun setObservers(){
 
+    }
 
 
 

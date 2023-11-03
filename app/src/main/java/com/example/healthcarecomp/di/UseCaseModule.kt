@@ -35,6 +35,4 @@ object UseCaseModule {
         return ScheduleUseCase(scheduleRepository)
     }
 
-
-
 }
