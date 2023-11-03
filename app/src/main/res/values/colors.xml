@@ -36,4 +36,6 @@
 
     <color name="card_recaycle">#fdfdff</color>
     <color name="icon_bg_red_light">#F5BBBB</color>
+
+    <color name="zxing_transparent">#00000000</color>
 </resources>

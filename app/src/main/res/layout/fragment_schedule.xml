@@ -96,17 +96,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="280dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="80dp"
-
+                android:paddingBottom="10dp"
                 android:background="@drawable/userhome_bg"
                 android:orientation="vertical">
+
+
                 <LinearLayout
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -120,6 +123,7 @@
                         android:textStyle="bold">
 
                     </TextView>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_listTodaySchedule"
                         android:layout_width="match_parent"
@@ -130,8 +134,6 @@
                     </androidx.recyclerview.widget.RecyclerView>
 
                 </LinearLayout>
-
-
 
                 <LinearLayout
                     android:layout_weight="1"

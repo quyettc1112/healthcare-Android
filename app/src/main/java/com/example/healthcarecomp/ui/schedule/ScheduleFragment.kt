@@ -1,12 +1,20 @@
 package com.example.healthcarecomp.ui.schedule
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +23,7 @@ import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
 import com.example.healthcarecomp.common.Constant
+import com.example.healthcarecomp.common.Screen
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.databinding.FragmentScheduleBinding
 import com.example.healthcarecomp.util.Resource
@@ -32,7 +41,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     private lateinit var currentList_UpComing: List<Schedule>
     private lateinit var currentList_Today: List<Schedule>
 
-
     private var calendar = Calendar.getInstance()
 
     val dateFormat = SimpleDateFormat("MMM dd yyyy HH:mm")
@@ -42,6 +50,10 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
 
     var currentTime = Calendar.getInstance()
+
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,16 +67,11 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
         setUpUI(binding, scheduleViewModel)
         setUpUI_UpComing(binding, scheduleViewModel)
-
-
+        if (scheduleViewModel.getListToday()?.size == 0 && scheduleViewModel.getListTodayUPComing()?.size == 0) {
+            Toast.makeText(requireContext(), "You have no Schedule", Toast.LENGTH_SHORT).show()
+        }
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
     private fun planSchedule(calendar: Calendar?) {
@@ -79,6 +86,104 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             )
         )
     }
+
+
+    private fun setUpUI(binding: FragmentScheduleBinding, scheduleViewModel: ScheduleViewModel) {
+        _recyclerViewAdapter = ScheduleAdapter(scheduleViewModel)
+        _recyclerViewAdapter.onItemClick = {
+            setUpDialogPopup(it)
+        }
+
+        binding.rvListTodaySchedule.apply {
+            adapter = _recyclerViewAdapter
+        }
+        scheduleViewModel.scheduleListToday.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is Resource.Success -> {
+                    _recyclerViewAdapter.differ.submitList(it.data?.toList())
+                    currentList_Today = _recyclerViewAdapter.differ.currentList?.toList()!!
+                }
+                else -> {}
+            }
+        })
+        val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
+        itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
+    }
+
+    private fun setUpUI_UpComing(
+        binding: FragmentScheduleBinding,
+        scheduleViewModel: ScheduleViewModel
+    ) {
+        _recyclerViewAdapter_UpComing = ScheduleAdapter(scheduleViewModel)
+        binding.rvListUpcomingSchedule.apply {
+            adapter = _recyclerViewAdapter_UpComing
+        }
+        scheduleViewModel.scheduleListUpComing.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is Resource.Success -> {
+                    _recyclerViewAdapter_UpComing.differ.submitList(it.data?.toList())
+                    currentList_UpComing =
+                        _recyclerViewAdapter_UpComing.differ.currentList?.toList()!!
+                }
+                else -> {}
+            }
+        })
+        val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter_UpComing.getSimpleCallBack())
+        itemTouchHelper.attachToRecyclerView(binding.rvListUpcomingSchedule)
+
+
+    }
+
+    fun setUpDialogPopup (schedule: Schedule) {
+
+
+
+        val dialogBinding = layoutInflater.inflate(R.layout.activity_pop_up, null)
+        val title = dialogBinding.findViewById<TextView>(R.id.title_activity_popup)
+        val deadline_title = dialogBinding.findViewById<TextView>(R.id.deadline_title_popup)
+        val iconPopUp_activity = dialogBinding.findViewById<ImageView>(R.id.icon_doctor)
+        val btn_finish = dialogBinding.findViewById<Button>(R.id.btn_statusButton)
+        val btn_phone = dialogBinding.findViewById<Button>(R.id.phoneDoctor)
+
+        title.text = "Meeting with"
+        val dateSchedule = dateFormat.format(Constant.convertTimestampToCalendar(schedule.date_medical_examinaton!!).time)
+        deadline_title.text = dateSchedule.toString()
+        iconPopUp_activity.setImageResource(R.drawable.default_user_avt)
+
+
+        val myDialog = Dialog(requireContext())
+        myDialog.setContentView(dialogBinding)
+        myDialog.setCancelable(true)
+        //myDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,   ViewGroup.LayoutParams.WRAP_CONTENT)
+        myDialog.window?.setLayout(Screen.width,   Screen.height)
+        myDialog.window?.setBackgroundDrawable(ColorDrawable(requireContext().getColor(R.color.zxing_transparent)))
+        myDialog.show()
+
+        btn_finish.setOnClickListener {
+            myDialog.dismiss()
+        }
+
+        btn_phone.setOnClickListener {
+            myDialog.dismiss()
+            val packageManager = requireContext().packageManager
+            val appInstalled = packageManager.getPackageInfo("com.android.phone", 0) != null
+
+            if (appInstalled) {
+                // Create an intent to open the phone app
+                val intent = Intent(Intent.ACTION_DIAL)
+                intent.data = Uri.parse("tel:0356970696")
+                // Start the intent
+                startActivity(intent)
+            } else {
+                // Show an error message
+                Toast.makeText(requireContext(), "Ứng dụng điện thoại không được cài đặt", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+    }
+
 
     private fun setDate(binding: FragmentScheduleBinding) {
         // Lấy ngày giờ hiện tại
@@ -128,7 +233,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 if (checkMinTimeValidation(validationHour, validationMin) ) {
                     errorDialog(timePickerDialog,  "Cannot Choose Time In The Past")
                 } else {
-                    if (checkDuplicate(scheduleViewModel.getListToday()!!, calendar!!) == true) {
+                    if (checkDuplicate(scheduleViewModel.getListToday()!!, calendar!!) == true && checkTimeDiff(calendar, currentTime)) {
                         errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
                     } else ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
                 }
@@ -148,16 +253,41 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     }
 
 
+
+    fun ConfirmDialog(calendar: Calendar?, binding: FragmentScheduleBinding, message: String) {
+        val confirmDialog = ConfirmDialog(
+            requireContext(),
+            object : ConfirmDialog.ConfirmCallback {
+                override fun negativeAction() {}
+                override fun positiveAction() {
+                    binding.tvDayChoose.text = calendar?.time.toString()
+                    planSchedule(calendar)
+                }
+            },
+            title = "Confirm",
+            message = message,
+            positiveButtonTitle = "Yes",
+            negativeButtonTitle = "No"
+        )
+        confirmDialog.show()
+    }
+
     fun checkDuplicate(list: List<Schedule>, date: Calendar): Boolean {
         for (item in list) {
             val checkday = Constant.convertTimestampToCalendar(item.date_medical_examinaton!!)
-            if (checkday.get(Calendar.HOUR_OF_DAY) == date.get(Calendar.HOUR_OF_DAY) &&
+            if (checkday.get(Calendar.HOUR_OF_DAY) == date.get(Calendar.HOUR_OF_DAY)  &&
                 checkday.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR) &&
                 checkday.get(Calendar.YEAR) == date.get(Calendar.YEAR)) {
                 return true
             }
         }
         return false
+    }
+    fun checkTimeDiff(date1: Calendar, date2: Calendar): Boolean {
+        val diff = date1.timeInMillis - date2.timeInMillis
+        val diffInMinutes = diff / (1000 * 60)
+        Log.d("Checl",  diffInMinutes.toString())
+        return diffInMinutes <= 60L
     }
 
 
@@ -168,8 +298,8 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
     private fun checkDayPicker(calendar: Calendar?) =
         isTimeCanceled == false &&
-        (calendar?.get(Calendar.DAY_OF_YEAR) == currentTime.get(Calendar.DAY_OF_YEAR)) &&
-        (calendar?.get(Calendar.YEAR) == currentTime.get(Calendar.YEAR))
+                (calendar?.get(Calendar.DAY_OF_YEAR) == currentTime.get(Calendar.DAY_OF_YEAR)) &&
+                (calendar?.get(Calendar.YEAR) == currentTime.get(Calendar.YEAR))
 
     private fun errorDialog(timePickerDialog: TimePickerDialog, message: String) {
         val confirmDialog = ConfirmDialog(
@@ -190,72 +320,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             negativeButtonTitle = "Cancel"
         )
         // Show the ConfirmDialog
-        confirmDialog.show()
-    }
-
-    private fun setUpUI(binding: FragmentScheduleBinding, scheduleViewModel: ScheduleViewModel) {
-        _recyclerViewAdapter = ScheduleAdapter(scheduleViewModel)
-
-
-        binding.rvListTodaySchedule.apply {
-            adapter = _recyclerViewAdapter
-        }
-        scheduleViewModel.scheduleListToday.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is Resource.Success -> {
-                    _recyclerViewAdapter.differ.submitList(it.data?.toList())
-                    currentList_Today = _recyclerViewAdapter.differ.currentList?.toList()!!
-                }
-                else -> {}
-            }
-        })
-        val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
-        itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
-    }
-
-    private fun setUpUI_UpComing(
-        binding: FragmentScheduleBinding,
-        scheduleViewModel: ScheduleViewModel
-    ) {
-        _recyclerViewAdapter_UpComing = ScheduleAdapter(scheduleViewModel)
-        binding.rvListUpcomingSchedule.apply {
-            adapter = _recyclerViewAdapter_UpComing
-        }
-        scheduleViewModel.scheduleListUpComing.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is Resource.Success -> {
-                    _recyclerViewAdapter_UpComing.differ.submitList(it.data?.toList())
-                    currentList_UpComing =
-                        _recyclerViewAdapter_UpComing.differ.currentList?.toList()!!
-                }
-                else -> {}
-            }
-        })
-        val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter_UpComing.getSimpleCallBack())
-        itemTouchHelper.attachToRecyclerView(binding.rvListUpcomingSchedule)
-
-        if (scheduleViewModel.getListToday().isNullOrEmpty() &&
-            scheduleViewModel.getListTodayUPComing().isNullOrEmpty()) {
-            Toast.makeText(requireContext(), "You have no Schedule", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-
-    fun ConfirmDialog(calendar: Calendar?, binding: FragmentScheduleBinding, message: String) {
-        val confirmDialog = ConfirmDialog(
-            requireContext(),
-            object : ConfirmDialog.ConfirmCallback {
-                override fun negativeAction() {}
-                override fun positiveAction() {
-                    binding.tvDayChoose.text = calendar?.time.toString()
-                    planSchedule(calendar)
-                }
-            },
-            title = "Confirm",
-            message = message,
-            positiveButtonTitle = "Yes",
-            negativeButtonTitle = "No"
-        )
         confirmDialog.show()
     }
 

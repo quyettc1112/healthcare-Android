@@ -58,7 +58,7 @@ class ScheduleRepositoryImpl @Inject constructor(
         listener: (Resource<MutableList<Schedule>>) -> Unit
     ) {
         val query: Query =
-            _dbRef.orderByChild("patientID").equalTo("1a04ee07-5909-4471-b767-a62f8c1e99d1")
+            _dbRef.orderByChild("patientID").equalTo(patientID)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val list = mutableListOf<Schedule>()
@@ -90,7 +90,7 @@ class ScheduleRepositoryImpl @Inject constructor(
         listener: (Resource<MutableList<Schedule>>) -> Unit
     ) {
         val query: Query =
-            _dbRef.orderByChild("patientID").equalTo("1a04ee07-5909-4471-b767-a62f8c1e99d1")
+            _dbRef.orderByChild("patientID").equalTo(patientID)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val list = mutableListOf<Schedule>()

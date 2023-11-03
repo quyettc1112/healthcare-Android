@@ -1,15 +1,6 @@
 package com.example.healthcarecomp.ui.schedule
 
-import android.content.res.Resources
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Color.RED
-import android.graphics.Paint
-import android.graphics.RectF
-import android.graphics.drawable.Drawable
 import android.icu.util.Calendar
-import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -19,17 +10,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.R
 
-import com.example.healthcarecomp.common.Constant
-import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.data.model.Schedule
-import com.example.healthcarecomp.databinding.DialogConfirmBinding
 
 import com.example.healthcarecomp.databinding.RvListScheduleBinding
-import okhttp3.internal.ignoreIoExceptions
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.ZoneOffset
-import java.util.Locale
 
 class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
     RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>() {
@@ -44,9 +28,6 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
             itemBinding.tvTimeMeettingSchedule.text = convertTimestampToCalendar_SimpleTimeFormat(Item.date_medical_examinaton!!)
             itemBinding.tvYearSchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.YEAR).toString()
             itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
-        }
-        fun nonList(){
-            itemBinding.tvTimeMeettingSchedule.text = "havw3 no schedule"
         }
 
     }
@@ -70,19 +51,12 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        // sortDifferByDateTime()
         val Item = differ.currentList[position]
-
-        if (differ.currentList.find { it.id.equals("None") } != null) {
-            holder.nonList()
-            //notifyDataSetChanged()
-        }
-        else {
-            holder.bindItem(Item)
-            holder.itemView.setOnClickListener {
+        holder.bindItem(Item)
+        holder.itemView.setOnClickListener {
                 onItemClick?.invoke(Item)
             }
-        }
+
 
     }
 
