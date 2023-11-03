@@ -5,4 +5,5 @@ import javax.inject.Inject
 
 interface DoctorRepository : BaseRepository<Doctor>{
     suspend fun getDoctorById(doctorKeys: HashMap<String?,Doctor?>, listener: (HashMap<String?, Doctor?>) -> Unit)
+
 }

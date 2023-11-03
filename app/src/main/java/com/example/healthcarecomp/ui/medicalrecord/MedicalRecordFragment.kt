@@ -14,7 +14,7 @@ import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.databinding.FragmentMedicalRecordBinding
-import com.example.healthcarecomp.ui.activity.MainActivity
+import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import com.example.healthcarecomp.util.extension.isDoctor
@@ -84,7 +84,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
 
         _medicalRecordViewModel.currentMedicalRecordId = args.medicalRecordId
 
-        if (_parent?.currentUser.isDoctor()) {
+        if (_parent?.currentUser!!.isDoctor()) {
             applyDoctorRole()
         } else {
             applyPatientRole()
