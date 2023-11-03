@@ -40,4 +40,14 @@
     <string name="team_name">-Ongtrumandroid-</string>
     <string name="app_name_and_version">Health Care version 0.0.1</string>
     <string name="dob_hint">dd/mm/yyy</string>
+
+    <!--    biometric authentication-->
+    <string name="biometric_authentication_title">Biometric Authentication</string>
+    <string name="biometric_authentication_subtitle">Log in using your biometric credential</string>
+    <!--    <string name="biometric_authentication_error">Authentication error: </string>-->
+    <!--    <string name="biometric_authentication_succeeded">Authentication succeeded!</string>-->
+    <!--    <string name="biometric_authentication_failed">Authentication failed</string>-->
+    <string name="biometric_support_unavailable">Biometric authentication is not available on this device</string>
+    <string name="biometric_currently_unavailable">Biometric authentication is currently unavailable</string>
+    <string name="biometric_enrollment_unavailable">Biometric enrollment is currently not available on this device</string>
 </resources>
