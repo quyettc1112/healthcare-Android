@@ -7,6 +7,6 @@ interface BaseRepository<T> {
     suspend fun remove(entity: T, id: String): Resource<T>
 
     fun onItemChange(listener: (Resource<T>) -> Unit, id: String)
-    suspend fun getAll(listener: (Resource<MutableList<T>>) -> Unit)
+     fun getAll(listener: (Resource<MutableList<T>>) -> Unit)
 
 }

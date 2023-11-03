@@ -1,14 +1,17 @@
 package com.example.healthcarecomp.ui.schedule
 
 import android.util.Log
+import android.util.LogPrinter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel
+import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.data.model.Patient
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.data.repository.AuthRepository
 import com.example.healthcarecomp.data.repository.ScheduleRepository
+import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryUseCase
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +23,10 @@ import javax.inject.Inject
 class ScheduleViewModel @Inject constructor(
     // Import use case for Viewmodel
     private val scheduleUseCase: ScheduleUseCase,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+
+    //Do trong MedicalRecordHistory có hàm để lấy danh sách các bác sĩ
+
 ) : BaseViewModel() {
 
     // Create a list of schedule today
@@ -28,10 +34,10 @@ class ScheduleViewModel @Inject constructor(
     var scheduleListUpComing = MutableLiveData<Resource<MutableList<Schedule>>>()
     var scheduleAdd = MutableLiveData<Resource<Schedule>>()
     var patientID = authRepository.getLoggedInUser()?.id
+    var doctorLIst =  MutableLiveData<Resource<MutableList<Doctor>>>()
 
     // hàm khởi tạo
     init {
-        //authRepository.getLoggedInUser()?.isDoctor()
         loadTodayScheduleByPatientID(patientID!!, "Today")
         loadUpComingcheduleByPatientID(patientID!!, "UpComing")
 
@@ -74,6 +80,15 @@ class ScheduleViewModel @Inject constructor(
 
     fun removeSchedule(schedule: Schedule) = viewModelScope.launch {
         scheduleUseCase.removeSchedule(schedule)
+    }
+
+    fun getAllDoctor(){
+        viewModelScope.launch {
+            scheduleUseCase.getAllDoctor{
+                doctorLIst.value = it
+            }
+        }
+
     }
 
 

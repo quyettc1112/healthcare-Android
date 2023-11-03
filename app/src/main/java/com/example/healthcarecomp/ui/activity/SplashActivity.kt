@@ -17,10 +17,8 @@ class SplashActivity : AppCompatActivity() {
     private var progressBarProgress = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.e("Frank","SplashAcitivty")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
         // Set up for progress bar run at 3 second and change activity fo MainAcitivity
         val progressBar = findViewById<ProgressBar>(R.id.progressBar_Splash)
         // Timedelay is a time to wait unitl change new acitvity: 100 = 1 second

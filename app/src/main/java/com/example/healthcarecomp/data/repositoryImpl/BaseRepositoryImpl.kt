@@ -28,10 +28,10 @@ open class BaseRepositoryImpl<T> @Inject constructor(
     private val TAG = "BaseRepositoryImpl"
     val _dbRef = tableName?.let { firebaseRef.child(it) }
 
-    override suspend fun getAll(
+    override fun getAll(
         listener: (Resource<MutableList<T>>) -> Unit
     ) {
-        val query = _dbRef
+        val query = firebaseRef.child(tableName!!)
         if (query != null) {
             fetchData(query, listener)
         }

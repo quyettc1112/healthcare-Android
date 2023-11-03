@@ -47,11 +47,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
     private var isCanceled: Boolean = false
     private var isTimeCanceled: Boolean = false
-
-
     var currentTime = Calendar.getInstance()
-
-
 
 
     override fun onCreateView(
@@ -71,6 +67,19 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             Toast.makeText(requireContext(), "You have no Schedule", Toast.LENGTH_SHORT).show()
         }
 
+        scheduleViewModel.getAllDoctor()
+
+        scheduleViewModel.doctorLIst.observe(viewLifecycleOwner, Observer {
+            when(it) {
+                is Resource.Success  -> {
+                    Log.d("CheckValue", it.data.toString())
+                }
+                else -> {
+                    Log.d("CheckValue", it.toString())
+                }
+            }
+        })
+
         return binding.root
     }
 
@@ -86,7 +95,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             )
         )
     }
-
 
     private fun setUpUI(binding: FragmentScheduleBinding, scheduleViewModel: ScheduleViewModel) {
         _recyclerViewAdapter = ScheduleAdapter(scheduleViewModel)
@@ -135,8 +143,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     }
 
     fun setUpDialogPopup (schedule: Schedule) {
-
-
 
         val dialogBinding = layoutInflater.inflate(R.layout.activity_pop_up, null)
         val title = dialogBinding.findViewById<TextView>(R.id.title_activity_popup)
