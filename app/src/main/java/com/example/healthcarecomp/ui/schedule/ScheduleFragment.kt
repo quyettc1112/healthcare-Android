@@ -75,7 +75,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                     Log.d("CheckValue", it.data.toString())
                 }
                 else -> {
-                    Log.d("CheckValue", it.toString())
                 }
             }
         })
