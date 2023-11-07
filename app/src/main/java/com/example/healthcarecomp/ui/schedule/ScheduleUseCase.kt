@@ -39,8 +39,11 @@ class ScheduleUseCase @Inject  constructor(
 
 
     suspend fun getAllDoctor(listener: (Resource<MutableList<Doctor>>) -> Unit) {
-        Log.d("CheckValue","use case")
         return doctorRepository.getAll(listener)
+    }
+
+    suspend fun getDoctorByIDKey(doctor: Doctor): Resource<Doctor?> {
+        return  doctorRepository.getDoctorByIdKey(doctor)
     }
 
 

@@ -141,6 +141,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 else -> {}
             }
         })
+
         val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter_UpComing.getSimpleCallBack())
         itemTouchHelper.attachToRecyclerView(binding.rvListUpcomingSchedule)
 

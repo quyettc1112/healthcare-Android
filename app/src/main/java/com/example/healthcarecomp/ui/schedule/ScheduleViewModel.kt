@@ -15,6 +15,7 @@ import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryUseCase
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.concurrent.locks.Condition
 import javax.inject.Inject
@@ -35,7 +36,6 @@ class ScheduleViewModel @Inject constructor(
     var scheduleAdd = MutableLiveData<Resource<Schedule>>()
     var patientID = authRepository.getLoggedInUser()?.id
     var doctorLIst =  MutableLiveData<Resource<MutableList<Doctor>>>()
-
     // hàm khởi tạo
     init {
         loadTodayScheduleByPatientID(patientID!!, "Today")
@@ -60,8 +60,12 @@ class ScheduleViewModel @Inject constructor(
 
     fun getListTodayUPComing(): List<Schedule>?{
         return scheduleListUpComing.value?.data?.toList()
-
     }
+
+    fun getListDoctor() : List<Doctor>? {
+        return doctorLIst.value?.data?.toList()
+    }
+
 
     fun loadUpComingcheduleByPatientID(patientID : String, condition: String){
         viewModelScope.launch {
@@ -90,6 +94,7 @@ class ScheduleViewModel @Inject constructor(
         }
 
     }
+
 
 
 }

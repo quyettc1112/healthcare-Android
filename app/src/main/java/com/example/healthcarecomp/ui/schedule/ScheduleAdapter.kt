@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.healthcarecomp.R
 
 import com.example.healthcarecomp.data.model.Schedule
+import com.example.healthcarecomp.data.repository.DoctorRepository
 
 import com.example.healthcarecomp.databinding.RvListScheduleBinding
 import java.text.SimpleDateFormat
@@ -28,6 +30,13 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
             itemBinding.tvTimeMeettingSchedule.text = convertTimestampToCalendar_SimpleTimeFormat(Item.date_medical_examinaton!!)
             itemBinding.tvYearSchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.YEAR).toString()
             itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
+            val doctorId = Item.doctorId
+            val doctor = scheduleViewModel.getListDoctor()?.filter { it.id == doctorId }?.firstOrNull()
+            if (doctor != null) {
+                Glide.with(itemBinding.root.context).load(doctor.avatar).into(itemBinding.ivUserAVTSchedule)
+            } else {
+                itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
+            }
         }
 
     }
