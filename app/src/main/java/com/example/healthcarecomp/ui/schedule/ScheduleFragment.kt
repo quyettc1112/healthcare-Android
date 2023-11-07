@@ -19,11 +19,14 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
+import com.example.healthcarecomp.common.Adapter.ListDoctorAdapter
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.common.Screen
+import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.databinding.FragmentScheduleBinding
 import com.example.healthcarecomp.util.Resource
@@ -38,8 +41,11 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     private lateinit var _recyclerViewAdapter: ScheduleAdapter
     private lateinit var _recyclerViewAdapter_UpComing: ScheduleAdapter
 
+    private lateinit var _recyclerViewAdapter_DoctorList: ListDoctorAdapter
+
     private lateinit var currentList_UpComing: List<Schedule>
     private lateinit var currentList_Today: List<Schedule>
+
 
     private var calendar = Calendar.getInstance()
 
@@ -57,37 +63,37 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     ): View? {
         val binding = FragmentScheduleBinding.inflate(inflater, container, false)
 
-        setDate(binding)
+
         binding.tvDayChoose.text = Calendar.getInstance().time.toString()
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
 
-        setUpUI(binding, scheduleViewModel)
-        setUpUI_UpComing(binding, scheduleViewModel)
+
         if (scheduleViewModel.getListToday()?.size == 0 && scheduleViewModel.getListTodayUPComing()?.size == 0) {
             Toast.makeText(requireContext(), "You have no Schedule", Toast.LENGTH_SHORT).show()
         }
 
         scheduleViewModel.getAllDoctor()
-
+        _recyclerViewAdapter_DoctorList = ListDoctorAdapter()
         scheduleViewModel.doctorLIst.observe(viewLifecycleOwner, Observer {
             when(it) {
                 is Resource.Success  -> {
-                    Log.d("CheckValue", it.data.toString())
+                    _recyclerViewAdapter_DoctorList.differ.submitList(it?.data?.toList())
                 }
-                else -> {
-                }
+                else -> {}
             }
         })
-
+        setDate(binding)
+        setUpUI(binding, scheduleViewModel)
+        setUpUI_UpComing(binding, scheduleViewModel)
         return binding.root
     }
 
-    private fun planSchedule(calendar: Calendar?) {
+    private fun planSchedule(calendar: Calendar?, doctor: Doctor) {
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
         scheduleViewModel.upsertSchedule(
             Schedule(
-                doctorId = "cbf1d2ea-0249-452e-bd4e-7db757ad6f4c",
-                patientID = "1a04ee07-5909-4471-b767-a62f8c1e99d1",
+                doctorId = doctor.id,
+                patientID = scheduleViewModel.patientID.toString(),
                 date_medical_examinaton = calendar?.timeInMillis,
                 status_medical_schedule = "Đã Đặt Lịch",
                 note = "Tôi bị đau bụng",
@@ -138,10 +144,34 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter_UpComing.getSimpleCallBack())
         itemTouchHelper.attachToRecyclerView(binding.rvListUpcomingSchedule)
 
-
+    }
+    fun setUpDoctorDialogPopUp(calendar: Calendar?, binding: FragmentScheduleBinding) {
+        val dialogBinding = layoutInflater.inflate(R.layout.dialog_doctor_list, null)
+        val rv = dialogBinding.findViewById<RecyclerView>(R.id.rv_doclist)
+        val button = dialogBinding.findViewById<Button>(R.id.btn_close)
+        rv.apply {
+            adapter = _recyclerViewAdapter_DoctorList
+        }
+        val myDialog = Dialog(requireContext())
+        myDialog.setContentView(dialogBinding)
+        myDialog.setCancelable(false)
+        //myDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,   ViewGroup.LayoutParams.WRAP_CONTENT)
+        myDialog.window?.setLayout(Screen.width, Screen.height)
+        myDialog.window?.setBackgroundDrawable(ColorDrawable(requireContext().getColor(R.color.zxing_transparent)))
+        myDialog.show()
+        button.setOnClickListener {
+            myDialog.dismiss()
+        }
+        _recyclerViewAdapter_DoctorList.onItemClick = {
+            ConfirmDialog(calendar,binding, it, "Meeting with ${it.lastName} at ${dateFormat.format(calendar?.time)} ", myDialog)
+        }
     }
 
     fun setUpDialogPopup (schedule: Schedule) {
+
+        _recyclerViewAdapter_UpComing.onItemClick = {
+            setUpDialogPopup(it)
+        }
 
         val dialogBinding = layoutInflater.inflate(R.layout.activity_pop_up, null)
         val title = dialogBinding.findViewById<TextView>(R.id.title_activity_popup)
@@ -167,12 +197,10 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         btn_finish.setOnClickListener {
             myDialog.dismiss()
         }
-
         btn_phone.setOnClickListener {
             myDialog.dismiss()
             val packageManager = requireContext().packageManager
             val appInstalled = packageManager.getPackageInfo("com.android.phone", 0) != null
-
             if (appInstalled) {
                 // Create an intent to open the phone app
                 val intent = Intent(Intent.ACTION_DIAL)
@@ -184,9 +212,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 Toast.makeText(requireContext(), "Ứng dụng điện thoại không được cài đặt", Toast.LENGTH_SHORT).show()
             }
         }
-
-
-
     }
 
 
@@ -240,7 +265,9 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 } else {
                     if (checkDuplicate(scheduleViewModel.getListToday()!!, calendar!!) == true && checkTimeDiff(calendar, currentTime)) {
                         errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
-                    } else ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}")
+                    } else {
+                        setUpDoctorDialogPopUp(calendar, binding)
+                    }
                 }
             } else {
                 when(isTimeCanceled) {
@@ -249,7 +276,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                         if (checkDuplicate(scheduleViewModel.getListTodayUPComing()!!, calendar!!) == true) {
                             errorDialog(timePickerDialog, "You have an appointment scheduled for that time")
                         } else {
-                            ConfirmDialog(calendar, binding, "You will meet doctor at \n ${dateFormat.format(calendar?.time)}") }
+                     }
                     }
                 }
             }
@@ -259,14 +286,15 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
 
 
-    fun ConfirmDialog(calendar: Calendar?, binding: FragmentScheduleBinding, message: String) {
+    fun ConfirmDialog(calendar: Calendar?, binding: FragmentScheduleBinding, doctor: Doctor, message: String, dialog: Dialog) {
         val confirmDialog = ConfirmDialog(
             requireContext(),
             object : ConfirmDialog.ConfirmCallback {
                 override fun negativeAction() {}
                 override fun positiveAction() {
                     binding.tvDayChoose.text = calendar?.time.toString()
-                    planSchedule(calendar)
+                    planSchedule(calendar, doctor)
+                    dialog.dismiss()
                 }
             },
             title = "Confirm",
