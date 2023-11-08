@@ -28,6 +28,7 @@
 
             <com.google.android.material.search.SearchBar
                 android:id="@+id/sbChatSearch"
+                android:elevation="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#f5f7fa"
@@ -45,9 +46,10 @@
     </LinearLayout>
 
     <ProgressBar
+        android:id="@+id/pbChatLoading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

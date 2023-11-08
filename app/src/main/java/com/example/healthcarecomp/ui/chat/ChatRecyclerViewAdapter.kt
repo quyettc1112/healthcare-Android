@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.ui.chat
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +13,53 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.data.model.ChatRoom
+import com.example.healthcarecomp.data.model.User
+import okhttp3.internal.notify
 
 class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.ChatViewHolder>() {
 
-    private val differCallback = object : DiffUtil.ItemCallback<ChatRoom>() {
-        override fun areItemsTheSame(oldItem: ChatRoom, newItem: ChatRoom): Boolean {
-           return oldItem.id == newItem.id
+    lateinit var currentUserId: String
+    lateinit var dataList: MutableList<Pair<ChatRoom, User>>
+    private var onItemClickListener : ((User, String) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: ((User, String) -> Unit)){
+        onItemClickListener = listener
+    }
+    fun submitData(list: MutableList<Pair<ChatRoom, User>>){
+        dataList = list
+        updateUI()
+    }
+
+    fun updateUI(){
+        dataList.sortByDescending {
+            it.first.lastActiveTime
+        }
+        differ.submitList(dataList.toList())
+    }
+
+    fun submitData(data: Pair<ChatRoom, User>){
+        val dataIndex = dataList.indexOfFirst { it.first.id == data.first.id }
+        if(dataIndex != -1){
+            dataList[dataIndex] = data
+        }else{
+            dataList.add(data)
+        }
+        updateUI()
+    }
+
+    private val differCallback = object : DiffUtil.ItemCallback<Pair<ChatRoom, User>>() {
+        override fun areItemsTheSame(
+            oldItem: Pair<ChatRoom, User>,
+            newItem: Pair<ChatRoom, User>
+        ): Boolean {
+            return oldItem.first.id == newItem.first.id
         }
 
-        override fun areContentsTheSame(oldItem: ChatRoom, newItem: ChatRoom): Boolean {
-           return oldItem == newItem
+        override fun areContentsTheSame(
+            oldItem: Pair<ChatRoom, User>,
+            newItem: Pair<ChatRoom, User>
+        ): Boolean {
+            return oldItem.first == newItem.first
         }
     }
 
@@ -47,10 +85,19 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
     }
 
     override fun onBindViewHolder(holder: ChatRecyclerViewAdapter.ChatViewHolder, position: Int) {
-        val chatRoom = differ.currentList[position]
+        val data = differ.currentList[position]
+        val chatRoom = data.first
+        val user = data.second
         holder.apply {
-            //Glide.with(itemView.context).load(chatRoom)
+            Glide.with(itemView.context).load(chatRoom).placeholder(R.drawable.default_user_avt).into(userAvatar)
+            userNameDisplay.text = user?.firstName
+            itemView.setOnClickListener {
+                onItemClickListener?.let {
+                    it(user, chatRoom.id)
+                }
+            }
         }
+
     }
 
     override fun getItemCount(): Int {

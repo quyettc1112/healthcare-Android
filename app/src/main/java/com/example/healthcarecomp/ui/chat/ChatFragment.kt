@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.data.model.ChatRoom
+import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentChatBinding
 import com.example.healthcarecomp.ui.activity.MainActivity
 import com.example.healthcarecomp.util.Resource
@@ -44,20 +45,36 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
 
     private fun setupUI() {
         _recyclerViewAdapter = ChatRecyclerViewAdapter()
+        _parent?.let {
+            _chatViewModel.invoke(_parent?.currentUser?.id!!){
+                Log.i("hum", it.toString())
+                _recyclerViewAdapter.submitData(it)
+            }
+        }
+        _recyclerViewAdapter.currentUserId = _parent?.currentUser?.id!!
+        _recyclerViewAdapter.setOnItemClickListener { user,id ->
+            val direction = ChatFragmentDirections.actionNavigationChatToChatMessageFragment(user, id)
+            navigateToPage(direction)
+        }
         _binding.rvChatUsers.apply {
             adapter = _recyclerViewAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-        _chatViewModel.chatRooms.observe(viewLifecycleOwner, Observer {
-            when(it) {
+
+        _chatViewModel.chatRooms.observe(viewLifecycleOwner, Observer { resources ->
+            when(resources) {
                 is Resource.Success -> {
-                    _recyclerViewAdapter.differ.submitList(it.data)
+                    hindLoading()
+                    _recyclerViewAdapter.submitData(resources.data!!)
                 }
                 is Resource.Error -> {
-
                 }
-                else -> {
 
+                is Resource.Loading -> {
+                    showLoading()
+                }
+
+                else -> {
                 }
             }
         })
@@ -75,9 +92,18 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
             when(it) {
                 is Resource.Success -> Log.i("okok", "upsert success")
                 is Resource.Error -> Log.i("okok", "upsert error: ${it.message}")
-                else -> Log.i("okok", "unknown err")
+                is Resource.Unknown -> Log.i("okok", "unknown err")
+                else -> Log.i("okok", "humm err")
             }
         })
+    }
+
+    fun showLoading(){
+        _binding.pbChatLoading.visibility = View.VISIBLE
+    }
+
+    fun hindLoading() {
+        _binding.pbChatLoading.visibility = View.INVISIBLE
     }
 
 }

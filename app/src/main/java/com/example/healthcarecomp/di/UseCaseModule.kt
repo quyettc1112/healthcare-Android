@@ -40,8 +40,8 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideChatRoomUseCase(chatRoomRepository: ChatRoomRepository) : ChatUseCase {
-        return ChatUseCase(chatRoomRepository)
+    fun provideChatRoomUseCase(chatRoomRepository: ChatRoomRepository, authRepository: AuthRepository) : ChatUseCase {
+        return ChatUseCase(chatRoomRepository, authRepository)
     }
 
 

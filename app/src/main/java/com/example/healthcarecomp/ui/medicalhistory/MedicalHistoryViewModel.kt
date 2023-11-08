@@ -41,7 +41,6 @@ class MedicalHistoryViewModel @Inject constructor(
                     val data = it.data
                     data?.forEach {record ->
                         doctorList.putIfAbsent(record.doctorId, null)
-                        Log.i("log",record.toString())
                     }
                     runBlocking {
                         medicalHistoryUseCase.getDoctorById(doctorList){

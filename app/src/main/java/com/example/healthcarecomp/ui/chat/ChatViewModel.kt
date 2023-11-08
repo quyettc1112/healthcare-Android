@@ -1,32 +1,107 @@
 package com.example.healthcarecomp.ui.chat
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel
 import com.example.healthcarecomp.data.model.ChatRoom
+import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val chatUseCase: ChatUseCase
-): BaseViewModel() {
-    val chatRooms = MutableLiveData<Resource<MutableList<ChatRoom>>>()
+) : BaseViewModel() {
     val chatRoomUpsert = MutableLiveData<Resource<ChatRoom>>()
+    val chatRooms = MutableLiveData<Resource<MutableList<Pair<ChatRoom, User>>>>()
+    private lateinit var listener: (Pair<ChatRoom, User>) -> Unit
     private lateinit var _userId: String
 
-    operator fun invoke(userId: String){
+    operator fun invoke(userId: String, listener: (Pair<ChatRoom, User>) -> Unit) {
         _userId = userId
-        onChatRoomChange()
+        this.listener = listener
+        onChatRoomLoad()
     }
 
-    fun onChatRoomChange() = viewModelScope.launch {
-        chatUseCase.onChatRoomChange(_userId) {
-            chatRooms.value = it
+    // this function will add event when load and update
+    // chatUseCase have 3 parameter:
+    // 1: userId: is current user login in system to load chat box user owner
+    // 2: add listener: is event when load each chat room of user
+    // 3: update listener: is event when chat room update
+    // when load success chat room , set that in runBlocking to wait to load who message
+    fun onChatRoomLoad() = viewModelScope.launch {
+        Log.i("hum", "call fun")
+        chatRooms.value = Resource.Loading()
+        viewModelScope.launch {
+            chatUseCase.onChatRoomLoad(_userId, { resource ->
+                if (resource is Resource.Success) {
+                    if (chatRooms.value is Resource.Loading) {
+                        chatRooms.value = Resource.Success(mutableListOf())
+                    }
+                    viewModelScope.launch {
+                        if (resource?.data!!.firstUserId == _userId) {
+                            chatUseCase.getUserById(resource.data?.secondUserId!!) { userResource ->
+                                userResource?.data?.let {
+                                    addData(resource.data!!, it)
+                                }
+                            }
+                        } else {
+                            chatUseCase.getUserById(resource.data?.firstUserId!!) { userResource ->
+                                userResource?.data?.let {
+                                    addData(resource.data!!, it)
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+            }, { resource ->
+                viewModelScope.launch {
+                    if (resource?.data!!.firstUserId == _userId) {
+                        chatUseCase.getUserById(resource.data?.secondUserId!!) { userResource ->
+                            userResource?.data?.let {
+                                updateData(resource.data!!, it)
+                            }
+                        }
+                    } else {
+                        chatUseCase.getUserById(resource.data?.firstUserId!!) { userResource ->
+                            userResource?.data?.let {
+                                updateData(resource.data!!, it)
+                            }
+                        }
+
+                    }
+                }
+            }
+            )
+        }
+
+    }
+
+    private fun addData(chat: ChatRoom, user: User) {
+        chatRooms.value = chatRooms.value.apply {
+            this?.data?.add(Pair(chat, user))
         }
     }
+
+    private fun updateData(chat: ChatRoom, user: User) {
+        chatRooms.value = chatRooms.value.apply {
+            val index = this?.data?.indexOfFirst {
+                it.first.id == chat.id
+            }
+            index?.let {
+                this?.data?.set(it, Pair(chat, user))
+            }
+
+        }
+    }
+
 
     fun upsert(chatRoom: ChatRoom) = viewModelScope.launch {
         chatRoomUpsert.value = chatUseCase.upsert(chatRoom)

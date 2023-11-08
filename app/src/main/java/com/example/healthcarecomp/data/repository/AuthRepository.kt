@@ -14,6 +14,8 @@ interface AuthRepository {
 
     suspend fun loginByPhone(phone: String, password: String): Resource<User>
 
+    suspend fun getUserById(userId: String, listener: (Resource<User?>) -> Unit)
+
     suspend fun signup(
         phone: String,
         password: String,
