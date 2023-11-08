@@ -15,6 +15,8 @@ import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryUseCase
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.concurrent.locks.Condition
@@ -23,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(
     // Import use case for Viewmodel
-    private val scheduleUseCase: ScheduleUseCase,
+    val scheduleUseCase: ScheduleUseCase,
     private val authRepository: AuthRepository,
 
     //Do trong MedicalRecordHistory có hàm để lấy danh sách các bác sĩ
@@ -86,8 +88,12 @@ class ScheduleViewModel @Inject constructor(
         scheduleUseCase.removeSchedule(schedule)
     }
 
+    fun getDoctorByID(doctorId: String) = viewModelScope.launch {
+        scheduleUseCase.getDoctorByIDKey(doctorId)  as Doctor
+    }
+
     fun getAllDoctor(){
-        viewModelScope.launch {
+        GlobalScope.launch() {
             scheduleUseCase.getAllDoctor{
                 doctorLIst.value = it
             }

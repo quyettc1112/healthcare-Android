@@ -29,11 +29,11 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
             itemBinding.tvDaySchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.DAY_OF_MONTH).toString()
             itemBinding.tvTimeMeettingSchedule.text = convertTimestampToCalendar_SimpleTimeFormat(Item.date_medical_examinaton!!)
             itemBinding.tvYearSchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.YEAR).toString()
-            itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
             val doctorId = Item.doctorId
             val doctor = scheduleViewModel.getListDoctor()?.filter { it.id == doctorId }?.firstOrNull()
             if (doctor != null) {
                 Glide.with(itemBinding.root.context).load(doctor.avatar).into(itemBinding.ivUserAVTSchedule)
+                itemBinding.tvNameUserMeetingSchedule.text = "Meeting with ${doctor.lastName}"
             } else {
                 itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
             }

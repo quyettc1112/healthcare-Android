@@ -31,8 +31,8 @@ class DoctorRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDoctorByIdKey(doctor: Doctor): Resource<Doctor?> {
-        val doctorSnapshot = _doctorRef.orderByChild(Constant.DoctorQuery.PATH.queryField).equalTo(doctor.id).get().await()
+    override suspend fun getDoctorByIdKey(doctor: String): Resource<Doctor?> {
+        val doctorSnapshot = _doctorRef.orderByChild(Constant.DoctorQuery.PATH.queryField).equalTo(doctor).get().await()
         if (doctorSnapshot.exists()) {
             val doctor= doctorSnapshot.children.first().getValue(Doctor::class.java)
             return Resource.Success(doctor)

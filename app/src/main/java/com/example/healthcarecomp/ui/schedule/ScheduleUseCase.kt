@@ -42,8 +42,8 @@ class ScheduleUseCase @Inject  constructor(
         return doctorRepository.getAll(listener)
     }
 
-    suspend fun getDoctorByIDKey(doctor: Doctor): Resource<Doctor?> {
-        return  doctorRepository.getDoctorByIdKey(doctor)
+    suspend fun getDoctorByIDKey(doctorID: String): Resource<Doctor?> {
+        return  doctorRepository.getDoctorByIdKey(doctorID)
     }
 
 
