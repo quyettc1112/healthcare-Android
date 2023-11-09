@@ -29,8 +29,6 @@ class InfoViewModel @Inject constructor(
     val userEditState = MutableLiveData<Resource<out User>>()
 
     fun upsertUser(
-        phone: String,
-        email: String,
         password: String,
         confirmPassword: String,
         firstName: String,
@@ -38,23 +36,31 @@ class InfoViewModel @Inject constructor(
         avatar: String?,
         gender: Boolean,
         dob: LocalDate? = null,
-    ){
+    ) {
         userEditState.value = Resource.Loading()
-        if(confirmPassword != password){
+        if (confirmPassword != password) {
             userEditState.value = Resource.Error("Confirm pass word does not match")
         }
         authRepository.getLoggedInUser()?.let {
             if (it.isDoctor()) {
-                var doctor =
-                    Doctor(phone, email, password, firstName, lastName, avatar, gender, dob)
+                it.password = password
+                it.firstName = firstName
+                it.lastName = lastName
+                it.avatar = avatar
+                it.gender = gender
+                it.dob = dob
                 viewModelScope.launch {
-                    userEditState.value = doctorRepository.upsert(doctor, it.id)
+                    userEditState.value = doctorRepository.upsert(it as Doctor, it.id)
                 }
             } else if (it.isPatient()) {
-                var patient =
-                    Patient(phone, email, password, firstName, lastName, avatar, gender, dob)
+                it.password = password
+                it.firstName = firstName
+                it.lastName = lastName
+                it.avatar = avatar
+                it.gender = gender
+                it.dob = dob
                 viewModelScope.launch {
-                    userEditState.value = patientRepository.upsert(patient, it.id)
+                    userEditState.value = patientRepository.upsert(it as Patient, it.id)
                 }
             } else {
                 userEditState.value = Resource.Error("Update user info unsuccessfully")

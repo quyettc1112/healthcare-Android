@@ -110,7 +110,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
 
-    fun saveUser(user: User) {
+    override fun saveUser(user: User) {
         var sharePrefKey: String = Constant.USER_SHARE_PREF_KEY
         if (user.isDoctor()) {
             sharePrefKey = Constant.DOCTOR_SHARE_PREF_KEY
@@ -123,7 +123,7 @@ class AuthRepositoryImpl @Inject constructor(
         sharePreference.edit().putString(sharePrefKey, userJson).apply()
     }
 
-    fun removeUser(user: User) {
+    override fun removeUser(user: User) {
         var sharePrefKey: String = Constant.USER_SHARE_PREF_KEY
         if (user.isDoctor()) {
             sharePrefKey = Constant.DOCTOR_SHARE_PREF_KEY

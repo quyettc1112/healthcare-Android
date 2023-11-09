@@ -11,7 +11,7 @@ open class User(
     var lastName: String? = null,
     var avatar: String? = null,
     var gender: Boolean? = null,
-    val dob: LocalDate? = null,
+    var dob: LocalDate? = null,
     val id: String = UUID.randomUUID().toString()
 ) {
     override fun equals(other: Any?): Boolean {

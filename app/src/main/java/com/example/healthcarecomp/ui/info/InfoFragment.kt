@@ -21,7 +21,6 @@ import com.example.healthcarecomp.ui.activity.main.MainViewModel
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.ValidationUtils
 import com.example.healthcarecomp.util.extension.afterTextChanged
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -62,17 +61,25 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
     //    @RequiresApi(Build.VERSION_CODES.O)
     private fun setEvents() {
         //logout
-        _binding.ibLogout.setOnClickListener{
+        _binding.ibLogout.setOnClickListener {
             _viewModel.logout()
             val confirmCallback = object : ConfirmDialog.ConfirmCallback {
                 override fun positiveAction() {
-                    startActivity(Intent(requireActivity(),AuthActivity::class.java))
+                    startActivity(Intent(requireActivity(), AuthActivity::class.java))
                     requireActivity().finish()
                 }
+
                 override fun negativeAction() {
                 }
             }
-            (requireActivity() as MainActivity).showConfirmDialog("Logging out", "Do you really want to log out?","Yes","Cancel","?",confirmCallback)
+            (requireActivity() as MainActivity).showConfirmDialog(
+                "Logging out",
+                "Do you really want to log out?",
+                "Yes",
+                "Cancel",
+                "?",
+                confirmCallback
+            )
 
         }
 
@@ -83,25 +90,18 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                 if (it) {
                     var firstName = _binding.etInfoFirstName.text.toString()
                     var lastName = _binding.etInfoLastName.text.toString()
-                    var phone = _binding.etInfoPhoneNumber.text.toString()
+
                     var password = _binding.etInfoPassword.text.toString()
                     var confirmPassword = _binding.etInfoPasswordConfirm.text.toString()
                     var gender = _binding.rbMale.isChecked
-                    var email = _binding.etInfoEmail.text.toString()
+
                     var avatar = mainViewModel.currentUser.value?.avatar
                     var dob: LocalDate? = null
 
                     if (!(ValidationUtils.isValidLastName(lastName)
-                                && ValidationUtils.isValidFirstName(firstName))
-                        && ValidationUtils.isValidConfirmPassword(
-                            password,
-                            confirmPassword
-                        )
-                        && ValidationUtils.isValidPhoneNumber(
-                            phone
-                        )
-                        && ValidationUtils.validateEmail(email)
-                        && ValidationUtils.validatePassword(password)
+                                && ValidationUtils.isValidFirstName(firstName)
+                                && ValidationUtils.isValidConfirmPassword(password, confirmPassword)
+                                && ValidationUtils.validatePassword(password))
                     ) {
                         _viewModel.userEditState.value =
                             Resource.Error("Please fill in correctly all field")
@@ -120,11 +120,9 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                             _viewModel.upsertUser(
                                 firstName = firstName,
                                 lastName = lastName,
-                                phone = phone,
                                 password = password,
                                 confirmPassword = confirmPassword,
                                 gender = gender,
-                                email = email,
                                 dob = dob,
                                 avatar = avatar
                             )
@@ -234,11 +232,9 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
             etInfoLastName.isEnabled = isEditing
             rbMale.isEnabled = isEditing
             rbFemale.isEnabled = isEditing
-            etInfoEmail.isEnabled = isEditing
             etInfoPassword.isEnabled = isEditing
             etInfoPassword.isEnabled = isEditing
             etInfoPasswordConfirm.isEnabled = isEditing
-            etInfoPhoneNumber.isEnabled = isEditing
             etDob.isEnabled = isEditing
             if (isEditing) {
                 fabEdit.setImageResource(R.drawable.ic_save_24)

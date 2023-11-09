@@ -27,4 +27,8 @@ interface AuthRepository {
     suspend fun onUserChange(user: User, listener: (Resource<User>) -> Unit)
 
     fun logout()
+
+    fun saveUser(user: User)
+
+    fun removeUser(user: User)
 }

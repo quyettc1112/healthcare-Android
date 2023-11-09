@@ -29,6 +29,11 @@ class MainViewModel @Inject constructor(
                 is Resource.Error -> Log.i("Main view model", it.message!!)
                 is Resource.Success -> {
                     currentUser.value = it.data
+                    if(it.data?.password == authRepository.getLoggedInUser()?.password){
+                        authRepository.saveUser(it.data!!)
+                    } else {
+                        authRepository.removeUser(it.data!!)
+                    }
                     Log.i("Main view model","user update")
                 }
                 else ->  Log.i("Main view model","unknown error")

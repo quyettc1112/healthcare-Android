@@ -16,6 +16,7 @@ open class BaseRepositoryImpl<T> @Inject constructor(
 
      var tableName: String? = null
      var entityClass: Class<T>? = null
+     var _dbRef :  DatabaseReference? = null
 
     operator fun invoke(
         tableName: String,
@@ -23,15 +24,16 @@ open class BaseRepositoryImpl<T> @Inject constructor(
     ) {
         this.tableName = tableName
         this.entityClass = entityClass
+        this._dbRef = tableName?.let { firebaseRef.child(it) }
     }
 
     private val TAG = "BaseRepositoryImpl"
-    val _dbRef = tableName?.let { firebaseRef.child(it) }
+
 
     override fun getAll(
         listener: (Resource<MutableList<T>>) -> Unit
     ) {
-        val query = firebaseRef.child(tableName!!)
+        val query = _dbRef
         if (query != null) {
             fetchData(query, listener)
         }
