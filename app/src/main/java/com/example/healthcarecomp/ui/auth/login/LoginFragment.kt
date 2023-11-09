@@ -2,6 +2,7 @@ package com.example.healthcarecomp.ui.auth.login
 
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,15 +17,13 @@ import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
-import com.example.healthcarecomp.ui.activity.AuthActivity
-import com.example.healthcarecomp.ui.activity.MainActivity
+import com.example.healthcarecomp.helper.BiometricHelper
+import com.example.healthcarecomp.ui.activity.auth.AuthActivity
+import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -33,6 +32,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
     private lateinit var _binding: FragmentLoginBinding
     private lateinit var _viewModel: LoginViewModel
     private var _userGG: User? = null
+    private lateinit var biometricHelper: BiometricHelper
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,23 +45,40 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         _viewModel = ViewModelProvider(requireActivity()).get(LoginViewModel::class.java)
+
+        autoLogin()
+
         return _binding.root
+    }
+
+    private fun autoLogin(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            biometricHelper = BiometricHelper(requireActivity(), { errorCode, errString ->
+                Toast.makeText(requireContext(),errString,Toast.LENGTH_SHORT).show()
+            }, {
+                _viewModel.isBiometricSuccess.value = true
+            }) {
+                null
+            }
+            biometricHelper.authenticateWithBiometric()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
-        observeLoginState()
+        setUI()
+        setEvents()
+        setObservers()
     }
 
-    private fun setupUI() {
-
-
+    private fun setUI() {
         //auto input phone
         arguments?.getString("phone")?.let {
             _binding.etLoginPhoneNumber.setText(it)
         }
+    }
 
+    private fun setEvents() {
 
         //set up display out line when user select role login
         _binding.ivLoginPatient.setOnClickListener(this)
@@ -112,10 +130,14 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
     }
 
     private fun loginWithGG() {
-        (requireActivity() as AuthActivity).loginWithGoogle(){
-            if(it == null) {
-                Toast.makeText(requireActivity(), "Have problem to login with google", Toast.LENGTH_SHORT).show()
-            }else{
+        (requireActivity() as AuthActivity).loginWithGoogle() {
+            if (it == null) {
+                Toast.makeText(
+                    requireActivity(),
+                    "Have problem to login with google",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 _userGG = it
                 _viewModel.loginByMail(it.email!!)
             }
@@ -123,7 +145,19 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
     }
 
-    private fun observeLoginState() {
+    private fun setObservers() {
+        //biometric login state
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                _viewModel.isBiometricSuccess.collectLatest {
+                    if(_viewModel.isBiometricSuccess.value){
+                        autoLogin()
+                    }
+                }
+            }
+        }
+
+        //Observe login state
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 _viewModel.loginFLow?.collectLatest {
@@ -142,8 +176,9 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
                         }
 
                         is Resource.Success -> {
-                            Log.d("Auth",_viewModel.getLoggedInUser().toString())
-                            val prefix = if (_viewModel.getLoggedInUser().isDoctor()) " Dr." else ""
+                            Log.d("Auth", _viewModel.getLoggedInUser().toString())
+                            val prefix =
+                                if (_viewModel.getLoggedInUser()!!.isDoctor()) " Dr." else ""
                             Toast.makeText(
                                 requireContext(),
                                 "Welcome$prefix ${_viewModel.getLoggedInUser()?.firstName}",
@@ -164,7 +199,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
                     _binding.pgLogin.visibility = View.GONE
                     when (it) {
                         is Resource.Success -> {
-                            val prefix = if (_viewModel.getLoggedInUser().isDoctor()) " Dr." else ""
+                            val prefix =
+                                if (_viewModel.getLoggedInUser()!!.isDoctor()) " Dr." else ""
                             Toast.makeText(
                                 requireContext(),
                                 "Welcome$prefix ${_viewModel.getLoggedInUser()?.firstName}",

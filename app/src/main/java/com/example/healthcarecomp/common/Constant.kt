@@ -104,46 +104,13 @@ class Constant {
             return itemList
         }
 
-        fun getScheduleToday(): ArrayList<Schedule> {
-            val scheduleList = ArrayList<Schedule>()
-
-            val schedule1 = Schedule(
-                doctorId = 1,
-                patientID = 2,
-                date_medical_examinaton = Calendar.getInstance().timeInMillis,
-                status_medical_schedule = "Đã hẹn"
-            )
-            scheduleList.add(schedule1)
-            scheduleList.add(schedule1)
-
-            return  scheduleList
+        fun convertTimestampToCalendar(timestamp: Long): Calendar {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = timestamp
+            return calendar
         }
 
-        fun getScheduleUpComing(): ArrayList<Schedule> {
-            val scheduleUpComingList = ArrayList<Schedule>()
 
-            val schedule1 = Schedule(
-                doctorId = 1,
-                patientID = 2,
-                date_medical_examinaton = Calendar.getInstance().timeInMillis,
-                status_medical_schedule = "Đã hẹn"
-            )
-
-
-            val schedule2 = Schedule(
-                doctorId = 2,
-                patientID = 3,
-                date_medical_examinaton = Calendar.getInstance().timeInMillis,
-                status_medical_schedule = "Chưa hẹn"
-            )
-
-            scheduleUpComingList.add(schedule1)
-            scheduleUpComingList.add(schedule1)
-            scheduleUpComingList.add(schedule1)
-            scheduleUpComingList.add(schedule2)
-
-            return  scheduleUpComingList
-        }
     }
 
     enum class DoctorQuery(val queryField: String){
@@ -194,6 +161,7 @@ class Constant {
         val nameIcon: String,
         val actionId:Int? = null
     )
+
 
 
 

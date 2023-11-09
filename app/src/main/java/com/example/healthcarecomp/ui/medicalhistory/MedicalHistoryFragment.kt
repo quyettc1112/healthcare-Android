@@ -15,11 +15,12 @@ import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.common.Constant.Companion.PATIENT_MEDICAL_HISTORY_KEY
 import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.databinding.FragmentMedicalHistoryBinding
-import com.example.healthcarecomp.ui.activity.MainActivity
+import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+
 import java.util.Date
 import java.util.UUID
 
@@ -64,7 +65,7 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
 
     private fun setupUI() {
         _parent?.let {
-            if (it.currentUser.isDoctor()) {
+            if (it.currentUser?.isDoctor()!!) {
                 _binding.btnMedicalHistoryAdd.visibility = View.VISIBLE
                 _binding.btnMedicalHistoryAdd.setOnClickListener {
                     val directions =

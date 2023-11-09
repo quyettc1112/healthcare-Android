@@ -35,8 +35,8 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provineScheduleUseCase(scheduleRepository: ScheduleRepository) : ScheduleUseCase {
-        return ScheduleUseCase(scheduleRepository)
+    fun provineScheduleUseCase(scheduleRepository: ScheduleRepository, doctorRepository: DoctorRepository) : ScheduleUseCase {
+        return ScheduleUseCase(scheduleRepository, doctorRepository)
     }
 
 
@@ -51,4 +51,5 @@ object UseCaseModule {
     fun provideChatMessageUseCase(chatMessageRepository: ChatMessageRepository) : ChatMessageUseCase {
         return ChatMessageUseCase(chatMessageRepository)
     }
+
 }

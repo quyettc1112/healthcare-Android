@@ -36,7 +36,7 @@
 
     <color name="card_recaycle">#fdfdff</color>
     <color name="icon_bg_red_light">#F5BBBB</color>
-    
+
     <color name="i_blue">#4A86F7</color>
     <color name="i_blue_light">#edf3fe</color>
     <color name="i_blue_e8ebfa">#e8ebfa</color>
@@ -45,4 +45,12 @@
     <color name="i_stroke">#e9edf1</color>
     <color name="i_bg">#f5f7fa</color>
     <color name="i_gray">#ececec</color>
+
+    <color name="light_blue_400">#FF29B6F6</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="gray_400">#FFBDBDBD</color>
+    <color name="gray_600">#FF757575</color>
+
+    <color name="zxing_transparent">#00000000</color>
+
 </resources>
