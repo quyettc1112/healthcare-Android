@@ -42,6 +42,7 @@ class ScheduleViewModel @Inject constructor(
     var currentUserID = authRepository.getLoggedInUser()?.id
     var currentUser = authRepository.getLoggedInUser()
     var doctorLIst =  MutableLiveData<Resource<MutableList<Doctor>>>()
+    var patientLIst =  MutableLiveData<Resource<MutableList<Patient>>>()
 
     // hàm khởi tạo
     init {
@@ -101,6 +102,9 @@ class ScheduleViewModel @Inject constructor(
         return doctorLIst.value?.data?.toList()
     }
 
+    fun getListPatient() : List<Patient> ? {
+        return null
+    }
     fun upsertSchedule(schedule: Schedule) = viewModelScope.launch {
         scheduleAdd.value = scheduleUseCase.upsertSchedule(schedule)
     }
@@ -109,9 +113,6 @@ class ScheduleViewModel @Inject constructor(
         scheduleUseCase.removeSchedule(schedule)
     }
 
-    fun getDoctorByID(doctorId: String) = viewModelScope.launch {
-        scheduleUseCase.getDoctorByIDKey(doctorId)  as Doctor
-    }
 
     fun getAllDoctor(){
         GlobalScope.launch() {
@@ -119,7 +120,6 @@ class ScheduleViewModel @Inject constructor(
                 doctorLIst.value = it
             }
         }
-
     }
 
 

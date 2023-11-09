@@ -32,7 +32,7 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
             itemBinding.tvDaySchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.DAY_OF_MONTH).toString()
             itemBinding.tvTimeMeettingSchedule.text = convertTimestampToCalendar_SimpleTimeFormat(Item.date_medical_examinaton!!)
             itemBinding.tvYearSchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.YEAR).toString()
-            if (scheduleViewModel.currentUser!!.isPatient()) {bindingPatient(Item)}
+            if (scheduleViewModel.currentUser!!.isPatient()) {bindingDoctor(Item)}
             else {
 
             }
@@ -40,7 +40,7 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
 
         }
 
-        private fun bindingPatient(Item: Schedule) {
+        private fun bindingDoctor(Item: Schedule) {
             val doctorId = Item.doctorId
             val doctor =
                 scheduleViewModel.getListDoctor()?.filter { it.id == doctorId }?.firstOrNull()
@@ -51,6 +51,21 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
                     .error(R.drawable.default_user_avt) // Optional: Error image to display on load failure
                     .into(itemBinding.ivUserAVTSchedule)
                 itemBinding.tvNameUserMeetingSchedule.text = "Meeting with ${doctor.lastName}"
+            } else {
+                itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
+            }
+        }
+        private fun bindingPatient(Item: Schedule) {
+            val patientID = Item.patientID
+            val patient =
+                scheduleViewModel.getListDoctor()?.filter { it.id == patientID }?.firstOrNull()
+            if (patient != null) {
+                Picasso.get()
+                    .load(patient?.avatar) // Assuming item.img is the URL string
+                    .placeholder(R.drawable.avatar_1) // Optional: Placeholder image while loading
+                    .error(R.drawable.default_user_avt) // Optional: Error image to display on load failure
+                    .into(itemBinding.ivUserAVTSchedule)
+                itemBinding.tvNameUserMeetingSchedule.text = "Meeting with ${patient.lastName}"
             } else {
                 itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)
             }
