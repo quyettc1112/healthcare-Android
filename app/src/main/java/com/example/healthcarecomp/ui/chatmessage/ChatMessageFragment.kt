@@ -18,7 +18,7 @@ import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Message
 import com.example.healthcarecomp.databinding.FragmentChatMessageBinding
-import com.example.healthcarecomp.ui.activity.MainActivity
+import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.log
