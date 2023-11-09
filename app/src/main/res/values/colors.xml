@@ -39,8 +39,10 @@
     
     <color name="i_blue">#4A86F7</color>
     <color name="i_blue_light">#edf3fe</color>
+    <color name="i_blue_e8ebfa">#e8ebfa</color>
     <color name="i_title">#35353D</color>
     <color name="i_body">#6a7185</color>
     <color name="i_stroke">#e9edf1</color>
     <color name="i_bg">#f5f7fa</color>
+    <color name="i_gray">#ececec</color>
 </resources>

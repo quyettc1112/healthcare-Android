@@ -10,6 +10,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:paddingBottom="80dp"
+       android:background="@color/i_bg"
        android:orientation="vertical">
        <com.example.healthcarecomp.base.customview.CustomToolbar
            android:id="@+id/customToolBar"
@@ -19,6 +20,7 @@
            app:showStartIcon="true"
            app:showEndIcon="false"
            app:showShadow="true"
+           android:background="@color/white"
            />
 
        <androidx.recyclerview.widget.RecyclerView

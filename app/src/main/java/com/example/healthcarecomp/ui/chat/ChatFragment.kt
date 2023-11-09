@@ -47,7 +47,6 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
         _recyclerViewAdapter = ChatRecyclerViewAdapter()
         _parent?.let {
             _chatViewModel.invoke(_parent?.currentUser?.id!!){
-                Log.i("hum", it.toString())
                 _recyclerViewAdapter.submitData(it)
             }
         }

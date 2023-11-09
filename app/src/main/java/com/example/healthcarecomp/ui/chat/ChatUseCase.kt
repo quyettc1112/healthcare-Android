@@ -11,19 +11,6 @@ class ChatUseCase @Inject constructor(
     private val chatRoomRepository: ChatRoomRepository,
     private val authRepository: AuthRepository
 ) {
-     suspend fun onFirstUserChange(
-        userId: String,
-        listener: (Resource<ChatRoom>) -> Unit
-    ) {
-         chatRoomRepository.onFirstUserChange(userId, listener)
-     }
-
-    suspend fun onSecondUserChange(
-        userId: String,
-        listener: (Resource<ChatRoom>) -> Unit
-    ) {
-        chatRoomRepository.onSecondUserChange(userId, listener)
-    }
 
     suspend fun upsert(chatRoom: ChatRoom) : Resource<ChatRoom> {
        return chatRoomRepository.upsert(chatRoom)

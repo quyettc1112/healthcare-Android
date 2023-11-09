@@ -179,6 +179,15 @@ class Constant {
 
     }
 
+    enum class ChatMessageQuery(val queryField: String){
+        PATH("chat_message"),
+        TIME_STAMP("timeStamp"),
+        CHAT_ROOM_ID("chatRoomId"),
+        CONTENT("content"),
+        SENDER_ID("senderId"),
+        RECEIVER_ID("receiverId")
+    }
+
     class Item_recycleView(
         val idIcon: Int,
         val imageIcon: Int,

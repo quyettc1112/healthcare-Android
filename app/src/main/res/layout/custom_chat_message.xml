@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llMessageLeft"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:paddingHorizontal="10dp">
+            <ImageView
+                android:id="@+id/ivSendStatusLeft"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/check_circle_24px"
+                app:tint="@color/i_blue"
+                android:visibility="gone" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivMessageLeft"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/default_user_avt"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/i_stroke"/>
+
+            <LinearLayout
+                android:id="@+id/llContentMessageLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/message_shape_1"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp">
+
+                <TextView
+                    android:id="@+id/tvMessageLeft"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#333"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="2dp"
+                    tools:text="heluu" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMessageRight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom|right"
+            android:paddingHorizontal="10dp">
+
+            <LinearLayout
+                android:id="@+id/llContentMessageRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/message_shape_2"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp">
+
+                <TextView
+                    android:id="@+id/tvMessageRight"
+                    android:gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#333"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="2dp"
+                    tools:text="heluu kjnsadfnsjdf sakdjfa sdffjsad fafkjds fasdlfja fdasdfkj asdfaljdf asdfaosjf adf kjda sdkjsd kfa kf sdiu fdoisln dfkj fasfj d fakjfa" />
+            </LinearLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivMessageRight"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/default_user_avt"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/i_stroke"/>
+            <ImageView
+                android:id="@+id/ivSendStatusRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/check_circle_24px"
+                app:tint="@color/i_blue"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</layout>

@@ -10,4 +10,15 @@
         <attr name="showStartText" format="boolean"/>
         <attr name="showShadow" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomChatMessage">
+        <attr name="leftBackGroundColor" format="color"/>
+        <attr name="rightBackGroundColor" format="color"/>
+        <attr name="android:src"/>
+        <attr name="messageContent" format="string"/>
+        <attr name="startDirection" format="boolean"/>
+        <attr name="textLeftColor" format="reference|color"/>
+        <attr name="textRightColor" format="reference|color"/>
+        <attr name="seen" format="boolean"/>
+    </declare-styleable>
 </resources>
