@@ -15,12 +15,14 @@ import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.data.repository.DoctorRepository
 
 import com.example.healthcarecomp.databinding.RvListScheduleBinding
+import com.example.healthcarecomp.util.extension.isPatient
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 
 class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
     RecyclerView.Adapter<ScheduleAdapter.MainViewHolder>() {
     var onItemClick: ((Schedule) -> Unit)? = null
+
 
     inner class MainViewHolder(val itemBinding: RvListScheduleBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -30,8 +32,18 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
             itemBinding.tvDaySchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.DAY_OF_MONTH).toString()
             itemBinding.tvTimeMeettingSchedule.text = convertTimestampToCalendar_SimpleTimeFormat(Item.date_medical_examinaton!!)
             itemBinding.tvYearSchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.YEAR).toString()
+            if (scheduleViewModel.currentUser!!.isPatient()) {bindingPatient(Item)}
+            else {
+
+            }
+
+
+        }
+
+        private fun bindingPatient(Item: Schedule) {
             val doctorId = Item.doctorId
-            val doctor = scheduleViewModel.getListDoctor()?.filter { it.id == doctorId }?.firstOrNull()
+            val doctor =
+                scheduleViewModel.getListDoctor()?.filter { it.id == doctorId }?.firstOrNull()
             if (doctor != null) {
                 Picasso.get()
                     .load(doctor?.avatar) // Assuming item.img is the URL string

@@ -128,7 +128,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         scheduleViewModel.upsertSchedule(
             Schedule(
                 doctorId = doctor.id,
-                patientID = scheduleViewModel.patientID.toString(),
+                patientID = scheduleViewModel.currentUserID.toString(),
                 date_medical_examinaton = calendar?.timeInMillis,
                 status_medical_schedule = "Đã Đặt Lịch",
                 note = "Tôi bị đau bụng",
