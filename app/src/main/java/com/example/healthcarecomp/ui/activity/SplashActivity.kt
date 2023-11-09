@@ -19,7 +19,7 @@ import java.util.TimerTask
 class SplashActivity : AppCompatActivity() {
 
     private var progressBarProgress = 0
-    private lateinit var scheduleViewModel: ScheduleViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +29,7 @@ class SplashActivity : AppCompatActivity() {
         // Timedelay is a time to wait unitl change new acitvity: 100 = 1 second
         startProgressBar(progressBar, timeDelay = 200)
 
-        scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
-        GlobalScope.launch {
-            scheduleViewModel.getAllDoctor()
-        }
+
 
     }
 

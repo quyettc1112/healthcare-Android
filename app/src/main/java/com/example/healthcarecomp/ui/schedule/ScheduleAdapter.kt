@@ -15,6 +15,7 @@ import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.data.repository.DoctorRepository
 
 import com.example.healthcarecomp.databinding.RvListScheduleBinding
+import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 
 class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
@@ -32,7 +33,11 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
             val doctorId = Item.doctorId
             val doctor = scheduleViewModel.getListDoctor()?.filter { it.id == doctorId }?.firstOrNull()
             if (doctor != null) {
-                Glide.with(itemBinding.root.context).load(doctor.avatar).into(itemBinding.ivUserAVTSchedule)
+                Picasso.get()
+                    .load(doctor?.avatar) // Assuming item.img is the URL string
+                    .placeholder(R.drawable.avatar_1) // Optional: Placeholder image while loading
+                    .error(R.drawable.default_user_avt) // Optional: Error image to display on load failure
+                    .into(itemBinding.ivUserAVTSchedule)
                 itemBinding.tvNameUserMeetingSchedule.text = "Meeting with ${doctor.lastName}"
             } else {
                 itemBinding.ivUserAVTSchedule.setImageResource(R.drawable.default_user_avt)

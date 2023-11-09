@@ -32,6 +32,7 @@ import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.databinding.FragmentScheduleBinding
 import com.example.healthcarecomp.util.Resource
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
@@ -221,13 +222,17 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         val iconPopUp_activity = dialogBinding.findViewById<ImageView>(R.id.icon_doctor)
         val btn_finish = dialogBinding.findViewById<Button>(R.id.btn_statusButton)
         val btn_phone = dialogBinding.findViewById<Button>(R.id.phoneDoctor)
-        Glide.with(dialogBinding.context).load(doctor?.avatar).into(iconPopUp_activity)
 
+       // Glide.with(dialogBinding.context).load(doctor?.avatar).into(iconPopUp_activity)
+        Picasso.get()
+            .load(doctor?.avatar) // Assuming item.img is the URL string
+            .placeholder(R.drawable.avatar_1) // Optional: Placeholder image while loading
+            .error(R.drawable.default_user_avt) // Optional: Error image to display on load failure
+            .into(iconPopUp_activity)
         title.text = "Meeting with ${doctor?.lastName}"
         val dateSchedule =
             dateFormat.format(Constant.convertTimestampToCalendar(schedule.date_medical_examinaton!!).time)
         deadline_title.text = dateSchedule.toString()
-        iconPopUp_activity.setImageResource(R.drawable.default_user_avt)
         val myDialog = Dialog(requireContext())
         myDialog.setContentView(dialogBinding)
         myDialog.setCancelable(true)
