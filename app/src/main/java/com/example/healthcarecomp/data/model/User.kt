@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.data.model
 
+import java.io.Serializable
 import java.time.LocalDate
 import java.util.UUID
 
@@ -13,7 +14,7 @@ open class User(
     var gender: Boolean? = null,
     var dob: LocalDate? = null,
     val id: String = UUID.randomUUID().toString()
-) {
+) : Serializable {
     override fun equals(other: Any?): Boolean {
         return this.id.equals((other as User).id)
     }

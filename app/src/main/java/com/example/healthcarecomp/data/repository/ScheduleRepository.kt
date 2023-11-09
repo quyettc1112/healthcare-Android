@@ -18,4 +18,7 @@ interface ScheduleRepository {
 
     fun  getScheduleByPatientID_Today(patientID : String, condition: String, listener: (Resource<MutableList<Schedule>>) -> Unit)
     fun  getScheduleByPatientID_UpComing(patientID : String, condition: String, listener: (Resource<MutableList<Schedule>>) -> Unit)
+
+    fun  getScheduleByDoctorID_Today(DoctorID : String, condition: String, listener: (Resource<MutableList<Schedule>>) -> Unit)
+    fun  getScheduleByDoctorID_UpComing(DoctorID: String, condition: String, listener: (Resource<MutableList<Schedule>>) -> Unit)
 }

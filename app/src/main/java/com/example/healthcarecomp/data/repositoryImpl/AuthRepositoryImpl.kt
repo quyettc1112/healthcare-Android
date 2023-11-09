@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.tasks.await
@@ -37,6 +38,31 @@ class AuthRepositoryImpl @Inject constructor(
             Resource.Error(e.message)
         }
     }
+
+    override suspend fun getUserById(userId: String, listener: (Resource<User?>) -> Unit) {
+        val doctorRef = fireBaseDatabase.reference.child(Constant.DoctorQuery.PATH.queryField)
+        val patientRef = fireBaseDatabase.reference.child(Constant.PatientQuery.PATH.queryField)
+
+        try {
+            var user: User? = null
+            val doctorSnapshot = doctorRef.child(userId).get().await()
+            val patientSnapshot = patientRef.child(userId).get().await()
+            if(doctorSnapshot.exists()){
+                user = doctorSnapshot.getValue(Doctor::class.java)
+            }else if(patientSnapshot.exists()){
+                user = patientSnapshot.getValue(Patient::class.java)
+            }
+
+            listener?.let {
+                it(Resource.Success(user))
+            }
+        }catch (e: Exception) {
+            listener?.let {
+                it(Resource.Error(e.message))
+            }
+        }
+    }
+
 
     private suspend fun queryUserByPhone(phone: String, password: String): Resource<User> {
         val doctorRef = fireBaseDatabase.reference.child(Constant.DoctorQuery.PATH.queryField)

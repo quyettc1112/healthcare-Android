@@ -29,6 +29,14 @@
         android:name="com.example.healthcarecomp.ui.chat.ChatFragment"
         android:label="@string/chat_title"
         tools:layout="@layout/fragment_chat">
+        <action
+            android:id="@+id/action_navigation_chat_to_chatMessageFragment"
+            app:destination="@id/chatMessageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -82,7 +90,26 @@
             app:nullable="true" />
 
     </fragment>
-
+    <fragment
+        android:id="@+id/chatMessageFragment"
+        android:name="com.example.healthcarecomp.ui.chatmessage.ChatMessageFragment"
+        android:label="fragment_chat_message"
+        tools:layout="@layout/fragment_chat_message" >
+        <argument
+            android:name="User"
+            app:argType="com.example.healthcarecomp.data.model.User" />
+        <argument
+            android:name="ChatRoomID"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_chatMessageFragment_to_navigation_chat"
+            app:destination="@id/navigation_chat"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
 
 
 </navigation>

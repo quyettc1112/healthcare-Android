@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="CustomToolbar">
+        <attr name="android:title"/>
+        <attr name="textStart" format="string"/>
+        <attr name="startIcon" format="reference"/>
+        <attr name="endIcon" format="reference"/>
+        <attr name="showStartIcon" format="boolean"/>
+        <attr name="showEndIcon" format="boolean"/>
+        <attr name="showStartText" format="boolean"/>
+        <attr name="showShadow" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomChatMessage">
+        <attr name="leftBackGroundColor" format="color"/>
+        <attr name="rightBackGroundColor" format="color"/>
+        <attr name="android:src"/>
+        <attr name="messageContent" format="string"/>
+        <attr name="startDirection" format="boolean"/>
+        <attr name="textLeftColor" format="reference|color"/>
+        <attr name="textRightColor" format="reference|color"/>
+        <attr name="seen" format="boolean"/>
+    </declare-styleable>
+</resources>

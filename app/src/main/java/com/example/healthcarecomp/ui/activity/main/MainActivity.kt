@@ -18,8 +18,11 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseActivity
 import com.example.healthcarecomp.data.model.User
+import com.example.healthcarecomp.ui.schedule.ScheduleViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -28,15 +31,24 @@ class MainActivity : BaseActivity() {
 
     val mainViewModel: MainViewModel by viewModels()
     var currentUser: User? = null
+    private lateinit var scheduleViewModel: ScheduleViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainViewModel.currentUser.observe(this, Observer {
             currentUser = it
         })
+        setUpThread()
         setContentView(R.layout.activity_main)
         setupBottomNav()
         setObservers()
+    }
+
+    private fun setUpThread() {
+        scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
+        GlobalScope.launch {
+            scheduleViewModel.getAllDoctor()
+        }
     }
 
     override fun showLoading(isShow: Boolean) {
