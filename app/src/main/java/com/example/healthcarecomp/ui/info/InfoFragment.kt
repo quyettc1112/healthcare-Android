@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.ui.info
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -60,6 +61,14 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
 
     //    @RequiresApi(Build.VERSION_CODES.O)
     private fun setEvents() {
+        //upload image
+        _binding.ibEditAvatar.setOnClickListener {
+            Intent(Intent.ACTION_GET_CONTENT).also {
+                it.type = "image/*"
+                startActivityForResult(it, 0)
+            }
+        }
+
         //logout
         _binding.ibLogout.setOnClickListener {
             _viewModel.logout()
@@ -242,6 +251,14 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                 fabEdit.setImageResource(R.drawable.ic_edit)
             }
 
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && requestCode == 0){
+            val uri = data?.data
+            _binding.ivUserAvatar.setImageURI(uri)
         }
     }
 }
