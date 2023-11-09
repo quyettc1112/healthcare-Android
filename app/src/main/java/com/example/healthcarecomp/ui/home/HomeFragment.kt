@@ -7,9 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,9 +16,7 @@ import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.common.Adapter.ItemActitivyHomeAdapter
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.databinding.FragmentHomeBinding
-import com.example.healthcarecomp.ui.activity.MainActivity
-import com.example.healthcarecomp.ui.activity.MainViewModel
-import com.example.healthcarecomp.util.extension.isDoctor
+import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.extension.isPatient
 
 
@@ -75,7 +70,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             it.actionId?.let {action ->
                 val bundle = Bundle()
                 parent?.let {
-                    if(parent?.currentUser.isPatient()){
+                    if(parent?.currentUser!!.isPatient()){
                         bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,parent?.currentUser?.id)
                     }else{
                         bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,"1a04ee07-5909-4471-b767-a62f8c1e99d1")

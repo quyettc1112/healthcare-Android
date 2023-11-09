@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.ui.activity
+package com.example.healthcarecomp.ui.activity.auth
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.FirebaseDatabase

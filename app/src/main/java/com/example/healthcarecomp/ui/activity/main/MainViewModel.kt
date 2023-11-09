@@ -1,4 +1,4 @@
-package com.example.healthcarecomp.ui.activity
+package com.example.healthcarecomp.ui.activity.main
 
 import android.util.Log
 import androidx.lifecycle.LiveData

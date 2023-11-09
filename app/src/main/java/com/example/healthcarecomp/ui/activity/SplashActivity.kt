@@ -5,8 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.healthcarecomp.R
+import com.example.healthcarecomp.ui.activity.auth.AuthActivity
+import com.example.healthcarecomp.ui.schedule.ScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.Timer
 import java.util.TimerTask
 
@@ -15,15 +20,17 @@ class SplashActivity : AppCompatActivity() {
 
     private var progressBarProgress = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.e("Frank","SplashAcitivty")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
         // Set up for progress bar run at 3 second and change activity fo MainAcitivity
         val progressBar = findViewById<ProgressBar>(R.id.progressBar_Splash)
         // Timedelay is a time to wait unitl change new acitvity: 100 = 1 second
         startProgressBar(progressBar, timeDelay = 200)
+
+
+
     }
 
     private fun openAuthActivity() {

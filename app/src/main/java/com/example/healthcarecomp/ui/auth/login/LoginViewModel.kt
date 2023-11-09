@@ -5,7 +5,9 @@ import com.example.healthcarecomp.base.BaseViewModel
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,14 +20,18 @@ class LoginViewModel @Inject constructor(
     private val _loginFlow = MutableStateFlow<Resource<User>?>(null)
     val loginFLow: StateFlow<Resource<User>?> = _loginFlow
 
+    val isBiometricSuccess = MutableStateFlow<Boolean>(false)
+
     fun getLoggedInUser() = loginUseCase.getLoggedInUser()
 
     val loginGGFlow = MutableStateFlow<Resource<User>?>(null)
 
 
-    init {
+    fun autoLogin(){
         getLoggedInUser()?.let {
-            _loginFlow.value = Resource.Success(getLoggedInUser()!!)
+            if(isBiometricSuccess.value){
+                _loginFlow.value = Resource.Success(getLoggedInUser()!!)
+            }
         }
     }
 
