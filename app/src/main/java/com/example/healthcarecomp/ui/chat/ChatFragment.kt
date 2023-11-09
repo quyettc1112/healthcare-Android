@@ -51,8 +51,8 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
             }
         }
         _recyclerViewAdapter.currentUserId = _parent?.currentUser?.id!!
-        _recyclerViewAdapter.setOnItemClickListener { user,id ->
-            val direction = ChatFragmentDirections.actionNavigationChatToChatMessageFragment(user, id)
+        _recyclerViewAdapter.setOnItemClickListener { user,chatRoom ->
+            val direction = ChatFragmentDirections.actionNavigationChatToChatMessageFragment(user, chatRoom)
             navigateToPage(direction)
         }
         _binding.rvChatUsers.apply {
@@ -80,7 +80,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
         _binding.fabChatAdd.setOnClickListener {
             val chatRoom = ChatRoom(
                 firstUserId = "1a04ee07-5909-4471-b767-a62f8c1e99d1",
-                secondUserId = "cbf1d2ea-0249-452e-bd4e-7db757ad6f4c",
+                secondUserId = _parent?.currentUser?.id,
                 lastActiveTime = System.currentTimeMillis(),
                 chatSeen = false
             )

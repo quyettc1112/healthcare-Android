@@ -21,6 +21,11 @@ import com.example.healthcarecomp.databinding.FragmentChatMessageBinding
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.log
 
 @AndroidEntryPoint
@@ -28,8 +33,8 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
     private lateinit var _binding: FragmentChatMessageBinding
     private var _parent: MainActivity? = null
     private val args: ChatMessageFragmentArgs by navArgs()
-    private lateinit var _recyclerViewAdapter : ChatMessageRecyclerViewAdapter
-    private lateinit var _viewModel : ChatMessageViewModel
+    private lateinit var _recyclerViewAdapter: ChatMessageRecyclerViewAdapter
+    private lateinit var _viewModel: ChatMessageViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +54,7 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
             onBackPressedCallback
         )
         _viewModel = ViewModelProvider(this)[ChatMessageViewModel::class.java]
-        _viewModel.invoke(args.chatRoomID)
+        _viewModel.invoke(args.chatRoom)
         return _binding.root
     }
 
@@ -61,37 +66,49 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
     }
 
     private fun setupUI() {
-        
+
         _binding.customToolBar.onStartIconClick = {
             navigateToPage(R.id.action_chatMessageFragment_to_navigation_chat)
         }
         _binding.customToolBar.setTitle(args.user.firstName!!)
-        
+
         _recyclerViewAdapter = ChatMessageRecyclerViewAdapter(_parent?.currentUser!!, args.user)
-        _recyclerViewAdapter.setItemOrderBy { 
-            it.sortedBy {  message ->  
+        _recyclerViewAdapter.setItemOrderBy {
+            it.sortedBy { message ->
                 message.timeStamp
             }
         }
-        _recyclerViewAdapter.setOnItemDisplayListener {message->
-            if(message.receiverId == _parent?.currentUser?.id && !message.seen){
+        _recyclerViewAdapter.setOnItemDisplayListener { message ->
+            if (message.receiverId == _parent?.currentUser?.id && !message.seen) {
                 Log.i("test", "seed update")
-                _viewModel.upsert(message.copy(
-                    seen = true
-                ))
+                _viewModel.upsert(
+                    message.copy(
+                        seen = true
+                    )
+                )
+            }
+        }
+        var job: Job? = null
+        _recyclerViewAdapter.setOnDataSubmitListener {
+            job?.cancel()
+            job = MainScope().launch {
+                delay(500L)
+                _binding.rvChatMessageContent.smoothScrollToPosition(_recyclerViewAdapter.itemCount - 1)
+                Log.i("test", "scroll")
             }
         }
 
-        _binding.rvChatMessageContent.apply { 
+        _binding.rvChatMessageContent.apply {
             adapter = _recyclerViewAdapter
             layoutManager = LinearLayoutManager(context)
         }
 
+        // click send btn
         _binding.tilChatMessage.setEndIconOnClickListener {
             val message = Message(
                 timeStamp = System.currentTimeMillis(),
                 content = _binding.etChatMessageText.text.toString(),
-                chatRoomId = args.chatRoomID,
+                chatRoomId = args.chatRoom.id,
                 senderId = _parent?.currentUser?.id,
                 receiverId = args.user.id
             )
@@ -101,7 +118,7 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
     }
 
     private fun setupObservers() {
-        _viewModel.messageList.observe(viewLifecycleOwner, Observer {resource ->
+        _viewModel.messageList.observe(viewLifecycleOwner, Observer { resource ->
             when (resource) {
                 is Resource.Success -> {
                     resource?.data?.let {
@@ -122,7 +139,7 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         _viewModel.messageSend.observe(viewLifecycleOwner, Observer { resource ->
             when (resource) {
                 is Resource.Success -> {
-                    _binding.rvChatMessageContent.smoothScrollToPosition(_recyclerViewAdapter.itemCount - 1)
+                    Log.i("test", "send success")
                 }
 
                 is Resource.Loading -> {

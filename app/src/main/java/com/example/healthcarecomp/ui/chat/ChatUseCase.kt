@@ -1,15 +1,18 @@
 package com.example.healthcarecomp.ui.chat
 
 import com.example.healthcarecomp.data.model.ChatRoom
+import com.example.healthcarecomp.data.model.Message
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.data.repository.AuthRepository
+import com.example.healthcarecomp.data.repository.ChatMessageRepository
 import com.example.healthcarecomp.data.repository.ChatRoomRepository
 import com.example.healthcarecomp.util.Resource
 import javax.inject.Inject
 
 class ChatUseCase @Inject constructor(
     private val chatRoomRepository: ChatRoomRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val chatMessageRepository: ChatMessageRepository
 ) {
 
     suspend fun upsert(chatRoom: ChatRoom) : Resource<ChatRoom> {
@@ -25,5 +28,9 @@ class ChatUseCase @Inject constructor(
         listener: (Resource<User?>) -> Unit
     ){
         authRepository.getUserById(userId, listener)
+    }
+
+    suspend fun getLastMessage(chatRoomId: String, listener: (Resource<Message>) -> Unit) {
+        chatMessageRepository.getLastMessage(chatRoomId, listener)
     }
 }

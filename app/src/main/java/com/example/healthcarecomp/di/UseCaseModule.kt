@@ -42,14 +42,14 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideChatRoomUseCase(chatRoomRepository: ChatRoomRepository, authRepository: AuthRepository) : ChatUseCase {
-        return ChatUseCase(chatRoomRepository, authRepository)
+    fun provideChatRoomUseCase(chatRoomRepository: ChatRoomRepository, authRepository: AuthRepository, chatMessageRepository: ChatMessageRepository) : ChatUseCase {
+        return ChatUseCase(chatRoomRepository, authRepository, chatMessageRepository)
     }
 
     @Provides
     @Singleton
-    fun provideChatMessageUseCase(chatMessageRepository: ChatMessageRepository) : ChatMessageUseCase {
-        return ChatMessageUseCase(chatMessageRepository)
+    fun provideChatMessageUseCase(chatMessageRepository: ChatMessageRepository, chatRoomRepository: ChatRoomRepository) : ChatMessageUseCase {
+        return ChatMessageUseCase(chatMessageRepository, chatRoomRepository)
     }
 
 }

@@ -99,8 +99,8 @@
             android:name="User"
             app:argType="com.example.healthcarecomp.data.model.User" />
         <argument
-            android:name="ChatRoomID"
-            app:argType="string" />
+            android:name="ChatRoom"
+            app:argType="com.example.healthcarecomp.data.model.ChatRoom" />
         <action
             android:id="@+id/action_chatMessageFragment_to_navigation_chat"
             app:destination="@id/navigation_chat"

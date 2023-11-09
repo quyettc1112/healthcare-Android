@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,38 +14,47 @@
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:paddingHorizontal="10dp">
-            <ImageView
-                android:id="@+id/ivSendStatusLeft"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/check_circle_24px"
-                app:tint="@color/i_blue"
-                android:visibility="gone" />
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivMessageLeft"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/default_user_avt"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@color/i_stroke"/>
 
             <LinearLayout
-                android:id="@+id/llContentMessageLeft"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/message_shape_1"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp">
+                android:layout_weight="1"
+                android:gravity="left">
 
-                <TextView
-                    android:id="@+id/tvMessageLeft"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/ivSendStatusLeft"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/check_circle_24px"
+                    android:visibility="gone"
+                    app:tint="@color/i_blue" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivMessageLeft"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/default_user_avt"
+                    app:civ_border_color="@color/i_stroke"
+                    app:civ_border_width="1dp" />
+
+                <LinearLayout
+                    android:id="@+id/llContentMessageLeft"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#333"
-                    android:textSize="16sp"
-                    android:lineSpacingExtra="2dp"
-                    tools:text="heluu" />
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/message_shape_1"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="10dp">
+
+                    <TextView
+                        android:id="@+id/tvMessageLeft"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="2dp"
+                        android:textColor="#333"
+                        android:textSize="16sp"
+                        tools:text="heluu" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -57,39 +66,48 @@
             android:paddingHorizontal="10dp">
 
             <LinearLayout
-                android:id="@+id/llContentMessageRight"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/message_shape_2"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp">
+                android:layout_weight="1"
+                android:gravity="right">
 
-                <TextView
-                    android:id="@+id/tvMessageRight"
-                    android:gravity="right"
+                <LinearLayout
+                    android:id="@+id/llContentMessageRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#333"
-                    android:textSize="16sp"
-                    android:lineSpacingExtra="2dp"
-                    tools:text="heluu kjnsadfnsjdf sakdjfa sdffjsad fafkjds fasdlfja fdasdfkj asdfaljdf asdfaosjf adf kjda sdkjsd kfa kf sdiu fdoisln dfkj fasfj d fakjfa" />
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/message_shape_2"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="10dp">
+
+                    <TextView
+                        android:id="@+id/tvMessageRight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:lineSpacingExtra="2dp"
+                        android:textColor="#333"
+                        android:textSize="16sp"
+                        tools:text="fkj fasfj d fakjfa" />
+                </LinearLayout>
             </LinearLayout>
+
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivMessageRight"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/default_user_avt"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@color/i_stroke"/>
+                app:civ_border_color="@color/i_stroke"
+                app:civ_border_width="1dp" />
+
             <ImageView
                 android:id="@+id/ivSendStatusRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/check_circle_24px"
-                app:tint="@color/i_blue"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                app:tint="@color/i_blue" />
         </LinearLayout>
     </LinearLayout>
 

@@ -3,6 +3,7 @@ package com.example.healthcarecomp.ui.chatmessage
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel
+import com.example.healthcarecomp.data.model.ChatRoom
 import com.example.healthcarecomp.data.model.Message
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,17 +16,17 @@ class ChatMessageViewModel @Inject constructor(
 ) : BaseViewModel(){
     val messageSend  =  MutableLiveData<Resource<Message>>()
     val messageList = MutableLiveData<Resource<MutableList<Message>>>()
-    var chatRoomId = ""
+    lateinit var chatRoom: ChatRoom
 
-    operator fun invoke(chatRoomId: String) {
-        this.chatRoomId = chatRoomId
+    operator fun invoke(chatRoom: ChatRoom) {
+        this.chatRoom = chatRoom
         onDataLoad()
     }
 
     fun onDataLoad() = viewModelScope.launch {
         messageList.value = Resource.Loading()
 
-        useCase.onChatLoad(chatRoomId, { resource ->
+        useCase.onChatLoad(chatRoom.id, { resource ->
             if(messageList.value is Resource.Loading){
                 messageList.value = Resource.Success(mutableListOf())
             }
@@ -52,5 +53,6 @@ class ChatMessageViewModel @Inject constructor(
 
     fun upsert(message: Message) = viewModelScope.launch {
         messageSend.value = useCase.upsert(message)
+        useCase.upsertChatRoom(chatRoom.copy(lastActiveTime = System.currentTimeMillis()))
     }
 }
