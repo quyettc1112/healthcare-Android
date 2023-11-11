@@ -199,11 +199,12 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
                     _binding.pgLogin.visibility = View.GONE
                     when (it) {
                         is Resource.Success -> {
+                            val loginUser = _viewModel.getLoggedInUser()!!
                             val prefix =
-                                if (_viewModel.getLoggedInUser()!!.isDoctor()) " Dr." else ""
+                                if (loginUser.isDoctor()) " Dr." else ""
                             Toast.makeText(
                                 requireContext(),
-                                "Welcome$prefix ${_viewModel.getLoggedInUser()?.firstName}",
+                                "Welcome$prefix ${loginUser.firstName}",
                                 Toast.LENGTH_SHORT
                             ).show()
                             openMainActivity()

@@ -5,6 +5,7 @@ import com.example.healthcarecomp.data.repository.ChatMessageRepository
 import com.example.healthcarecomp.data.repository.ChatRoomRepository
 import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.data.repository.MedicalHistoryRepository
+import com.example.healthcarecomp.data.repository.NotificationRepository
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryUseCase
 import com.example.healthcarecomp.ui.schedule.ScheduleUseCase
@@ -48,8 +49,8 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideChatMessageUseCase(chatMessageRepository: ChatMessageRepository, chatRoomRepository: ChatRoomRepository) : ChatMessageUseCase {
-        return ChatMessageUseCase(chatMessageRepository, chatRoomRepository)
+    fun provideChatMessageUseCase(chatMessageRepository: ChatMessageRepository, chatRoomRepository: ChatRoomRepository, notificationRepository: NotificationRepository) : ChatMessageUseCase {
+        return ChatMessageUseCase(chatMessageRepository, chatRoomRepository, notificationRepository)
     }
 
 }

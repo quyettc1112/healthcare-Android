@@ -21,13 +21,13 @@ import okhttp3.internal.notify
 class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.ChatViewHolder>() {
 
     lateinit var currentUserId: String
-    lateinit var dataList: MutableList<Triple<ChatRoom, User, Message>>
+    lateinit var dataList: MutableList<Triple<ChatRoom, User, Message?>>
     private var onItemClickListener : ((User, ChatRoom) -> Unit)? = null
 
     fun setOnItemClickListener(listener: ((User, ChatRoom) -> Unit)){
         onItemClickListener = listener
     }
-    fun submitData(list: MutableList<Triple<ChatRoom, User, Message>>){
+    fun submitData(list: MutableList<Triple<ChatRoom, User, Message?>>){
         dataList = list
         updateUI()
     }
@@ -39,7 +39,7 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
         differ.submitList(dataList.toList())
     }
 
-    fun submitData(data: Triple<ChatRoom, User, Message>){
+    fun submitData(data: Triple<ChatRoom, User, Message?>){
         val dataIndex = dataList.indexOfFirst { it.first.id == data.first.id }
         if(dataIndex != -1){
             dataList[dataIndex] = data
@@ -49,18 +49,18 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
         updateUI()
     }
 
-    private val differCallback = object : DiffUtil.ItemCallback<Triple<ChatRoom, User, Message>>() {
+    private val differCallback = object : DiffUtil.ItemCallback<Triple<ChatRoom, User, Message?>>() {
 
         override fun areItemsTheSame(
-            oldItem: Triple<ChatRoom, User, Message>,
-            newItem: Triple<ChatRoom, User, Message>
+            oldItem: Triple<ChatRoom, User, Message?>,
+            newItem: Triple<ChatRoom, User, Message?>
         ): Boolean {
             return oldItem.first.id == newItem.first.id
         }
 
         override fun areContentsTheSame(
-            oldItem: Triple<ChatRoom, User, Message>,
-            newItem: Triple<ChatRoom, User, Message>
+            oldItem: Triple<ChatRoom, User, Message?>,
+            newItem: Triple<ChatRoom, User, Message?>
         ): Boolean {
             return oldItem.first == newItem.first
         }
@@ -101,11 +101,14 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
                     it(user, chatRoom)
                 }
             }
-            messageContent.text = message.content
-            val context = itemView.context
-            if(!message.seen && message.senderId == user.id){
-                chatItemLayout.backgroundTintList = context.getColorStateList(R.color.i_blue_e8ebfa)
+            message?.let {
+                messageContent.text = message.content
+                val context = itemView.context
+                if(!message.seen && message.senderId == user.id){
+                    chatItemLayout.backgroundTintList = context.getColorStateList(R.color.i_blue_e8ebfa)
+                }
             }
+
         }
 
     }

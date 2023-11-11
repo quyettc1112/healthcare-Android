@@ -30,7 +30,7 @@ class ChatUseCase @Inject constructor(
         authRepository.getUserById(userId, listener)
     }
 
-    suspend fun getLastMessage(chatRoomId: String, listener: (Resource<Message>) -> Unit) {
+    suspend fun getLastMessage(chatRoomId: String, listener: (Resource<Message?>) -> Unit) {
         chatMessageRepository.getLastMessage(chatRoomId, listener)
     }
 }

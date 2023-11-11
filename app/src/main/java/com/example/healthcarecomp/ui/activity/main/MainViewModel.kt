@@ -17,10 +17,10 @@ class MainViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ): BaseViewModel(){
     var currentUser = MutableLiveData<User?>()
+    val localUser: User? = authRepository.getLoggedInUser()
 
     init {
-        val user = authRepository.getLoggedInUser()
-        onUserChange(user)
+        onUserChange(localUser)
     }
 
     private fun onUserChange(user: User?) = viewModelScope.launch{

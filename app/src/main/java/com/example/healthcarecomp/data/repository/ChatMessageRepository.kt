@@ -13,5 +13,5 @@ interface ChatMessageRepository {
         deleteListener: ((Resource<Message>) -> Unit)? = null
     )
 
-    suspend fun getLastMessage(chatRoomId: String, listener: (Resource<Message>) -> Unit)
+    suspend fun getLastMessage(chatRoomId: String, listener: (Resource<Message?>) -> Unit)
 }

@@ -50,4 +50,8 @@
     <string name="biometric_support_unavailable">Biometric authentication is not available on this device</string>
     <string name="biometric_currently_unavailable">Biometric authentication is currently unavailable</string>
     <string name="biometric_enrollment_unavailable">Biometric enrollment is currently not available on this device</string>
+
+    <!--  services notification  -->
+    <string name="default_notification_channel_id">chanel id</string>
+    <string name="fcm_message">fcm_message</string>
 </resources>

@@ -19,11 +19,11 @@ class ChatViewModel @Inject constructor(
     private val chatUseCase: ChatUseCase
 ) : BaseViewModel() {
     val chatRoomUpsert = MutableLiveData<Resource<ChatRoom>>()
-    val chatRooms = MutableLiveData<Resource<MutableList<Triple<ChatRoom, User, Message>>>>()
-    private lateinit var listener: (Triple<ChatRoom, User, Message>) -> Unit
+    val chatRooms = MutableLiveData<Resource<MutableList<Triple<ChatRoom, User, Message?>>>>()
+    private lateinit var listener: (Triple<ChatRoom, User, Message?>) -> Unit
     private lateinit var _userId: String
 
-    operator fun invoke(userId: String, listener: (Triple<ChatRoom, User, Message>) -> Unit) {
+    operator fun invoke(userId: String, listener: (Triple<ChatRoom, User, Message?>) -> Unit) {
         _userId = userId
         this.listener = listener
         onChatRoomLoad()
@@ -50,7 +50,7 @@ class ChatViewModel @Inject constructor(
                                     viewModelScope.launch {
                                         chatUseCase.getLastMessage(resource?.data?.id!!) {
                                             if (it is Resource.Success) {
-                                                addData(resource.data!!, user, it.data!!)
+                                                addData(resource.data!!, user, it.data)
                                             }
                                         }
                                     }
@@ -63,14 +63,13 @@ class ChatViewModel @Inject constructor(
                                     viewModelScope.launch {
                                         chatUseCase.getLastMessage(resource?.data?.id!!) {
                                             if (it is Resource.Success) {
-                                                addData(resource.data!!, user, it.data!!)
+                                                addData(resource.data!!, user, it.data)
                                             }
                                         }
                                     }
 
                                 }
                             }
-
                         }
                     }
 
@@ -83,7 +82,7 @@ class ChatViewModel @Inject constructor(
                                 viewModelScope.launch {
                                     chatUseCase.getLastMessage(resource?.data?.id!!) {
                                         if (it is Resource.Success) {
-                                            updateData(resource.data!!, user, it.data!!)
+                                            updateData(resource.data!!, user, it.data)
                                         }
                                     }
                                 }
@@ -96,7 +95,7 @@ class ChatViewModel @Inject constructor(
                                 viewModelScope.launch {
                                     chatUseCase.getLastMessage(resource?.data?.id!!) {
                                         if (it is Resource.Success) {
-                                            updateData(resource.data!!, user, it.data!!)
+                                            updateData(resource.data!!, user, it.data)
                                         }
                                     }
                                 }
@@ -112,13 +111,13 @@ class ChatViewModel @Inject constructor(
 
     }
 
-    private fun addData(chat: ChatRoom, user: User, message: Message) {
+    private fun addData(chat: ChatRoom, user: User, message: Message?) {
         chatRooms.value = chatRooms.value.apply {
             this?.data?.add(Triple(chat, user, message))
         }
     }
 
-    private fun updateData(chat: ChatRoom, user: User, message: Message) {
+    private fun updateData(chat: ChatRoom, user: User, message: Message?) {
         chatRooms.value = chatRooms.value.apply {
             val index = this?.data?.indexOfFirst {
                 it.first.id == chat.id

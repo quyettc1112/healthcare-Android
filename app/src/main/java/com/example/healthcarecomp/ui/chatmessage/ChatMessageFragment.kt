@@ -20,6 +20,7 @@ import com.example.healthcarecomp.data.model.Message
 import com.example.healthcarecomp.databinding.FragmentChatMessageBinding
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -44,6 +45,7 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         _binding = FragmentChatMessageBinding.inflate(layoutInflater, container, false)
         _parent = requireActivity() as? MainActivity
 
+        //set up action click back
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 navigateToPage(R.id.action_chatMessageFragment_to_navigation_chat)
@@ -53,8 +55,10 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
             viewLifecycleOwner,
             onBackPressedCallback
         )
+        //setup view model
         _viewModel = ViewModelProvider(this)[ChatMessageViewModel::class.java]
         _viewModel.invoke(args.chatRoom)
+
         return _binding.root
     }
 
@@ -80,7 +84,6 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         }
         _recyclerViewAdapter.setOnItemDisplayListener { message ->
             if (message.receiverId == _parent?.currentUser?.id && !message.seen) {
-                Log.i("test", "seed update")
                 _viewModel.upsert(
                     message.copy(
                         seen = true
@@ -88,13 +91,14 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
                 )
             }
         }
+
+        // auto scroll down after submit list
         var job: Job? = null
         _recyclerViewAdapter.setOnDataSubmitListener {
             job?.cancel()
             job = MainScope().launch {
                 delay(500L)
                 _binding.rvChatMessageContent.smoothScrollToPosition(_recyclerViewAdapter.itemCount - 1)
-                Log.i("test", "scroll")
             }
         }
 
@@ -113,7 +117,8 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
                 receiverId = args.user.id
             )
             _binding.etChatMessageText.setText("")
-            _viewModel.upsert(message)
+            //send notification
+            _viewModel.upsert(message,requireContext(), _parent?.currentUser?.firstName, args.user.id)
         }
     }
 

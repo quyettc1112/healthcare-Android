@@ -81,7 +81,7 @@ class ChatMessageRepositoryImpl @Inject constructor(
         })
     }
 
-    override suspend fun getLastMessage(chatRoomId: String, listener: (Resource<Message>) -> Unit) {
+    override suspend fun getLastMessage(chatRoomId: String, listener: (Resource<Message?>) -> Unit) {
         chatMessageRef.child(chatRoomId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.children.count() != 0){
@@ -90,6 +90,8 @@ class ChatMessageRepositoryImpl @Inject constructor(
                     message?.let {
                         listener(Resource.Success(message))
                     }
+                }else {
+                    listener(Resource.Success(null))
                 }
 
             }
