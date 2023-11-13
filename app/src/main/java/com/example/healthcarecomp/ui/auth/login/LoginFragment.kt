@@ -51,10 +51,10 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         return _binding.root
     }
 
-    private fun autoLogin(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            biometricHelper = BiometricHelper(requireActivity(), { errorCode, errString ->
-                Toast.makeText(requireContext(),errString,Toast.LENGTH_SHORT).show()
+    private fun autoLogin() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && _viewModel.getLoggedInUser() != null) {
+            biometricHelper = BiometricHelper(this, { errorCode, errString ->
+                Toast.makeText(requireContext(), errString, Toast.LENGTH_SHORT).show()
             }, {
                 _viewModel.isBiometricSuccess.value = true
             }) {
@@ -148,10 +148,10 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
     private fun setObservers() {
         //biometric login state
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 _viewModel.isBiometricSuccess.collectLatest {
-                    if(_viewModel.isBiometricSuccess.value){
-                        autoLogin()
+                    if (_viewModel.isBiometricSuccess.value) {
+                        _viewModel.autoLogin()
                     }
                 }
             }

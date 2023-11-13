@@ -9,6 +9,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.healthcarecomp.R
 
@@ -25,7 +26,7 @@ import com.example.healthcarecomp.R
  */
 @RequiresApi(Build.VERSION_CODES.P)
 class BiometricHelper(
-    private val fragmentActivity: FragmentActivity,
+    private val fragmentActivity: Fragment,
     private val onError: (Int, CharSequence) -> Unit,
     private val onSucceeded: () -> Unit,
     private val onFailed: () -> Unit
@@ -41,8 +42,9 @@ class BiometricHelper(
      * Creates a BiometricPrompt instance with the provided executor and authentication callback.
      */
     private fun createBiometricPrompt(): BiometricPrompt {
-        val executor = ContextCompat.getMainExecutor(fragmentActivity)
-        return BiometricPrompt(fragmentActivity, executor, createAuthenticationCallback())
+//        val executor = ContextCompat.getMainExecutor(fragmentActivity)
+//        return BiometricPrompt(fragmentActivity, executor, createAuthenticationCallback())
+        return BiometricPrompt(fragmentActivity,createAuthenticationCallback())
     }
 
     /**
@@ -102,7 +104,7 @@ class BiometricHelper(
      * If supported, it returns true; otherwise, it handles error conditions and returns false.
      */
     private fun isBiometricSupport(): Boolean {
-        val biometricManager = BiometricManager.from(fragmentActivity)
+        val biometricManager = BiometricManager.from(fragmentActivity.requireContext())
         when (biometricManager.canAuthenticate(Authenticators.BIOMETRIC_STRONG or Authenticators.DEVICE_CREDENTIAL)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
                 logMessage("Biometric authentication is available")
@@ -125,7 +127,7 @@ class BiometricHelper(
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 logMessage("No biometric credentials are enrolled")
                 val enrollIntent = Intent(Settings.ACTION_BIOMETRIC_ENROLL)
-                if (enrollIntent.resolveActivity(fragmentActivity.packageManager) != null) {
+                if (enrollIntent.resolveActivity(fragmentActivity.requireActivity().packageManager) != null) {
                     enrollIntent.putExtra(
                         Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
                         Authenticators.BIOMETRIC_STRONG or Authenticators.DEVICE_CREDENTIAL

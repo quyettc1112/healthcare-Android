@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.base
 
-import android.app.Dialog
+import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -12,13 +13,44 @@ import com.example.healthcarecomp.base.dialog.NotifyDialog
 
 open class BaseActivity : AppCompatActivity() {
 
+    var progressDialog: ProgressDialog? = null
 
-    open fun showLoading(isShow: Boolean) {
+    open fun showLoading(
+        isShow: Boolean
+    ) {
 
     }
 
+    open fun showLoading(
+        title: String,
+        message: String,
+        cancelable: Boolean = false,
+        cancelListener: ((DialogInterface) -> Unit) = {}
+    ) {
+
+        progressDialog = ProgressDialog(this)
+        progressDialog?.setTitle(title)
+        progressDialog?.setMessage(message)
+        progressDialog?.setCancelable(cancelable)
+
+        if (cancelable) {
+            progressDialog?.setOnCancelListener(cancelListener)
+        }
+
+        progressDialog?.show()
+
+    }
+
+    open fun hideLoading() {
+        progressDialog?.let {
+            if (it.isShowing) {
+                it.dismiss()
+            }
+        }
+    }
+
     open fun showErrorDialog(message: String) {
-        val errorDialog = ErrorDialog(this,  message)
+        val errorDialog = ErrorDialog(this, message)
         errorDialog.show()
         errorDialog.window?.setGravity(Gravity.CENTER)
         errorDialog.window?.setLayout(
