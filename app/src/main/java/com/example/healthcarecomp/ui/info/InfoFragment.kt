@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.icu.util.Calendar
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,9 +28,6 @@ import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.ValidationUtils
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import dagger.hilt.android.AndroidEntryPoint
-import java.sql.Timestamp
-import java.util.Date
-import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class InfoFragment : BaseFragment(R.layout.fragment_info) {
@@ -63,11 +60,13 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
     }
 
     private fun setUI() {
+        _viewModel.isEditing.value = false
+
         val currentDate: Calendar = Calendar.getInstance()
         datePickerDialog = DatePickerDialog(
             this.requireContext(),
             DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                _binding.etDob.setText("$dayOfMonth/${month+1}/$year")
+                _binding.etDob.setText("$dayOfMonth/${month + 1}/$year")
             },
             currentDate.get(Calendar.YEAR),
             currentDate.get(Calendar.MONTH),
@@ -137,6 +136,7 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                     ) {
                         _viewModel.userEditState.value =
                             Resource.Error("Please fill in correctly all field")
+                        _viewModel.isEditing.value = !_viewModel.isEditing.value!!
                         mainViewModel.currentUser = mainViewModel.currentUser
                     } else {
                         try {
@@ -144,6 +144,7 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                         } catch (e: Exception) {
                             e.printStackTrace()
                             _viewModel.userEditState.value = Resource.Error("Error input date")
+                            _viewModel.isEditing.value = !_viewModel.isEditing.value!!
                         }
                         _viewModel.upsertUser(
                             firstName = firstName,
@@ -173,6 +174,7 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                     it.message,
                     Toast.LENGTH_SHORT
                 ).show()
+
                 else -> mainViewModel.currentUser = mainViewModel.currentUser
             }
         }
@@ -194,7 +196,12 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                             false -> rbFemale.isChecked = true
                         }
                     }
-                    Glide.with(requireActivity()).load(it.avatar).into(ivUserAvatar)
+                    try {
+                        Glide.with(requireActivity()).load(it.avatar).into(ivUserAvatar)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        ivUserAvatar.setImageURI(Uri.parse(it.avatar))
+                    }
                     var prefix = if (it is Doctor) "Dr"
                     else if (it is Patient) {
                         if (it.gender == false) "Mrs" else "Mr"
@@ -266,6 +273,13 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                     } else null
                 }
             }
+            _binding.etDob.apply {
+                afterTextChanged {
+                    error = if (!ValidationUtils.isValidDob(it)) {
+                        "Date of birth format is dd/MM/yyyy (ex: 01/01/2023)"
+                    } else null
+                }
+            }
         }
     }
 
@@ -297,16 +311,16 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
 
             if (uri != null) {
                 _viewModel.uploadImage(uri, onProgress = {
-                    showLoading(
-                        "Upload Image",
-                        "Image is uploading please wait",
-                    )
+                    Log.d("Image","loading")
+                    _viewModel.userEditState.value = Resource.Loading()
                 }, onSuccess = {
+                    Log.d("Image","success")
                     hideLoading()
                     _binding.ivUserAvatar.setImageURI(it)
-//                    _viewModel.upsertUser()
+                    _viewModel.upsertUser(avatar = it.toString())
                 }, onFailure = {
-                    hideLoading()
+                    Log.d("Image","fail")
+                    _viewModel.userEditState.value = Resource.Error("Upload image failed")
                     Toast.makeText(this.requireContext(), it, Toast.LENGTH_SHORT).show()
                 })
             }

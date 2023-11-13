@@ -23,7 +23,7 @@ open class BaseActivity : AppCompatActivity() {
     open fun showLoading(
         title: String,
         message: String,
-        cancelable: Boolean = false,
+        cancelable: Boolean = true,
         cancelListener: ((DialogInterface) -> Unit) = {}
     ) {
 

@@ -17,7 +17,6 @@ import com.example.healthcarecomp.util.extension.isDoctor
 import com.example.healthcarecomp.util.extension.isPatient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,16 +28,15 @@ class InfoViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     var isEditing = MutableLiveData<Boolean>(false)
-
     var userEditState = MutableLiveData<Resource<out User>>()
 
     fun upsertUser(
-        password: String,
-        confirmPassword: String,
-        firstName: String,
-        lastName: String,
-        avatar: String?,
-        gender: Boolean,
+        password: String? = null,
+        confirmPassword: String? = null,
+        firstName: String? = null,
+        lastName: String? = null,
+        avatar: String? = null,
+        gender: Boolean? = null,
         dob: Long? = null,
     ) {
         userEditState.value = Resource.Loading()
@@ -47,24 +45,24 @@ class InfoViewModel @Inject constructor(
         }
         authRepository.getLoggedInUser()?.let {
             if (it.isDoctor()) {
-                Log.d("UserRole","Doctor")
-                it.password = password
-                it.firstName = firstName
-                it.lastName = lastName
-                it.avatar = avatar
-                it.gender = gender
-                it.dob = dob
+                Log.d("UserRole", "Doctor")
+                password?.let { _ -> it.password = password }
+                firstName?.let { _ -> it.firstName = firstName }
+                lastName?.let { _ -> it.lastName = lastName }
+                avatar?.let { _ -> it.avatar = avatar }
+                gender?.let { _ -> it.gender = gender }
+                dob?.let { _ -> it.dob = dob }
                 viewModelScope.launch {
                     userEditState.postValue(doctorRepository.upsert(it as Doctor, it.id))
                 }
             } else if (it.isPatient()) {
-                Log.d("UserRole","Patient")
-                it.password = password
-                it.firstName = firstName
-                it.lastName = lastName
-                it.avatar = avatar
-                it.gender = gender
-                it.dob = dob
+                Log.d("UserRole", "Patient")
+                password?.let { _ -> it.password = password }
+                firstName?.let { _ -> it.firstName = firstName }
+                lastName?.let { _ -> it.lastName = lastName }
+                avatar?.let { _ -> it.avatar = avatar }
+                gender?.let { _ -> it.gender = gender }
+                dob?.let { _ -> it.dob = dob }
                 viewModelScope.launch {
                     userEditState.postValue(patientRepository.upsert(it as Patient, it.id))
                 }
