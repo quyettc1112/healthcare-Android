@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.base
 
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -17,14 +18,26 @@ open class BaseFragment(view: Int) : Fragment(view) {
         findNavController().navigate(actionId, bundle)
     }
 
-    protected fun navigateToPage(direction: NavDirections){
+    protected fun navigateToPage(direction: NavDirections) {
         findNavController().navigate(direction)
     }
 
-    protected fun showLoading(isShow: Boolean) {
+    protected fun showLoading(
+        title: String,
+        message: String,
+        cancelable: Boolean = false,
+        cancelListener: ((DialogInterface) -> Unit) = {}
+    ) {
         val activity = requireActivity()
         if (activity is BaseActivity) {
-            activity.showLoading(isShow)
+            activity.showLoading( title, message, cancelable, cancelListener)
+        }
+    }
+
+    protected fun hideLoading(){
+        val activity = requireActivity()
+        if (activity is BaseActivity) {
+            activity.hideLoading()
         }
     }
 

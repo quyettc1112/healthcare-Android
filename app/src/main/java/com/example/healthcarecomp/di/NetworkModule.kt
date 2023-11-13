@@ -5,6 +5,7 @@ import com.example.healthcarecomp.data.api.DoctorApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -79,4 +80,9 @@ object NetworkModule {
         return MoshiConverterFactory.create(moshi)
     }
 
+    @Provides
+    @Singleton
+    fun provideFirebaseStorage(): FirebaseStorage{
+        return FirebaseStorage.getInstance()
+    }
 }

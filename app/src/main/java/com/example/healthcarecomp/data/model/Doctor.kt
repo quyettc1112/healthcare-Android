@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.data.model
 
 import java.time.LocalDate
+import java.util.Date
 import java.util.UUID
 
 class Doctor(
@@ -11,7 +12,7 @@ class Doctor(
     lastName: String? = null,
     avatar: String? = null,
     gender: Boolean? = null,
-    dob: LocalDate? = null,
+    dob: Long? = null,
     val specialty: String? = null
 ) : User(phone, email, password, firstName, lastName, avatar, gender, dob){
 
