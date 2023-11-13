@@ -12,6 +12,7 @@ import com.example.healthcarecomp.ui.schedule.ScheduleUseCase
 import com.example.healthcarecomp.ui.auth.login.LoginUseCase
 import com.example.healthcarecomp.ui.chat.ChatUseCase
 import com.example.healthcarecomp.ui.chatmessage.ChatMessageUseCase
+import com.example.healthcarecomp.ui.viewProfile.ViewProfileUserCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +52,12 @@ object UseCaseModule {
     @Singleton
     fun provideChatMessageUseCase(chatMessageRepository: ChatMessageRepository, chatRoomRepository: ChatRoomRepository, notificationRepository: NotificationRepository) : ChatMessageUseCase {
         return ChatMessageUseCase(chatMessageRepository, chatRoomRepository, notificationRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideViewProfileUseCase(chatRoomRepository: ChatRoomRepository) : ViewProfileUserCase {
+        return ViewProfileUserCase(chatRoomRepository)
     }
 
 }

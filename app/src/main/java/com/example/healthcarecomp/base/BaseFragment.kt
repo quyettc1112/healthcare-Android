@@ -1,10 +1,12 @@
 package com.example.healthcarecomp.base
 
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.example.healthcarecomp.R
+import com.example.healthcarecomp.data.model.User
 
 
 open class BaseFragment(view: Int) : Fragment(view) {
@@ -61,6 +63,4 @@ open class BaseFragment(view: Int) : Fragment(view) {
     protected fun showLoadingMore(isShow: Boolean) {
 
     }
-
-
 }

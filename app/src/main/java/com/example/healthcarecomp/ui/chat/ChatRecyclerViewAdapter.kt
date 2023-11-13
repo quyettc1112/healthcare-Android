@@ -23,6 +23,7 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
     lateinit var currentUserId: String
     lateinit var dataList: MutableList<Triple<ChatRoom, User, Message?>>
     private var onItemClickListener : ((User, ChatRoom) -> Unit)? = null
+    private var onAvatarClickListener: ((User) -> Unit)? = null
 
     fun setOnItemClickListener(listener: ((User, ChatRoom) -> Unit)){
         onItemClickListener = listener
@@ -101,6 +102,9 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
                     it(user, chatRoom)
                 }
             }
+            onAvatarClickListener?.let {
+                it(user)
+            }
             message?.let {
                 messageContent.text = message.content
                 val context = itemView.context
@@ -115,5 +119,10 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
 
     override fun getItemCount(): Int {
         return differ.currentList.size
+    }
+
+
+    fun setOnAvatarClickListener(listener: (User) -> Unit){
+        onAvatarClickListener = listener
     }
 }

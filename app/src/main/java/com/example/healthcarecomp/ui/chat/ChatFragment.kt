@@ -55,6 +55,10 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
             val direction = ChatFragmentDirections.actionNavigationChatToChatMessageFragment(user, chatRoom)
             navigateToPage(direction)
         }
+        _recyclerViewAdapter.setOnAvatarClickListener { user ->
+            val direction = ChatFragmentDirections.actionNavigationChatToViewProfileFragment(user, R.id.action_viewProfileFragment_to_navigation_chat)
+            navigateToPage(direction)
+        }
         _binding.rvChatUsers.apply {
             adapter = _recyclerViewAdapter
             layoutManager = LinearLayoutManager(requireContext())

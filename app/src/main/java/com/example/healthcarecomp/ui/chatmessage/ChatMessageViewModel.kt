@@ -37,7 +37,6 @@ class ChatMessageViewModel @Inject constructor(
             if (resource is Resource.Success) {
                 messageList.value = messageList.value.apply {
                     this?.data?.add(resource.data!!)
-
                 }
             }
 

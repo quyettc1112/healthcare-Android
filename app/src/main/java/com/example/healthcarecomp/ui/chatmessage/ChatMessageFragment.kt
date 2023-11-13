@@ -1,33 +1,27 @@
 package com.example.healthcarecomp.ui.chatmessage
 
+import android.graphics.Path.Direction
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
-import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Message
 import com.example.healthcarecomp.databinding.FragmentChatMessageBinding
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 @AndroidEntryPoint
 class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
@@ -75,7 +69,7 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
             navigateToPage(R.id.action_chatMessageFragment_to_navigation_chat)
         }
         _binding.customToolBar.setTitle(args.user.firstName!!)
-
+        //setting for recycler view
         _recyclerViewAdapter = ChatMessageRecyclerViewAdapter(_parent?.currentUser!!, args.user)
         _recyclerViewAdapter.setItemOrderBy {
             it.sortedBy { message ->

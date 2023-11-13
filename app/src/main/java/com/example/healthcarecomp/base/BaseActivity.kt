@@ -1,7 +1,9 @@
 package com.example.healthcarecomp.base
 
+import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
 import com.example.healthcarecomp.base.dialog.ErrorDialog

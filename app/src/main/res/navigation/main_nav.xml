@@ -37,6 +37,14 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_chat_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -64,6 +72,14 @@
         <argument
             android:name="patientID"
             app:argType="string" />
+        <action
+            android:id="@+id/action_medicalHistoryFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/medicalRecordFragment"
@@ -109,6 +125,50 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_chatMessageFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.example.healthcarecomp.ui.viewProfile.ViewProfileFragment"
+        android:label="fragment_view_profile"
+        tools:layout="@layout/fragment_view_profile" >
+        <argument
+            android:name="user"
+            app:argType="com.example.healthcarecomp.data.model.User" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_medicalHistoryFragment"
+            app:destination="@id/medicalHistoryFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
+        <action
+            android:id="@+id/action_viewProfileFragment_to_navigation_chat"
+            app:destination="@id/navigation_chat"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
+        <argument
+            android:name="prePage"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_chatMessageFragment"
+            app:destination="@id/chatMessageFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
     </fragment>
 
 
