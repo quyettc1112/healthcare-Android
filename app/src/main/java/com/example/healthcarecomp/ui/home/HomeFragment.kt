@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,11 +19,13 @@ import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.databinding.FragmentHomeBinding
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.extension.isPatient
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
     private lateinit var binding:FragmentHomeBinding
     private var parent: MainActivity? = null
+    private lateinit var homeViewModel: HomeViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,6 +33,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         parent = requireActivity() as? MainActivity
+        homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         return binding.root
     }
 
@@ -68,14 +72,14 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         adapter.onItemClick = {
 //            Toast.makeText(requireContext(), "Click", Toast.LENGTH_SHORT).show()
             it.actionId?.let {action ->
-                val bundle = Bundle()
                 parent?.let {
                     if(parent?.currentUser!!.isPatient()){
-                        bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,parent?.currentUser?.id)
+
+                        homeViewModel.setMedicalHistoryPatientId(parent?.currentUser?.id!!)
                     }else{
-                        bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY,"1a04ee07-5909-4471-b767-a62f8c1e99d1")
+                        homeViewModel.setMedicalHistoryPatientId("1a04ee07-5909-4471-b767-a62f8c1e99d1")
                     }
-                    navigateToPage(action, bundle)
+                    navigateToPage(action)
                 }
 
             }

@@ -13,7 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_medicalHistoryFragment"
             app:destination="@id/medicalHistoryFragment"
-            app:enterAnim="@anim/zoom_in"/>
+            app:enterAnim="@anim/zoom_in"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -69,9 +71,6 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
-        <argument
-            android:name="patientID"
-            app:argType="string" />
         <action
             android:id="@+id/action_medicalHistoryFragment_to_viewProfileFragment"
             app:destination="@id/viewProfileFragment"
@@ -95,9 +94,6 @@
             app:popExitAnim="@anim/slide_out_left"/>
         <argument
             android:name="medicalRecordId"
-            app:argType="string"
-            app:nullable="true" />
-        <argument android:name="PatientId"
             app:argType="string"
             app:nullable="true" />
         <argument

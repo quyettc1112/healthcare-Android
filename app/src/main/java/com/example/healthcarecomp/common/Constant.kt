@@ -115,6 +115,16 @@ class Constant {
 
     }
 
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class BottomNav() {
+        companion object {
+            val HOME_NAV = listOf(R.id.navigation_home, R.id.medicalHistoryFragment, R.id.medicalRecordFragment)
+            val SCHEDULE_NAV = listOf(R.id.navigation_schedule)
+            val CHAT_NAV = listOf(R.id.navigation_chat, R.id.chatMessageFragment)
+            val INFO_NAV = listOf(R.id.navigation_info, R.id.viewProfileFragment)
+        }
+    }
+
     enum class DoctorQuery(val queryField: String){
         PATH("Doctor"),
         EMAIL("email"),

@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -23,6 +24,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseActivity
+import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.ui.schedule.ScheduleViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -80,6 +82,28 @@ class MainActivity : BaseActivity() {
     fun setupBottomNav() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        //handle display bottom selected when a fragment display
+        val menuHashMap = HashMap<Int, MenuItem>()
+        navView.menu?.let{ menu ->
+            for(i in 0 until menu.size()) {
+                val menuItem = menu.getItem(i)
+                menuHashMap[menuItem.itemId] = menuItem
+            }
+        }
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+             val selectedId = when (destination.id) {
+
+                in Constant.BottomNav.CHAT_NAV ->  R.id.navigation_chat
+                in Constant.BottomNav.SCHEDULE_NAV -> R.id.navigation_schedule
+                in Constant.BottomNav.INFO_NAV -> R.id.navigation_info
+                else -> R.id.navigation_home
+            }
+            menuHashMap[selectedId]?.isChecked = true
+        }
+
+
+
         navView.setupWithNavController(navController)
 
     }

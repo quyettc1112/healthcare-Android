@@ -113,6 +113,7 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
             _binding.etChatMessageText.setText("")
             //send notification
             _viewModel.upsert(message,requireContext(), _parent?.currentUser?.firstName, args.user.id)
+            Log.i("Maindd","${args.user.id}" )
         }
     }
 

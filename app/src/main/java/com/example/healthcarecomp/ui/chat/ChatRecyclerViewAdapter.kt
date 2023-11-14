@@ -103,7 +103,9 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
                 }
             }
             onAvatarClickListener?.let {
-                it(user)
+                userAvatar.setOnClickListener {
+                    it(user)
+                }
             }
             message?.let {
                 messageContent.text = message.content

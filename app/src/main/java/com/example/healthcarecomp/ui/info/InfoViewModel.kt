@@ -15,6 +15,7 @@ import com.example.healthcarecomp.data.repository.PatientRepository
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
 import com.example.healthcarecomp.util.extension.isPatient
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -75,7 +76,12 @@ class InfoViewModel @Inject constructor(
     }
 
     fun logout() {
+        stopReceiveNotification()
         authRepository.logout()
+    }
+
+    fun stopReceiveNotification(){
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(sessionManager.getLoggedInUser()?.id!!)
     }
 
     fun uploadImage(
