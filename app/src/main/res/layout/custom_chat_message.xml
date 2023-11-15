@@ -9,17 +9,17 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/llMessageLeft"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            android:paddingHorizontal="10dp">
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/llMessageLeft"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left">
+                android:gravity="left"
+                android:paddingHorizontal="10dp">
 
                 <ImageView
                     android:id="@+id/ivSendStatusLeft"
@@ -27,88 +27,150 @@
                     android:layout_height="16dp"
                     android:src="@drawable/check_circle_24px"
                     android:visibility="gone"
+                    android:layout_gravity="bottom"
                     app:tint="@color/i_blue" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivMessageLeft"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:layout_gravity="bottom"
                     android:src="@drawable/default_user_avt"
                     app:civ_border_color="@color/i_stroke"
                     app:civ_border_width="1dp" />
 
                 <LinearLayout
-                    android:id="@+id/llContentMessageLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/message_shape_1"
-                    android:paddingHorizontal="20dp"
-                    android:paddingVertical="10dp">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvMessageLeft"
-                        android:layout_width="match_parent"
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:visibility="gone"
+                        android:id="@+id/flImgContainerLeft"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:lineSpacingExtra="2dp"
-                        android:textColor="#333"
-                        android:textSize="16sp"
-                        tools:text="heluu" />
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal"
+                        android:background="@drawable/message_shape_1"
+                        ></com.google.android.flexbox.FlexboxLayout>
+
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:visibility="gone"
+                        android:id="@+id/flFileContainerleft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/message_shape_1"
+                        android:orientation="horizontal"></com.google.android.flexbox.FlexboxLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llContentMessageLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/message_shape_1"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp">
+
+                        <TextView
+                            android:id="@+id/tvMessageLeft"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="2dp"
+                            android:textColor="#333"
+                            android:textSize="16sp"
+                            tools:text="heluu" />
+                    </LinearLayout>
                 </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llMessageRight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom|right"
-            android:paddingHorizontal="10dp">
+            android:gravity="bottom"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/llMessageRight"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right">
+                android:gravity="right"
+                android:paddingHorizontal="10dp">
+
+                <ImageView
+                    android:id="@+id/ivSendStatusRight"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/check_circle_24px"
+                    android:visibility="gone"
+                    android:layout_gravity="bottom"
+                    app:tint="@color/i_blue" />
 
                 <LinearLayout
-                    android:id="@+id/llContentMessageRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/message_shape_2"
-                    android:paddingHorizontal="20dp"
-                    android:paddingVertical="10dp">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvMessageRight"
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:visibility="gone"
+                        android:id="@+id/flImgContainerRight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:lineSpacingExtra="2dp"
-                        android:textColor="#333"
-                        android:textSize="16sp"
-                        tools:text="fkj fasfj d fakjfa" />
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/message_shape_2"
+                        app:alignContent="stretch"
+                        app:flexDirection="row"
+                        app:flexWrap="wrap"
+                        app:justifyContent="flex_start"></com.google.android.flexbox.FlexboxLayout>
+
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:visibility="gone"
+                        android:id="@+id/flFileContainerRight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/message_shape_2"
+                        app:alignContent="stretch"
+                        app:flexDirection="row"
+                        app:flexWrap="wrap"
+                        app:justifyContent="flex_end"></com.google.android.flexbox.FlexboxLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llContentMessageRight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/message_shape_2"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp">
+
+                        <TextView
+                            android:id="@+id/tvMessageRight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="2dp"
+                            android:textColor="#333"
+                            android:textSize="16sp"
+                            tools:text="heluu" />
+                    </LinearLayout>
                 </LinearLayout>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivMessageRight"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom"
+                    android:src="@drawable/default_user_avt"
+                    app:civ_border_color="@color/i_stroke"
+                    app:civ_border_width="1dp" />
             </LinearLayout>
-
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivMessageRight"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/default_user_avt"
-                app:civ_border_color="@color/i_stroke"
-                app:civ_border_width="1dp" />
-
-            <ImageView
-                android:id="@+id/ivSendStatusRight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/check_circle_24px"
-                android:visibility="gone"
-                app:tint="@color/i_blue" />
         </LinearLayout>
+
+
     </LinearLayout>
 
 

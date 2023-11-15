@@ -35,20 +35,10 @@
                 />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilChatMessage"
-            style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            app:endIconDrawable="@drawable/baseline_send_24"
-            app:endIconMode="custom"
+        <com.example.healthcarecomp.base.customview.CustomEditTextMessage
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etChatMessageText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Type message"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="wrap_content"
+            android:id="@+id/etChatMessage"/>
    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

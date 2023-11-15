@@ -6,5 +6,6 @@ data class Message(
     val content: String? = null,
     val senderId: String? = null,
     val receiverId: String? = null,
-    val seen: Boolean = false
+    val seen: Boolean = false,
+    val attachFiles: List<Attachment>? = null
 )

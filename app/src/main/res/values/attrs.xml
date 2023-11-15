@@ -21,4 +21,16 @@
         <attr name="textRightColor" format="reference|color"/>
         <attr name="seen" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomEditTextMessage">
+        <attr name="backgroundColor"/>
+        <attr name="android:textColor"/>
+        <attr name="iconColor" format="reference|color"/>
+        <attr name="android:hint"/>
+        <attr name="android:text"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomFileSend">
+        <attr name="android:src"/>
+    </declare-styleable>
 </resources>

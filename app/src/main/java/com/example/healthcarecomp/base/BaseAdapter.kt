@@ -13,7 +13,7 @@ abstract class BaseAdapter<T : Any, VH : BaseItemViewHolder<T, *>> : RecyclerVie
 
     protected abstract fun differCallBack(): DiffUtil.ItemCallback<T>
 
-    private val differ = AsyncListDiffer(this, differCallBack())
+    protected val differ = AsyncListDiffer(this, differCallBack())
 
     override fun getItemCount(): Int {
         return differ.currentList.size

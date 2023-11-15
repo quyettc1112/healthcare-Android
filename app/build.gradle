@@ -151,4 +151,8 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-storage")
 
+    //automatic newline wrapping for dynamically in view
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+
+
 }
