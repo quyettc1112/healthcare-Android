@@ -29,8 +29,6 @@ class SplashActivity : AppCompatActivity() {
         // Timedelay is a time to wait unitl change new acitvity: 100 = 1 second
         startProgressBar(progressBar, timeDelay = 200)
 
-
-
     }
 
     private fun openAuthActivity() {

@@ -151,4 +151,8 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-storage")
 
+
+    // For Gif Image View
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
+
 }

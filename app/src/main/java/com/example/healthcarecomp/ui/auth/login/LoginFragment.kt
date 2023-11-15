@@ -1,7 +1,9 @@
 package com.example.healthcarecomp.ui.auth.login
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
+import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
+import com.example.healthcarecomp.base.dialog.MyBottomSheetDialogFragment
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
 import com.example.healthcarecomp.helper.BiometricHelper
@@ -22,6 +25,7 @@ import com.example.healthcarecomp.ui.activity.auth.AuthActivity
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -34,6 +38,9 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
     private var _userGG: User? = null
     private lateinit var biometricHelper: BiometricHelper
 
+    // NFC Check
+    private var nfcAdapter: NfcAdapter? = null
+    private var pendingIntent: PendingIntent? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +54,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         _viewModel = ViewModelProvider(requireActivity()).get(LoginViewModel::class.java)
 
         autoLogin()
+        setUp_NFC_UI(container)
 
         return _binding.root
     }
@@ -62,6 +70,18 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
             }
             biometricHelper.authenticateWithBiometric()
         }
+    }
+
+    private fun setUp_NFC_UI(container: ViewGroup?) {
+        _binding.inLoginWithNFC.setOnClickListener {
+            val fragment = MyBottomSheetDialogFragment()
+
+// Hiển thị bottom sheet dialog
+            fragment.show(childFragmentManager, "my_bottom_sheet_dialog")
+
+        }
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

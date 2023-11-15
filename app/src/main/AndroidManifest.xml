@@ -10,6 +10,10 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
     <uses-permission android:name="com.google.android.gms.auth.api.signin.permission.GOOGLE_SIGN_IN" />
+
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
+
     <application
         android:name=".HealthCareCompApp"
         android:allowBackup="true"
@@ -37,10 +41,21 @@
 
         <activity
             android:name=".ui.activity.auth.AuthActivity"
-            android:exported="false" />
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
+        </activity>
         <activity
             android:name=".ui.activity.main.MainActivity"
-            android:exported="true"></activity>
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".ui.activity.SplashActivity"
             android:exported="true">

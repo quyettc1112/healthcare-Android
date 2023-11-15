@@ -180,15 +180,31 @@
                 android:layout_marginTop="12dp"
                 android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                 />
-            
-            <ImageButton
-                android:id="@+id/ibLoginWithGoogle"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/google_login"
-                android:background="@color/white"
-                android:layout_marginTop="12dp"
-                android:scaleType="fitCenter"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/ibLoginWithGoogle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/google_login"
+                    android:background="@color/white"
+                    android:layout_marginTop="12dp"
+                    android:scaleType="fitCenter"/>
+
+                <ImageButton
+                    android:layout_marginLeft="16dp"
+                    android:id="@+id/inLoginWithNFC"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/baseline_nfc_24"
+                    android:background="@color/white"
+                    android:layout_marginTop="12dp"
+                    android:scaleType="fitCenter"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
