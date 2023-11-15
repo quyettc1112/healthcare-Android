@@ -43,7 +43,7 @@
 
     <!--    biometric authentication-->
     <string name="biometric_authentication_title">Biometric Authentication</string>
-    <string name="biometric_authentication_subtitle">Log in using your biometric credential</string>
+    <string name="biometric_authentication_subtitle">Log in using </string>
     <!--    <string name="biometric_authentication_error">Authentication error: </string>-->
     <!--    <string name="biometric_authentication_succeeded">Authentication succeeded!</string>-->
     <!--    <string name="biometric_authentication_failed">Authentication failed</string>-->
