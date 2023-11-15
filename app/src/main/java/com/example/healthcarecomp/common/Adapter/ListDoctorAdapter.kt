@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.healthcarecomp.R
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.databinding.FragmentScheduleBinding
 import com.example.healthcarecomp.databinding.RvItemUserhomeBinding
 import com.example.healthcarecomp.databinding.RvListDotorBinding
+import com.squareup.picasso.Picasso
 
 class ListDoctorAdapter :
     RecyclerView.Adapter<ListDoctorAdapter.MainViewHolder>() {
@@ -25,7 +27,11 @@ class ListDoctorAdapter :
         fun bindItem(Item: Doctor) {
             itemBinding.tvNameDoctor.text = Item.lastName
             itemBinding.tvSpecialList.text = Item.specialty.toString()
-            Glide.with(itemBinding.root.context).load(Item.avatar).into(itemBinding.ivAvtDoctor)
+            Picasso.get()
+                .load(Item?.avatar) // Assuming item.img is the URL string
+                .placeholder(R.drawable.avatar_1) // Optional: Placeholder image while loading
+                .error(R.drawable.default_user_avt) // Optional: Error image to display on load failure
+                .into(itemBinding.ivAvtDoctor)
         }
     }
 

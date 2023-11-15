@@ -35,8 +35,6 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
             itemBinding.tvYearSchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.YEAR).toString()
             if (scheduleViewModel.currentUser!!.isPatient()) {bindingDoctor(Item)}
             else bindingPatient(Item)
-
-
         }
 
         private fun bindingDoctor(Item: Schedule) {
