@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
+    <uses-permission android:name="com.google.android.gms.auth.api.signin.permission.GOOGLE_SIGN_IN" />
     <application
         android:name=".HealthCareCompApp"
         android:allowBackup="true"
@@ -49,7 +50,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <service android:name=".services.FirebaseNotificationService"
             android:permission="com.google.android.c2dm.permission.SEND"
             android:exported="false">
@@ -58,7 +59,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
-        
+
     </application>
 
 </manifest>

@@ -55,16 +55,16 @@
 
         </LinearLayout>
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_avtDoctor"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_gravity="center"
+            android:layout_marginStart="20dp"
             android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:src="@drawable/default_user_avt">
-
-        </ImageView>
+            android:src="@drawable/default_user_avt"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+            />
 
 
     </LinearLayout>

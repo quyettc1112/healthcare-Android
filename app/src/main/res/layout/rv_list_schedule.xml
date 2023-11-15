@@ -84,15 +84,16 @@
 
         </LinearLayout>
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:layout_marginLeft="10dp"
             android:layout_gravity="center"
             android:id="@+id/iv_userAVT_schedule"
             android:layout_width="65dp"
             android:layout_height="65dp"
-            android:src="@drawable/default_user_avt">
+            android:src="@drawable/default_user_avt"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
 
-        </ImageView>
+        />
 
 
     </LinearLayout>

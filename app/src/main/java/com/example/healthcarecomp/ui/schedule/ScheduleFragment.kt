@@ -30,14 +30,18 @@ import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.common.Screen
 import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.Schedule
+import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentScheduleBinding
 import com.example.healthcarecomp.util.Resource
+import com.example.healthcarecomp.util.extension.isDoctor
+import com.example.healthcarecomp.util.extension.isPatient
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -72,9 +76,6 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     ): View? {
         binding = FragmentScheduleBinding.inflate(inflater, container, false)
 
-        val newThread = Thread { }
-        newThread.start()
-
 
         var flow = flow {
             while (true) {
@@ -98,11 +99,21 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        scheduleViewModel.getAllDoctor()
+        GlobalScope.launch {
+            scheduleViewModel.getAllDoctor()
+            scheduleViewModel.getAllPatient()
+        }
         _recyclerViewAdapter_UpComing = ScheduleAdapter(scheduleViewModel)
         _recyclerViewAdapter = ScheduleAdapter(scheduleViewModel)
         getDoctorList()
-        setDate(binding)
+
+        // Chỉ khi người dùng là patient thì mới có thể settdate
+        if (scheduleViewModel.currentUser!!.isPatient()) {
+            setDate(binding)
+        } else if (scheduleViewModel.currentUser!!.isDoctor()) {
+            binding.btnShowDatePicker.visibility = View.GONE
+        }
+
         setUpUI(binding, scheduleViewModel)
         setUpUI_UpComing(binding, scheduleViewModel)
     }
@@ -114,6 +125,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         _recyclerViewAdapter_DoctorList = ListDoctorAdapter()
         scheduleViewModel.doctorLIst.observe(viewLifecycleOwner, Observer {
             when (it) {
+                is Resource.Loading -> {}
                 is Resource.Success -> {
                     _recyclerViewAdapter_DoctorList.differ.submitList(it?.data?.toList())
                 }
@@ -154,8 +166,11 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                 else -> {}
             }
         })
-        val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
-        itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
+        if (scheduleViewModel.currentUser!!.isPatient()) {
+            val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter.getSimpleCallBack())
+            itemTouchHelper.attachToRecyclerView(binding.rvListTodaySchedule)
+        }
+
     }
 
     private fun setUpUI_UpComing(
@@ -176,12 +191,16 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
                     currentList_UpComing =
                         _recyclerViewAdapter_UpComing.differ.currentList?.toList()!!
                 }
+
                 else -> {}
             }
         })
 
-        val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter_UpComing.getSimpleCallBack())
-        itemTouchHelper.attachToRecyclerView(binding.rvListUpcomingSchedule)
+        if (scheduleViewModel.currentUser!!.isPatient()) {
+            val itemTouchHelper = ItemTouchHelper(_recyclerViewAdapter_UpComing.getSimpleCallBack())
+            itemTouchHelper.attachToRecyclerView(binding.rvListUpcomingSchedule)
+        }
+
 
     }
 
@@ -213,9 +232,18 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         }
     }
 
-    fun setUpDialogPopup(schedule: Schedule, scheduleViewModel: ScheduleViewModel){
+    fun setUpDialogPopup(schedule: Schedule, scheduleViewModel: ScheduleViewModel) {
+        var user: User? = null
+        // Nếu người dùng hiện tại là bệnh nhan thì sẽ list ra danh sách bác sĩ và ngược lại
+        if (scheduleViewModel.currentUser!!.isPatient()) {
+            user = scheduleViewModel.getListDoctor()?.filter { it.id == schedule.doctorId }
+                ?.firstOrNull()
+        } else {
+            user = scheduleViewModel.getListPatient()?.filter { it.id == schedule.patientID }
+                ?.firstOrNull()
+        }
 
-        val doctor = scheduleViewModel.getListDoctor()?.filter { it.id == schedule.doctorId }?.firstOrNull()
+
         val dialogBinding = layoutInflater.inflate(R.layout.activity_pop_up, null)
         val title = dialogBinding.findViewById<TextView>(R.id.title_activity_popup)
         val deadline_title = dialogBinding.findViewById<TextView>(R.id.deadline_title_popup)
@@ -223,13 +251,13 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
         val btn_finish = dialogBinding.findViewById<Button>(R.id.btn_statusButton)
         val btn_phone = dialogBinding.findViewById<Button>(R.id.phoneDoctor)
 
-       // Glide.with(dialogBinding.context).load(doctor?.avatar).into(iconPopUp_activity)
+        // Glide.with(dialogBinding.context).load(doctor?.avatar).into(iconPopUp_activity)
         Picasso.get()
-            .load(doctor?.avatar) // Assuming item.img is the URL string
+            .load(user?.avatar) // Assuming item.img is the URL string
             .placeholder(R.drawable.avatar_1) // Optional: Placeholder image while loading
             .error(R.drawable.default_user_avt) // Optional: Error image to display on load failure
             .into(iconPopUp_activity)
-        title.text = "Meeting with ${doctor?.lastName}"
+        title.text = "Meeting with ${user?.lastName}"
         val dateSchedule =
             dateFormat.format(Constant.convertTimestampToCalendar(schedule.date_medical_examinaton!!).time)
         deadline_title.text = dateSchedule.toString()
@@ -251,7 +279,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
             if (appInstalled) {
                 // Create an intent to open the phone app
                 val intent = Intent(Intent.ACTION_DIAL)
-                intent.data = Uri.parse("tel:${doctor?.phone}}")
+                intent.data = Uri.parse("tel:${user?.phone}}")
                 // Start the intent
                 startActivity(intent)
             } else {
@@ -268,6 +296,7 @@ class ScheduleFragment : BaseFragment(R.layout.fragment_schedule) {
 
     private fun setDate(binding: FragmentScheduleBinding) {
         // Lấy ngày giờ hiện tại
+
         binding.btnShowDatePicker.setOnClickListener {
             // Tạo đối tượng DatePickerDialog
             val datePickerDialog = DatePickerDialog(

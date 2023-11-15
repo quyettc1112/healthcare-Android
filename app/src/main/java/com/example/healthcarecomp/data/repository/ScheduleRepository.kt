@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.data.repository
 
 
+import com.example.healthcarecomp.data.model.MedicalRecord
 import com.example.healthcarecomp.data.model.Patient
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.util.Resource
@@ -21,4 +22,7 @@ interface ScheduleRepository {
 
     fun  getScheduleByDoctorID_Today(DoctorID : String, condition: String, listener: (Resource<MutableList<Schedule>>) -> Unit)
     fun  getScheduleByDoctorID_UpComing(DoctorID: String, condition: String, listener: (Resource<MutableList<Schedule>>) -> Unit)
+
+
+    suspend fun getAllByPatientID(patientID: String, listener: (Resource<MutableList<Patient>>) -> Unit )
 }

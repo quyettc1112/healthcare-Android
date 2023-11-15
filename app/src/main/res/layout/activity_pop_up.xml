@@ -31,15 +31,18 @@
                 android:orientation="horizontal"
                 android:layout_margin="16dp">
 
-                <ImageView
-                    android:layout_weight="1"
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/icon_doctor"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="8dp"
-                    android:src="@drawable/default_user_avt">
+                    android:layout_weight="1"
+                    android:src="@drawable/default_user_avt"
+                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
 
-                </ImageView>
+                    />
+
+
 
                 <Button
                     android:id="@+id/phoneDoctor"

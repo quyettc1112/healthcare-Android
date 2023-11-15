@@ -6,6 +6,7 @@ import com.example.healthcarecomp.data.repository.ChatRoomRepository
 import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.data.repository.MedicalHistoryRepository
 import com.example.healthcarecomp.data.repository.NotificationRepository
+import com.example.healthcarecomp.data.repository.PatientRepository
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryUseCase
 import com.example.healthcarecomp.ui.schedule.ScheduleUseCase
@@ -37,8 +38,8 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provineScheduleUseCase(scheduleRepository: ScheduleRepository, doctorRepository: DoctorRepository) : ScheduleUseCase {
-        return ScheduleUseCase(scheduleRepository, doctorRepository)
+    fun provineScheduleUseCase(scheduleRepository: ScheduleRepository, doctorRepository: DoctorRepository, patientRepository: PatientRepository) : ScheduleUseCase {
+        return ScheduleUseCase(scheduleRepository, doctorRepository, patientRepository)
     }
 
 
