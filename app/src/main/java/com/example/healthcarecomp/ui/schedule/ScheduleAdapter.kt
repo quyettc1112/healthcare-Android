@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.ui.schedule
 
 import android.icu.util.Calendar
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -33,9 +34,7 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
             itemBinding.tvTimeMeettingSchedule.text = convertTimestampToCalendar_SimpleTimeFormat(Item.date_medical_examinaton!!)
             itemBinding.tvYearSchedule.text = convertTimestampToCalendar(Item.date_medical_examinaton!!).get(Calendar.YEAR).toString()
             if (scheduleViewModel.currentUser!!.isPatient()) {bindingDoctor(Item)}
-            else {
-
-            }
+            else bindingPatient(Item)
 
 
         }
@@ -58,7 +57,7 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
         private fun bindingPatient(Item: Schedule) {
             val patientID = Item.patientID
             val patient =
-                scheduleViewModel.getListDoctor()?.filter { it.id == patientID }?.firstOrNull()
+                scheduleViewModel.getListPatient()?.filter { it.id == patientID }?.firstOrNull()
             if (patient != null) {
                 Picasso.get()
                     .load(patient?.avatar) // Assuming item.img is the URL string

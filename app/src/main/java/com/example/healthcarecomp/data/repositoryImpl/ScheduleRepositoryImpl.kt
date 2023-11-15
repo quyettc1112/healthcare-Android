@@ -3,6 +3,7 @@ package com.example.healthcarecomp.data.repositoryImpl
 import android.util.Log
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.MedicalRecord
+import com.example.healthcarecomp.data.model.Patient
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.util.Resource
@@ -183,6 +184,32 @@ class ScheduleRepositoryImpl @Inject constructor(
         })
     }
 
+    override suspend  fun getAllByPatientID(
+        patientID: String,
+        listener: (Resource<MutableList<Patient>>) -> Unit
+    ) {
+        val query = _dbRef.orderByChild("patientID").equalTo(patientID)
+        fetchData(query, listener)
+    }
+    private fun fetchData(query: Query, listener: (Resource<MutableList<Patient>>) -> Unit){
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val list = mutableListOf<Patient>()
+                snapshot.children.forEach {data ->
+                    val mr = data.getValue(Patient::class.java)
+                    mr?.let {
+                        list.add(it)
+                    }
+                }
+                listener?.let {
+                    it(Resource.Success(list))
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                listener(Resource.Error(error.message))
+            }
+        })
+    }
 
     override fun onDataChange(listener: (Resource<MutableList<Schedule>>) -> Unit) {
         _onChildAddedListener = listener
