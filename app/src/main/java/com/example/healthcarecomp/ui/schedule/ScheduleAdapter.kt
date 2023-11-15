@@ -94,8 +94,6 @@ class ScheduleAdapter(val scheduleViewModel: ScheduleViewModel) :
         holder.itemView.setOnClickListener {
                 onItemClick?.invoke(Item)
             }
-
-
     }
 
     private val differCallBack = object : DiffUtil.ItemCallback<Schedule>() {
