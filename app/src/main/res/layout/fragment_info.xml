@@ -53,7 +53,7 @@
                     app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
 
                 <ImageButton
-                    android:id="@+id/ivEditIcon"
+                    android:id="@+id/ibEditAvatar"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/ic_edit"
@@ -174,7 +174,7 @@
                             android:id="@+id/etDob"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="text"
+                            android:inputType="date"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
                     </com.google.android.material.textfield.TextInputLayout>

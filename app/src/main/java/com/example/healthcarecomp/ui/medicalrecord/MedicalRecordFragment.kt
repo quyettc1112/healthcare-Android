@@ -31,7 +31,6 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
     private var _currentMedical: MedicalRecord? = null
     private var _parent: MainActivity? = null
 
-
     companion object {
         val HEART_RATE = Constant.MEDICAL.INT.HEARTH_RATE.dimension
         val BODY_TEMPERATURE = Constant.MEDICAL.FLOAT.BODY_TEMPERATURE.dimension
@@ -50,8 +49,6 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
         _binding = FragmentMedicalRecordBinding.inflate(inflater, container, false)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                var bundle = Bundle()
-                bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY, args.patientId)
                 navigateToPage(R.id.action_medicalRecordFragment_to_medicalHistoryFragment)
             }
         }
@@ -68,6 +65,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        _medicalRecordViewModel.invoke()
         setupUI()
     }
 
@@ -77,9 +75,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
         //////////////// setup when click back button ////////////
 
         _binding.ibMedicalRecordBack.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(Constant.PATIENT_MEDICAL_HISTORY_KEY, args.patientId)
-            navigateToPage(R.id.action_medicalRecordFragment_to_medicalHistoryFragment, bundle)
+            navigateToPage(R.id.action_medicalRecordFragment_to_medicalHistoryFragment)
         }
 
         _medicalRecordViewModel.currentMedicalRecordId = args.medicalRecordId
@@ -88,6 +84,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
             applyDoctorRole()
         } else {
             applyPatientRole()
+            _binding.etMedicalRecordNote.isEnabled = false
         }
 
         observeDataChange()
@@ -319,7 +316,7 @@ class MedicalRecordFragment : BaseFragment(R.layout.fragment_medical_record) {
         val general = _binding.etMedicalRecordNote.text.toString()
         val id = _medicalRecordViewModel.currentMedicalRecordId ?: UUID.randomUUID().toString()
         val doctorId = _parent?.currentUser?.id
-        val patientId = args.patientId
+        val patientId = _medicalRecordViewModel.patientId
         val timestamp = _currentMedical?.timestamps ?: System.currentTimeMillis()
 
         if (ValidU.isValidWeight(weight) && ValidU.isValidHeight(height)

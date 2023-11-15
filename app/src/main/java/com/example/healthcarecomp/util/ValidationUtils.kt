@@ -2,10 +2,13 @@ package com.example.healthcarecomp.util
 
 import android.app.appsearch.AppSearchSchema.BooleanPropertyConfig
 import android.content.Context
+import android.os.Build
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.example.healthcarecomp.common.Constant
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object ValidationUtils{
 
@@ -99,4 +102,16 @@ object ValidationUtils{
         return Constant.MEDICAL.STRING.BLOOD_PRESSURE.regex.matches(bloodPressure.trim())
     }
 
+    fun isValidDob(dobCharSequence: CharSequence): Boolean{
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                LocalDate.parse(dobCharSequence, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                true
+            } else {
+                false
+            }
+        }catch (e: Exception){
+            false
+        }
+    }
 }

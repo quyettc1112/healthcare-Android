@@ -26,7 +26,6 @@ class Constant {
 
     companion object{
         const val DEFAULT_ERROR_MESSAGE: String = "An error occurred"
-        const val BASE_URL: String = "https://mockapi.io/projects/648fd2c81e6aa71680ca1f63"
         const val APP_DATABASE_NAME = "app_db"
         const val FIREBASE_DATABASE_URL = "https://healtcarecomp-default-rtdb.asia-southeast1.firebasedatabase.app/"
         const val MEDICAL_HISTORY_TBL = "medical_history"
@@ -36,7 +35,10 @@ class Constant {
         const val PATIENT_SHARE_PREF_KEY: String = "patient"
         const val PATIENT_MEDICAL_HISTORY_KEY = "PatientMedicalId"
 
-
+        const val BASE_URL = "https://fcm.googleapis.com"
+        const val DEFAULT_ACCESS_TOKEN = "835e9ebec19b393f1a561302ccfc73dc55308747"
+        const val CONTENT_TYPE = "application/json"
+        const val NOTIFICATION_HOST = "fcm.googleapis.com"
         const val SCHEDULE_TBL = "schedule"
 
 
@@ -111,6 +113,16 @@ class Constant {
         }
 
 
+    }
+
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class BottomNav() {
+        companion object {
+            val HOME_NAV = listOf(R.id.navigation_home, R.id.medicalHistoryFragment, R.id.medicalRecordFragment)
+            val SCHEDULE_NAV = listOf(R.id.navigation_schedule)
+            val CHAT_NAV = listOf(R.id.navigation_chat, R.id.chatMessageFragment)
+            val INFO_NAV = listOf(R.id.navigation_info, R.id.viewProfileFragment)
+        }
     }
 
     enum class DoctorQuery(val queryField: String){

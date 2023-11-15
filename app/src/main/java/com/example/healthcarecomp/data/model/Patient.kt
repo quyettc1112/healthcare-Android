@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.data.model
 
 import java.time.LocalDate
+import java.util.Date
 
 class Patient(
     phone: String? = null,
@@ -10,7 +11,7 @@ class Patient(
     lastName: String? = null,
     avatar: String? = null,
     gender: Boolean? = null,
-    dob: LocalDate? = null,
+    dob: Long? = null,
     val healthInsurance: Long? = null
 ) : User(phone, email, password, firstName, lastName, avatar, gender, dob) {
 

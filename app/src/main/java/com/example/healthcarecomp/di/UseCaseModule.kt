@@ -5,13 +5,14 @@ import com.example.healthcarecomp.data.repository.ChatMessageRepository
 import com.example.healthcarecomp.data.repository.ChatRoomRepository
 import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.data.repository.MedicalHistoryRepository
-import com.example.healthcarecomp.data.repository.PatientRepository
+import com.example.healthcarecomp.data.repository.NotificationRepository
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.ui.medicalhistory.MedicalHistoryUseCase
 import com.example.healthcarecomp.ui.schedule.ScheduleUseCase
 import com.example.healthcarecomp.ui.auth.login.LoginUseCase
 import com.example.healthcarecomp.ui.chat.ChatUseCase
 import com.example.healthcarecomp.ui.chatmessage.ChatMessageUseCase
+import com.example.healthcarecomp.ui.viewProfile.ViewProfileUserCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,21 +37,27 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provineScheduleUseCase(scheduleRepository: ScheduleRepository, doctorRepository: DoctorRepository, patientRepository: PatientRepository) : ScheduleUseCase {
-        return ScheduleUseCase(scheduleRepository, doctorRepository, patientRepository)
+    fun provineScheduleUseCase(scheduleRepository: ScheduleRepository, doctorRepository: DoctorRepository) : ScheduleUseCase {
+        return ScheduleUseCase(scheduleRepository, doctorRepository)
     }
 
 
     @Provides
     @Singleton
-    fun provideChatRoomUseCase(chatRoomRepository: ChatRoomRepository, authRepository: AuthRepository) : ChatUseCase {
-        return ChatUseCase(chatRoomRepository, authRepository)
+    fun provideChatRoomUseCase(chatRoomRepository: ChatRoomRepository, authRepository: AuthRepository, chatMessageRepository: ChatMessageRepository) : ChatUseCase {
+        return ChatUseCase(chatRoomRepository, authRepository, chatMessageRepository)
     }
 
     @Provides
     @Singleton
-    fun provideChatMessageUseCase(chatMessageRepository: ChatMessageRepository) : ChatMessageUseCase {
-        return ChatMessageUseCase(chatMessageRepository)
+    fun provideChatMessageUseCase(chatMessageRepository: ChatMessageRepository, chatRoomRepository: ChatRoomRepository, notificationRepository: NotificationRepository) : ChatMessageUseCase {
+        return ChatMessageUseCase(chatMessageRepository, chatRoomRepository, notificationRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideViewProfileUseCase(chatRoomRepository: ChatRoomRepository) : ViewProfileUserCase {
+        return ViewProfileUserCase(chatRoomRepository)
     }
 
 }

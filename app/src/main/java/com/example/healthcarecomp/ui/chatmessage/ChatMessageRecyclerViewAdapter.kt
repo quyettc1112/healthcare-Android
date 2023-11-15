@@ -15,24 +15,25 @@ import com.example.healthcarecomp.databinding.RowItemChatMessageBinding
 class ChatMessageRecyclerViewAdapter(private val user: User, private val partner: User) :
     BaseAdapter<Message, ChatMessageRecyclerViewAdapter.ChatMessageViewHolder>() {
 
-    private var onItemDisplayListener : ((Message) -> Unit)? = null
+    private var onItemDisplayListener: ((Message) -> Unit)? = null
+    private var onDataSubmitListener: (() -> Unit)? = null
 
     inner class ChatMessageViewHolder(binding: RowItemChatMessageBinding) :
         BaseItemViewHolder<Message, RowItemChatMessageBinding>(binding) {
         override fun bind(item: Message) {
             binding.message.apply {
                 val person: User
-                val imageView : ImageView
-                if(item.senderId == user.id){
+                val imageView: ImageView
+                if (item.senderId == user.id) {
                     setStartDirection(true)
                     person = user
                     imageView = binding.ivMessageLeft
-                }else{
+                } else {
                     setStartDirection(false)
                     person = partner
                     imageView = binding.ivMessageRight
                 }
-                item?.content?.let{
+                item?.content?.let {
                     setContent(it)
                 }
                 Glide.with(context).load(person.avatar).into(imageView)
@@ -40,7 +41,6 @@ class ChatMessageRecyclerViewAdapter(private val user: User, private val partner
                 onItemDisplayListener?.let {
                     it(item)
                 }
-                Log.i("test", "bind")
             }
         }
     }
@@ -66,6 +66,17 @@ class ChatMessageRecyclerViewAdapter(private val user: User, private val partner
 
     fun setOnItemDisplayListener(listener: (Message) -> Unit) {
         onItemDisplayListener = listener
+    }
+
+    override fun submitList(list: MutableList<Message>) {
+        super.submitList(list)
+        onDataSubmitListener?.let {
+            it()
+        }
+    }
+
+    fun setOnDataSubmitListener(listener: () -> Unit) {
+        onDataSubmitListener = listener
     }
 
 }

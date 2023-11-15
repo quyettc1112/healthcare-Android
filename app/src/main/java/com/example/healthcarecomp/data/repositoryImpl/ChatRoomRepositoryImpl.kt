@@ -78,4 +78,26 @@ class ChatRoomRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun findChatRoom(userId: String, partnerId: String, onChatRoomFound:(ChatRoom) -> Unit, onChatRoomNotFound: () -> Unit) {
+        charRoomRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {child ->
+                    val chatRoom = child.getValue(ChatRoom::class.java)
+                    chatRoom?.let {
+                        if((it.firstUserId == userId && it.secondUserId == partnerId) || (it.firstUserId == partnerId && it.secondUserId == userId)) {
+                            onChatRoomFound(it)
+                            return
+                        }
+                    }
+                }
+                onChatRoomNotFound()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                onChatRoomNotFound()
+            }
+
+        })
+    }
+
 }

@@ -1,11 +1,16 @@
 package com.example.healthcarecomp.ui.info
 
+import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
-import android.os.Build
+import android.icu.util.Calendar
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -18,12 +23,11 @@ import com.example.healthcarecomp.databinding.FragmentInfoBinding
 import com.example.healthcarecomp.ui.activity.auth.AuthActivity
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.ui.activity.main.MainViewModel
+import com.example.healthcarecomp.util.ConvertUtils
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.ValidationUtils
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class InfoFragment : BaseFragment(R.layout.fragment_info) {
@@ -31,6 +35,7 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
     private lateinit var _binding: FragmentInfoBinding
     private lateinit var _viewModel: InfoViewModel
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var datePickerDialog: DatePickerDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,11 +60,35 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
     }
 
     private fun setUI() {
+        _viewModel.isEditing.value = false
+
+        val currentDate: Calendar = Calendar.getInstance()
+        datePickerDialog = DatePickerDialog(
+            this.requireContext(),
+            DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                _binding.etDob.setText("$dayOfMonth/${month + 1}/$year")
+            },
+            currentDate.get(Calendar.YEAR),
+            currentDate.get(Calendar.MONTH),
+            currentDate.get(Calendar.DAY_OF_MONTH)
+        )
 
     }
 
     //    @RequiresApi(Build.VERSION_CODES.O)
     private fun setEvents() {
+        _binding.etDob.setOnClickListener {
+            datePickerDialog.show()
+        }
+
+        //upload image
+        _binding.ibEditAvatar.setOnClickListener {
+            Intent(Intent.ACTION_GET_CONTENT).also {
+                it.type = "image/*"
+                startActivityForResult(it, 0)
+            }
+        }
+
         //logout
         _binding.ibLogout.setOnClickListener {
             _viewModel.logout()
@@ -96,36 +125,36 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                     var gender = _binding.rbMale.isChecked
 
                     var avatar = mainViewModel.currentUser.value?.avatar
-                    var dob: LocalDate? = null
+                    var dob: Long? = null
+                    var dobCharSequence = _binding.etDob.text.toString()
 
                     if (!(ValidationUtils.isValidLastName(lastName)
                                 && ValidationUtils.isValidFirstName(firstName)
                                 && ValidationUtils.isValidConfirmPassword(password, confirmPassword)
-                                && ValidationUtils.validatePassword(password))
+                                && ValidationUtils.validatePassword(password)
+                                && ValidationUtils.isValidDob(dobCharSequence))
                     ) {
                         _viewModel.userEditState.value =
                             Resource.Error("Please fill in correctly all field")
+                        _viewModel.isEditing.value = !_viewModel.isEditing.value!!
+                        mainViewModel.currentUser = mainViewModel.currentUser
                     } else {
                         try {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                dob = LocalDate.parse(
-                                    _binding.etDob.text.toString(),
-                                    DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                                )
-                            }
+                            dob = ConvertUtils.convertDateStringToLong(dobCharSequence)
                         } catch (e: Exception) {
-                            _viewModel.userEditState.value = Resource.Error("Error input")
+                            e.printStackTrace()
+                            _viewModel.userEditState.value = Resource.Error("Error input date")
+                            _viewModel.isEditing.value = !_viewModel.isEditing.value!!
                         }
-                        if (ValidationUtils.isValidFirstName(firstName))
-                            _viewModel.upsertUser(
-                                firstName = firstName,
-                                lastName = lastName,
-                                password = password,
-                                confirmPassword = confirmPassword,
-                                gender = gender,
-                                dob = dob,
-                                avatar = avatar
-                            )
+                        _viewModel.upsertUser(
+                            firstName = firstName,
+                            lastName = lastName,
+                            password = password,
+                            confirmPassword = confirmPassword,
+                            gender = gender,
+                            dob = dob,
+                            avatar = avatar
+                        )
                     }
                 }
             }
@@ -134,6 +163,21 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
 
 
     private fun setObservers() {
+
+        _viewModel.userEditState.observe(viewLifecycleOwner) {
+            hideLoading()
+            when (it) {
+                is Resource.Success -> mainViewModel.currentUser.value = it.data
+                is Resource.Loading -> showLoading("Updating profile", "Please wait...")
+                is Resource.Error -> Toast.makeText(
+                    requireContext(),
+                    it.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                else -> mainViewModel.currentUser = mainViewModel.currentUser
+            }
+        }
 
         //observe user info fields
         mainViewModel.currentUser.observe(viewLifecycleOwner, Observer {
@@ -145,13 +189,19 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                     etInfoPhoneNumber.setText(it.phone)
                     etInfoPassword.setText(it.password)
                     etInfoPasswordConfirm.setText(it.password)
+                    etDob.setText(it.dob?.let { dob -> ConvertUtils.convertLongToDateString(dob) })
                     it.gender?.let { gender ->
                         when (gender) {
                             true -> rbMale.isChecked = true
                             false -> rbFemale.isChecked = true
                         }
                     }
-                    Glide.with(requireActivity()).load(it.avatar).into(ivUserAvatar)
+                    try {
+                        Glide.with(requireActivity()).load(it.avatar).into(ivUserAvatar)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        ivUserAvatar.setImageURI(Uri.parse(it.avatar))
+                    }
                     var prefix = if (it is Doctor) "Dr"
                     else if (it is Patient) {
                         if (it.gender == false) "Mrs" else "Mr"
@@ -223,6 +273,13 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                     } else null
                 }
             }
+            _binding.etDob.apply {
+                afterTextChanged {
+                    error = if (!ValidationUtils.isValidDob(it)) {
+                        "Date of birth format is dd/MM/yyyy (ex: 01/01/2023)"
+                    } else null
+                }
+            }
         }
     }
 
@@ -242,6 +299,31 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                 fabEdit.setImageResource(R.drawable.ic_edit)
             }
 
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 0) {
+            val uri = data?.data
+//            _binding.ivUserAvatar.setImageURI(uri)
+            Log.d("image", uri.toString())
+
+            if (uri != null) {
+                _viewModel.uploadImage(uri, onProgress = {
+                    Log.d("Image","loading")
+                    _viewModel.userEditState.value = Resource.Loading()
+                }, onSuccess = {
+                    Log.d("Image","success")
+                    hideLoading()
+                    _binding.ivUserAvatar.setImageURI(it)
+                    _viewModel.upsertUser(avatar = it.toString())
+                }, onFailure = {
+                    Log.d("Image","fail")
+                    _viewModel.userEditState.value = Resource.Error("Upload image failed")
+                    Toast.makeText(this.requireContext(), it, Toast.LENGTH_SHORT).show()
+                })
+            }
         }
     }
 }

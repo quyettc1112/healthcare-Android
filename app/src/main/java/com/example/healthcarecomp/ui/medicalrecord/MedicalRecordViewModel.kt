@@ -19,11 +19,14 @@ class MedicalRecordViewModel @Inject constructor(
     val upsertMedicalRecord = MutableLiveData<Resource<MedicalRecord>>()
     var currentMedicalRecordId: String? = null
     val isEditMode = MutableLiveData<Boolean>()
-
+    var patientId : String? = null
     init {
         isEditMode.value = false
     }
 
+    operator fun invoke() {
+        patientId = sessionManager.getMedicalHistoryPatientId()
+    }
 
     fun onItemDataChange(listener: (Resource<MedicalRecord>) -> Unit) {
         currentMedicalRecordId?.let {

@@ -13,7 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_medicalHistoryFragment"
             app:destination="@id/medicalHistoryFragment"
-            app:enterAnim="@anim/zoom_in"/>
+            app:enterAnim="@anim/zoom_in"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -37,6 +39,14 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_chat_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -61,9 +71,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
-        <argument
-            android:name="patientID"
-            app:argType="string" />
+        <action
+            android:id="@+id/action_medicalHistoryFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/medicalRecordFragment"
@@ -81,9 +96,6 @@
             android:name="medicalRecordId"
             app:argType="string"
             app:nullable="true" />
-        <argument android:name="PatientId"
-            app:argType="string"
-            app:nullable="true" />
         <argument
             android:name="medicalDoctorId"
             app:argType="string"
@@ -99,8 +111,8 @@
             android:name="User"
             app:argType="com.example.healthcarecomp.data.model.User" />
         <argument
-            android:name="ChatRoomID"
-            app:argType="string" />
+            android:name="ChatRoom"
+            app:argType="com.example.healthcarecomp.data.model.ChatRoom" />
         <action
             android:id="@+id/action_chatMessageFragment_to_navigation_chat"
             app:destination="@id/navigation_chat"
@@ -109,6 +121,50 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_chatMessageFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.example.healthcarecomp.ui.viewProfile.ViewProfileFragment"
+        android:label="fragment_view_profile"
+        tools:layout="@layout/fragment_view_profile" >
+        <argument
+            android:name="user"
+            app:argType="com.example.healthcarecomp.data.model.User" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_medicalHistoryFragment"
+            app:destination="@id/medicalHistoryFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
+        <action
+            android:id="@+id/action_viewProfileFragment_to_navigation_chat"
+            app:destination="@id/navigation_chat"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
+        <argument
+            android:name="prePage"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_chatMessageFragment"
+            app:destination="@id/chatMessageFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
     </fragment>
 
 
