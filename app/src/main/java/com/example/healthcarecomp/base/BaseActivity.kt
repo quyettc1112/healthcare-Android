@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
 import com.example.healthcarecomp.base.dialog.ErrorDialog

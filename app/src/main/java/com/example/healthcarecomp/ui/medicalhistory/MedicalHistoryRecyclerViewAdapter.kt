@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.MedicalRecord
+import com.example.healthcarecomp.data.model.User
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -26,6 +27,7 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
     val formatter = SimpleDateFormat("MMM dd, yyyy", Locale.UK)
     lateinit var doctorList : HashMap<String?,Doctor?>
     private lateinit var _context: Context
+    private var onAvatarClickListener: ((User) -> Unit)? = null
 
     class MedicalHistoryViewHolder(view: View) : ViewHolder(view) {
         val avatar = view.findViewById<ImageView>(R.id.ivMedicalHistoryItemAvatar)
@@ -64,6 +66,11 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
                 this.doctorName.text = "Dr.${it.firstName} ${it.lastName}"
                 Glide.with(_context).load(it.avatar).placeholder(R.drawable.default_user_avt).into(holder.avatar)
             }
+            avatar.setOnClickListener {
+                onAvatarClickListener?.let {
+                    it(doctor!!)
+                }
+            }
         }
 
     }
@@ -90,4 +97,8 @@ class MedicalHistoryRecyclerViewAdapter: RecyclerView.Adapter<MedicalHistoryRecy
     }
 
     val differ = AsyncListDiffer(this, differCallBack)
+
+    fun setOnAvatarClickListener(listener: (User) -> Unit){
+        onAvatarClickListener = listener
+    }
 }

@@ -10,6 +10,7 @@ interface ChatRoomRepository {
     suspend fun onChatRoomLoad(userId: String, listener: (Resource<ChatRoom>) -> Unit, updateListener: (Resource<ChatRoom>) -> Unit)
     suspend fun upsert(chatRoom: ChatRoom) : (Resource<ChatRoom>)
 
+    suspend fun findChatRoom(userId: String, partnerId: String, onChatRoomFound:(ChatRoom) -> Unit, onChatRoomNotFound: () -> Unit)
 
 
 }

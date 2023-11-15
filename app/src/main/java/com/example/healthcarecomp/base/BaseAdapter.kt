@@ -29,7 +29,7 @@ abstract class BaseAdapter<T : Any, VH : BaseItemViewHolder<T, *>> : RecyclerVie
         }
     }
 
-    fun submitList(list: MutableList<T>) {
+    open fun submitList(list: MutableList<T>) {
         setItemOrderBy?.let {
             it(list.toList())
         }

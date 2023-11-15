@@ -6,6 +6,7 @@ import com.example.healthcarecomp.data.repository.ChatRoomRepository
 import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.data.repository.ImageRepository
 import com.example.healthcarecomp.data.repository.MedicalHistoryRepository
+import com.example.healthcarecomp.data.repository.NotificationRepository
 import com.example.healthcarecomp.data.repository.PatientRepository
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.data.repositoryImpl.AuthRepositoryImpl
@@ -14,6 +15,7 @@ import com.example.healthcarecomp.data.repositoryImpl.ChatRoomRepositoryImpl
 import com.example.healthcarecomp.data.repositoryImpl.DoctorRepositoryImpl
 import com.example.healthcarecomp.data.repositoryImpl.ImageRepositoryImpl
 import com.example.healthcarecomp.data.repositoryImpl.MedicalHistoryRepositoryImpl
+import com.example.healthcarecomp.data.repositoryImpl.NotificationRepositoryImpl
 import com.example.healthcarecomp.data.repositoryImpl.PatientRepositoryImpl
 import com.example.healthcarecomp.data.repositoryImpl.ScheduleRepositoryImpl
 import dagger.Binds
@@ -58,5 +60,10 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindNotificationRepository(notificationRepositoryImpl: NotificationRepositoryImpl): NotificationRepository
+    
+    @Binds
+    @Singleton
     abstract fun bindImageRepository(imageRepositoryImpl: ImageRepositoryImpl): ImageRepository
+
 }

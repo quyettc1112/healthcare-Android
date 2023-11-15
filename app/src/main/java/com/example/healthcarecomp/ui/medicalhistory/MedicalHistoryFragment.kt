@@ -30,7 +30,6 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
     private lateinit var _recyclerViewAdapter: MedicalHistoryRecyclerViewAdapter
     private lateinit var _medicalHistoryViewModel: MedicalHistoryViewModel
     private var _parent: MainActivity? = null
-    private lateinit var _patientId: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,8 +50,7 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
         )
         //set up view model
         _medicalHistoryViewModel = ViewModelProvider(this)[MedicalHistoryViewModel::class.java]
-        _patientId = arguments?.getString(PATIENT_MEDICAL_HISTORY_KEY)!!
-        _medicalHistoryViewModel.invoke(_patientId)
+        _medicalHistoryViewModel.invoke()
         //
         _parent = requireActivity() as? MainActivity
         return _binding.root
@@ -71,7 +69,6 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
                     val directions =
                         MedicalHistoryFragmentDirections.actionMedicalHistoryFragmentToMedicalRecordFragment(
                             null,
-                            _patientId,
                             null
                         )
                     navigateToPage(directions)
@@ -83,11 +80,14 @@ class MedicalHistoryFragment : BaseFragment(R.layout.fragment_medical_history) {
 
         _recyclerViewAdapter = MedicalHistoryRecyclerViewAdapter()
         //set on item to see detail
+        _recyclerViewAdapter.setOnAvatarClickListener { user ->
+            val direction = MedicalHistoryFragmentDirections.actionMedicalHistoryFragmentToViewProfileFragment(user, R.id.action_viewProfileFragment_to_medicalHistoryFragment)
+            navigateToPage(direction)
+        }
         _recyclerViewAdapter.setOnItemDetailButtonClick {
             val directions =
                 MedicalHistoryFragmentDirections.actionMedicalHistoryFragmentToMedicalRecordFragment(
                     it.id,
-                    it.patientId,
                     it.doctorId
                 )
             navigateToPage(directions)

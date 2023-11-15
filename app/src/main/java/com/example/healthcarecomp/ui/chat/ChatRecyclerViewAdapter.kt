@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -13,19 +14,21 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.data.model.ChatRoom
+import com.example.healthcarecomp.data.model.Message
 import com.example.healthcarecomp.data.model.User
 import okhttp3.internal.notify
 
 class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.ChatViewHolder>() {
 
     lateinit var currentUserId: String
-    lateinit var dataList: MutableList<Pair<ChatRoom, User>>
-    private var onItemClickListener : ((User, String) -> Unit)? = null
+    lateinit var dataList: MutableList<Triple<ChatRoom, User, Message?>>
+    private var onItemClickListener : ((User, ChatRoom) -> Unit)? = null
+    private var onAvatarClickListener: ((User) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: ((User, String) -> Unit)){
+    fun setOnItemClickListener(listener: ((User, ChatRoom) -> Unit)){
         onItemClickListener = listener
     }
-    fun submitData(list: MutableList<Pair<ChatRoom, User>>){
+    fun submitData(list: MutableList<Triple<ChatRoom, User, Message?>>){
         dataList = list
         updateUI()
     }
@@ -37,7 +40,7 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
         differ.submitList(dataList.toList())
     }
 
-    fun submitData(data: Pair<ChatRoom, User>){
+    fun submitData(data: Triple<ChatRoom, User, Message?>){
         val dataIndex = dataList.indexOfFirst { it.first.id == data.first.id }
         if(dataIndex != -1){
             dataList[dataIndex] = data
@@ -47,17 +50,18 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
         updateUI()
     }
 
-    private val differCallback = object : DiffUtil.ItemCallback<Pair<ChatRoom, User>>() {
+    private val differCallback = object : DiffUtil.ItemCallback<Triple<ChatRoom, User, Message?>>() {
+
         override fun areItemsTheSame(
-            oldItem: Pair<ChatRoom, User>,
-            newItem: Pair<ChatRoom, User>
+            oldItem: Triple<ChatRoom, User, Message?>,
+            newItem: Triple<ChatRoom, User, Message?>
         ): Boolean {
             return oldItem.first.id == newItem.first.id
         }
 
         override fun areContentsTheSame(
-            oldItem: Pair<ChatRoom, User>,
-            newItem: Pair<ChatRoom, User>
+            oldItem: Triple<ChatRoom, User, Message?>,
+            newItem: Triple<ChatRoom, User, Message?>
         ): Boolean {
             return oldItem.first == newItem.first
         }
@@ -69,6 +73,7 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
         val userAvatar = view.findViewById<ImageView>(R.id.ivChatItemAvatar)
         val userNameDisplay = view.findViewById<TextView>(R.id.tvChatItemUserName)
         val messageContent = view.findViewById<TextView>(R.id.tvChatItemContent)
+        val chatItemLayout = view.findViewById<LinearLayout>(R.id.llContainer)
     }
 
     override fun onCreateViewHolder(
@@ -88,19 +93,38 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
         val data = differ.currentList[position]
         val chatRoom = data.first
         val user = data.second
+        val message = data.third
         holder.apply {
-            Glide.with(itemView.context).load(chatRoom).placeholder(R.drawable.default_user_avt).into(userAvatar)
+            Glide.with(itemView.context).load(user.avatar).placeholder(R.drawable.default_user_avt).into(userAvatar)
             userNameDisplay.text = user?.firstName
             itemView.setOnClickListener {
                 onItemClickListener?.let {
-                    it(user, chatRoom.id)
+                    it(user, chatRoom)
                 }
             }
+            onAvatarClickListener?.let {
+                userAvatar.setOnClickListener {
+                    it(user)
+                }
+            }
+            message?.let {
+                messageContent.text = message.content
+                val context = itemView.context
+                if(!message.seen && message.senderId == user.id){
+                    chatItemLayout.backgroundTintList = context.getColorStateList(R.color.i_blue_e8ebfa)
+                }
+            }
+
         }
 
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
+    }
+
+
+    fun setOnAvatarClickListener(listener: (User) -> Unit){
+        onAvatarClickListener = listener
     }
 }

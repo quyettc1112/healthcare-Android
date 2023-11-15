@@ -18,18 +18,23 @@
            android:layout_height="wrap_content"
            android:title="username"
            app:showStartIcon="true"
-           app:showEndIcon="false"
+           app:showEndIcon="true"
            app:showShadow="true"
            android:background="@color/white"
            />
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srlChatMessage"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <androidx.recyclerview.widget.RecyclerView
+                android:paddingHorizontal="10dp"
+                android:id="@+id/rvChatMessageContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-       <androidx.recyclerview.widget.RecyclerView
-           android:paddingHorizontal="10dp"
-           android:id="@+id/rvChatMessageContent"
-           android:layout_width="match_parent"
-           android:layout_height="0dp"
-           android:layout_weight="1"
-           />
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilChatMessage"
             style="@style/Widget.Material3.TextInputLayout.FilledBox"

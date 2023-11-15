@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.data.repositoryImpl
 
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Message
@@ -75,6 +76,28 @@ class ChatMessageRepositoryImpl @Inject constructor(
 
             override fun onCancelled(error: DatabaseError) {
 
+            }
+
+        })
+    }
+
+    override suspend fun getLastMessage(chatRoomId: String, listener: (Resource<Message?>) -> Unit) {
+        chatMessageRef.child(chatRoomId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.children.count() != 0){
+                    val lastMessage =  snapshot.children.last()
+                    val message = lastMessage.getValue(Message::class.java)
+                    message?.let {
+                        listener(Resource.Success(message))
+                    }
+                }else {
+                    listener(Resource.Success(null))
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                listener(Resource.Error(error.message))
             }
 
         })

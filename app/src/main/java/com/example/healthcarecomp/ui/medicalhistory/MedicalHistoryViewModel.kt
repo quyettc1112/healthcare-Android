@@ -26,17 +26,16 @@ class MedicalHistoryViewModel @Inject constructor(
     var medicalAdded = MutableLiveData<Resource<MedicalRecord>>()
     var doctorList = HashMap<String?, Doctor?>()
     var currentUser = MutableLiveData<User?>(authRepository.getLoggedInUser())
-
-    lateinit var  patientId: String
-    operator fun invoke(patientId: String){
-        this.patientId = patientId
+    var  patientId: String? = null
+    operator fun invoke(){
+         patientId = sessionManager.getMedicalHistoryPatientId()
         loadMedicalRecord()
     }
 
     fun loadMedicalRecord(){
         viewModelScope.launch {
             medicalHistoryList.value = Resource.Loading()
-            medicalHistoryUseCase.getAllByPatientID(patientId) {
+            medicalHistoryUseCase.getAllByPatientID(patientId!!) {
                 if(it is Resource.Success){
                     val data = it.data
                     data?.forEach {record ->
