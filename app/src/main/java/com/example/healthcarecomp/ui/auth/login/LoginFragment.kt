@@ -1,16 +1,17 @@
 package com.example.healthcarecomp.ui.auth.login
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
 import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -22,25 +23,28 @@ import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
 import com.example.healthcarecomp.helper.BiometricHelper
 import com.example.healthcarecomp.ui.activity.auth.AuthActivity
+import com.example.healthcarecomp.ui.activity.auth.AuthViewModel
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.UnsupportedEncodingException
+import java.nio.charset.Charset
+import kotlin.experimental.and
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListener {
     private lateinit var _binding: FragmentLoginBinding
     private lateinit var _viewModel: LoginViewModel
+    private lateinit var authViewModel: AuthViewModel
     private var _userGG: User? = null
     private lateinit var biometricHelper: BiometricHelper
 
     // NFC Check
     private var nfcAdapter: NfcAdapter? = null
-    private var pendingIntent: PendingIntent? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,8 +57,12 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
         _viewModel = ViewModelProvider(requireActivity()).get(LoginViewModel::class.java)
 
+        if(requireActivity() is AuthActivity){
+            authViewModel = (requireActivity() as AuthActivity).authViewModel
+        }
+
         autoLogin()
-        setUp_NFC_UI(container)
+        setUp_NFC_UI()
 
         return _binding.root
     }
@@ -72,16 +80,43 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         }
     }
 
-    private fun setUp_NFC_UI(container: ViewGroup?) {
-        _binding.inLoginWithNFC.setOnClickListener {
-            val fragment = MyBottomSheetDialogFragment()
+    private fun setUp_NFC_UI() {
+        nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
+        if (nfcAdapter == null) {
+            _binding.inLoginWithNFC.visibility = View.GONE
+        } else {
+            _binding.inLoginWithNFC.setOnClickListener {
+                if(nfcAdapter!!.isEnabled == true) {
+                    val fragment = MyBottomSheetDialogFragment()
+                    fragment.show(childFragmentManager, "my_bottom_sheet_dialog")
 
-// Hiển thị bottom sheet dialog
-            fragment.show(childFragmentManager, "my_bottom_sheet_dialog")
+                    val texttt =  authViewModel.NFCValue.value["SDT"]
+                    Toast.makeText(requireContext(), "${texttt}", Toast.LENGTH_SHORT).show()
 
+                } else showNFCDisabledDialog()
+            }
         }
+    }
 
 
+    private fun showNFCDisabledDialog() {
+        // Tạo một đối tượng dialog
+        val dialog = AlertDialog.Builder(requireContext())
+
+        // Thiết lập tiêu đề của dialog
+        dialog.setTitle("NFC bị vô hiệu hóa")
+
+        // Thiết lập nội dung của dialog
+        dialog.setMessage("NFC bị vô hiệu hóa. Vui lòng bật NFC trong cài đặt của bạn để sử dụng tính năng này.")
+
+        // Thêm nút "OK" vào dialog
+        dialog.setPositiveButton("OK") { _, _ ->
+            // Mở cài đặt NFC
+            val intent = Intent(Settings.ACTION_NFC_SETTINGS)
+            startActivity(intent)
+        }
+        // Hiển thị dialog
+        dialog.show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -166,6 +201,16 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
     }
 
     private fun setObservers() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.NFCValue.collectLatest {
+                    if (!it["SDT"].isNullOrEmpty() && !it["PSD"].isNullOrEmpty()) {
+                        _viewModel.loginByPhone(it["SDT"]!!, it["PSD"]!!)
+                    }
+                }
+            }
+        }
+
         //biometric login state
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
