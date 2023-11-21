@@ -24,6 +24,7 @@ import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.data.model.Attachment
 import com.example.healthcarecomp.data.model.Message
 import com.example.healthcarecomp.databinding.FragmentChatMessageBinding
+import com.example.healthcarecomp.helper.FileHelper
 import com.example.healthcarecomp.helper.ImageSelectorHelper
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
@@ -118,7 +119,10 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         _binding
         _binding.etChatMessage.apply {
             this.onSendBtnClickListener {
-                if(_binding.etChatMessage.getText().trim().isNotEmpty() || _viewModel.selectedFileList.value!!.size > 0 ) {
+                if (_binding.etChatMessage.getText().trim()
+                        .isNotEmpty() || _viewModel.selectedFileList.value!!.size > 0
+                ) {
+                    _viewModel.sendStatus.value = Resource.Loading()
                     Log.i("upfile", "call fun")
                     val message = Message(
                         timeStamp = System.currentTimeMillis(),
@@ -132,23 +136,19 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
                         _viewModel.fileUploaded.observe(viewLifecycleOwner, Observer {
                             Log.i("upfile", "uploaded: ${it.size}")
                             if (it.size == _viewModel.selectedFileList?.value!!.size) {
-                                val message2 = Message(
-                                    timeStamp = System.currentTimeMillis(),
-                                    content = this.getText(),
-                                    chatRoomId = args.chatRoom.id,
-                                    senderId = _parent?.currentUser?.id,
-                                    receiverId = args.user.id,
-                                    attachFiles = it.toList()
-                                )
+                                val message2 = message.copy(attachFiles = it.toList())
                                 Log.i("upfile", "uploaded: ${it.toString()}")
+                                //reset value
                                 _viewModel.selectedFileList.value = mutableListOf()
                                 this.setText("")
+                                //do send
                                 _viewModel.upsert(
                                     message2,
                                     requireContext(),
                                     _parent?.currentUser?.firstName,
                                     args.user.id
                                 )
+                                _viewModel.sendStatus.value = Resource.Success(message2)
                             }
                         })
                     } else {
@@ -208,7 +208,31 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         }
     }
 
+    private fun showLoading() {
+        _binding.pbChatMessage.visibility = View.VISIBLE
+    }
+
+    private fun hindLoading() {
+        _binding.pbChatMessage.visibility = View.INVISIBLE
+    }
+
     private fun setupObservers() {
+        _viewModel.sendStatus.observe(viewLifecycleOwner, Observer { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    _binding.etChatMessage.binding.ibBtnSend.isEnabled = true
+                    hindLoading()
+                }
+                is Resource.Loading -> {
+                    _binding.etChatMessage.binding.ibBtnSend.isEnabled = false
+                    showLoading()
+                }
+                else -> {
+                    hindLoading()
+                }
+            }
+        })
+
         _viewModel.messageList.observe(viewLifecycleOwner, Observer { resource ->
             when (resource) {
                 is Resource.Success -> {
@@ -257,7 +281,14 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
                 val data: Intent? = result.data
                 val imageUri = data?.data
                 try {
-                    _viewModel.selectFile(Attachment.TYPE_IMAGE, imageUri.toString())
+                    val fileName = FileHelper.getFileName(imageUri, requireContext())
+                    val fileSize = FileHelper.getFileSize(imageUri, requireContext())
+                    _viewModel.selectFile(
+                        Attachment.TYPE_IMAGE,
+                        imageUri.toString(),
+                        fileName = fileName,
+                        fileSize
+                    )
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -272,7 +303,14 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
                     val capturePhoto = data?.extras?.get("data") as Bitmap
                     val imageUri: Uri =
                         imageSelectorHelper.getImageUri(requireContext(), capturePhoto)
-                    _viewModel.selectFile(Attachment.TYPE_IMAGE, imageUri.toString())
+                    val fileName = FileHelper.getFileName(imageUri, requireContext())
+                    val fileSize = FileHelper.getFileSize(imageUri, requireContext())
+                    _viewModel.selectFile(
+                        Attachment.TYPE_IMAGE,
+                        imageUri.toString(),
+                        fileName,
+                        fileSize
+                    )
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -307,7 +345,10 @@ class ChatMessageFragment : BaseFragment(R.layout.fragment_chat_message) {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 val fileUri = result.data?.data
-                _viewModel.selectFile(Attachment.TYPE_FILE, fileUri.toString())
+                val fileName = FileHelper.getFileName(fileUri, requireContext())
+                val fileType = Attachment.getType(fileUri!!, requireContext())
+                val fileSize = FileHelper.getFileSize(fileUri, requireContext())
+                _viewModel.selectFile(fileType, fileUri.toString(), fileName, fileSize)
             }
         }
 

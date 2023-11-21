@@ -4,4 +4,5 @@
     <dimen name="file_height_file_message">50dp</dimen>
     <dimen name="file_message_margin_horizontal">10dp</dimen>
     <dimen name="file_message_margin_vertical">10dp</dimen>
+    <dimen name="file_name_message_width">200dp</dimen>
 </resources>

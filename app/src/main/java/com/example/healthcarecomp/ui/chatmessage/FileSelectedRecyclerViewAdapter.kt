@@ -20,6 +20,8 @@ class FileSelectedRecyclerViewAdapter :
                 if (item.type == Attachment.TYPE_IMAGE) {
                     val uri = Uri.parse(item.filePath)
                     binding.ivSend.setImageURI(uri)
+                }else {
+                    setDisplayImg(item.getFileDisplay())
                 }
                 this.setOnXBtnClick {
                     onXBtnClick?.let {

@@ -25,6 +25,7 @@ class ChatMessageViewModel @Inject constructor(
     val messageList = MutableLiveData<Resource<MutableList<Message>>>()
     val selectedFileList = MutableLiveData<MutableList<Attachment>>()
     var fileUploaded = MutableLiveData<MutableList<Attachment>>()
+    val sendStatus = MutableLiveData<Resource<Message>>()
 
     companion object {
         const val CHAT_MESSAGE_FOLDER = "ChatRooms"
@@ -78,9 +79,13 @@ class ChatMessageViewModel @Inject constructor(
                     fileUploaded.value = fileUploaded.value.apply {
                         this?.add(
                             Attachment(
-                                type = attachment.type, filePath = uri.toString()
+                                type = attachment.type,
+                                filePath = uri.toString(),
+                                fileName = attachment.fileName,
+                                fileSize = attachment.fileSize
                             )
                         )
+                        Log.i("test", "add file2 ${attachment.fileSize}")
                     }
                 }, onProgress = {
 
@@ -103,7 +108,7 @@ class ChatMessageViewModel @Inject constructor(
                 message = MessageNotification(
                     notification = Notification(
                         title = sender,
-                        body = if(message.content.isNullOrEmpty()) "Has seen a message" else message.content!!,
+                        body = if (message.content.isNullOrEmpty()) "Has seen a message" else message.content!!,
                     ),
                     topic = to
                 )
@@ -112,8 +117,10 @@ class ChatMessageViewModel @Inject constructor(
         }
     }
 
-    fun selectFile(type: String, filePath: String) {
-        val file = Attachment(type = type, filePath = filePath)
+    fun selectFile(type: String, filePath: String, fileName: String, fileSize: String) {
+        val file =
+            Attachment(type = type, filePath = filePath, fileName = fileName, fileSize = fileSize)
+        Log.i("test", "add file $fileName")
         selectedFileList.value = selectedFileList.value.apply {
             this?.add(file)
         }

@@ -51,7 +51,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:orientation="horizontal"
+                        app:alignContent="stretch"
+                        app:flexDirection="row"
+                        app:flexWrap="wrap"
                         android:background="@drawable/message_shape_1"
                         ></com.google.android.flexbox.FlexboxLayout>
 
@@ -61,6 +63,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
+                        app:alignContent="stretch"
+                        app:flexDirection="column"
+                        android:paddingRight="20dp"
+                        app:flexWrap="wrap"
                         android:background="@drawable/message_shape_1"
                         android:orientation="horizontal"></com.google.android.flexbox.FlexboxLayout>
 
@@ -135,7 +141,8 @@
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/message_shape_2"
                         app:alignContent="stretch"
-                        app:flexDirection="row"
+                        app:flexDirection="column"
+                        android:paddingRight="20dp"
                         app:flexWrap="wrap"
                         app:justifyContent="flex_end"></com.google.android.flexbox.FlexboxLayout>
 

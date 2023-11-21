@@ -71,6 +71,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
                     _recyclerViewAdapter.submitData(resources.data!!)
                 }
                 is Resource.Error -> {
+                    hindLoading()
                 }
 
                 is Resource.Loading -> {
@@ -78,6 +79,7 @@ class ChatFragment : BaseFragment(R.layout.fragment_chat) {
                 }
 
                 else -> {
+                    hindLoading()
                 }
             }
         })
