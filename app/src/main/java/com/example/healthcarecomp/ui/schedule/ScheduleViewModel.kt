@@ -103,7 +103,7 @@ class ScheduleViewModel @Inject constructor(
     }
 
     fun getListPatient() : List<Patient> ? {
-        return null
+        return patientLIst.value?.data?.toList()
     }
     fun upsertSchedule(schedule: Schedule) = viewModelScope.launch {
         scheduleAdd.value = scheduleUseCase.upsertSchedule(schedule)
@@ -118,6 +118,13 @@ class ScheduleViewModel @Inject constructor(
         GlobalScope.launch() {
             scheduleUseCase.getAllDoctor{
                 doctorLIst.value = it
+            }
+        }
+    }
+    fun getAllPatient(){
+        GlobalScope.launch() {
+            scheduleUseCase.getAllPatient{
+                patientLIst.value = it
             }
         }
     }

@@ -37,16 +37,17 @@
 
                     <LinearLayout
                         android:layout_width="60dp"
-                        android:gravity="center"
-                        android:layout_height="60dp">
+                        android:layout_height="60dp"
+                        android:gravity="center">
 
-                        <ImageView
+                        <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/iv_useravt_UserHome"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:src="@drawable/default_user_avt">
+                            android:src="@drawable/default_user_avt"
+                            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
 
-                        </ImageView>
+                        />
                     </LinearLayout>
 
 

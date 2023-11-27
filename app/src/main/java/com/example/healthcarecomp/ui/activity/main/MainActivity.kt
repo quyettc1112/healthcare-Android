@@ -71,6 +71,7 @@ class MainActivity : BaseActivity() {
         scheduleViewModel = ViewModelProvider(this)[ScheduleViewModel::class.java]
         GlobalScope.launch {
             scheduleViewModel.getAllDoctor()
+            scheduleViewModel.getAllPatient()
         }
     }
 

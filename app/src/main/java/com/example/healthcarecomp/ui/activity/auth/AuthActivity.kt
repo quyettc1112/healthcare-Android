@@ -12,6 +12,8 @@ import com.example.healthcarecomp.data.model.User
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -61,6 +63,14 @@ class AuthActivity : BaseActivity() {
     }
 
     fun loginWithGoogle(listener: (User?) -> Unit) {
+//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestEmail()
+//            .build()
+//        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+//
+//        val signInIntent = mGoogleSignInClient.signInIntent
+//        startActivityForResult(signInIntent, FULLSCREEN_MODE_REQUEST_ENTER)
+
         googleLoginListener = listener
         oneTapClient.beginSignIn(signInRequest)
             .addOnSuccessListener(this) { result ->

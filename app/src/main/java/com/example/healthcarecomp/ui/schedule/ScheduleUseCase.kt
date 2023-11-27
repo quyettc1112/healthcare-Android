@@ -3,9 +3,11 @@ package com.example.healthcarecomp.ui.schedule
 import android.util.Log
 import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.MedicalRecord
+import com.example.healthcarecomp.data.model.Patient
 import com.example.healthcarecomp.data.model.Schedule
 import com.example.healthcarecomp.data.repository.DoctorRepository
 import com.example.healthcarecomp.data.repository.MedicalHistoryRepository
+import com.example.healthcarecomp.data.repository.PatientRepository
 import com.example.healthcarecomp.data.repository.ScheduleRepository
 import com.example.healthcarecomp.util.Resource
 import com.google.firebase.database.ChildEventListener
@@ -14,7 +16,8 @@ import javax.inject.Inject
 // Inject một cái repository
 class ScheduleUseCase @Inject  constructor(
     private val scheduleRepository : ScheduleRepository,
-    private val doctorRepository: DoctorRepository
+    private val doctorRepository: DoctorRepository,
+    private val patientRepository: PatientRepository
 
 ) {
 
@@ -47,6 +50,10 @@ class ScheduleUseCase @Inject  constructor(
 
     suspend fun getAllDoctor(listener: (Resource<MutableList<Doctor>>) -> Unit) {
         return doctorRepository.getAll(listener)
+    }
+
+    suspend fun getAllPatient( listener: (Resource<MutableList<Patient>>) -> Unit) {
+        return patientRepository.getAll(listener)
     }
 
 
