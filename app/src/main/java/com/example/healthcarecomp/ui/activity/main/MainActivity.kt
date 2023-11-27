@@ -2,9 +2,16 @@ package com.example.healthcarecomp.ui.activity.main
 
 import android.Manifest
 import android.app.ActionBar
+import android.app.PendingIntent
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.nfc.FormatException
+import android.nfc.NdefMessage
+import android.nfc.NfcAdapter
+import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -26,6 +33,8 @@ import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseActivity
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.User
+import com.example.healthcarecomp.helper.NFCHelper
+import com.example.healthcarecomp.ui.activity.auth.AuthViewModel
 import com.example.healthcarecomp.ui.schedule.ScheduleViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.auth.oauth2.GoogleCredentials
@@ -45,9 +54,16 @@ import java.util.concurrent.atomic.AtomicInteger
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
     private var loadingLayout: FrameLayout? = null
-
     val mainViewModel: MainViewModel by viewModels()
     var currentUser: User? = null
+    lateinit var authViewModel: AuthViewModel
+
+
+    var nfcAdapter: NfcAdapter? = null
+    var pendingIntent: PendingIntent? = null
+    var writeMode = false
+    var myTag: Tag? = null
+
     private lateinit var scheduleViewModel: ScheduleViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +77,45 @@ class MainActivity : BaseActivity() {
         setupBottomNav()
         setObservers()
         setupNotifications()
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        if (nfcAdapter == null) {
+            // Stop here, we definitely need NFC
+            Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show()
+            finish()
+        }
+        //NFCHelper(authViewModel, myTag, this).readFromIntent(intent)
+        pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent.FLAG_MUTABLE
+        )
+        readFromIntent(intent = intent)
+
     }
+    private fun readFromIntent(intent: Intent) {
+        val action = intent.action
+        if (NfcAdapter.ACTION_TAG_DISCOVERED == action || NfcAdapter.ACTION_TECH_DISCOVERED == action || NfcAdapter.ACTION_NDEF_DISCOVERED == action) {
+            myTag = intent.getParcelableExtra<Parcelable>(NfcAdapter.EXTRA_TAG) as Tag?
+            mainViewModel.changeTag(myTag)
+        }
+    }
+
+
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        //NFCHelper(authViewModel, myTag, this).readFromIntent(intent)
+        readFromIntent(intent)
+        if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action) {
+            myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
+        }
+    }
+
+
 
     private fun setupNotifications() {
         FirebaseMessaging.getInstance().subscribeToTopic(currentUser?.id!!)
@@ -112,6 +166,19 @@ class MainActivity : BaseActivity() {
     fun setObservers(){
 
     }
+
+    public override fun onResume() {
+        super.onResume()
+        nfcAdapter!!.enableForegroundDispatch(this, pendingIntent, null, null)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        myTag = intent.getParcelableExtra<Parcelable>(NfcAdapter.EXTRA_TAG) as Tag?
+    }
+
+
+
 
 
 

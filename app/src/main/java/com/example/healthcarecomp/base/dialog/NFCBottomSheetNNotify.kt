@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.example.healthcarecomp.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class MyBottomSheetDialogFragment: BottomSheetDialogFragment() {
+class NFCBottomSheetNNotify: BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

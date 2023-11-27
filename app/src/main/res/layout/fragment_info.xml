@@ -257,6 +257,13 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <Button
+                        android:id="@+id/btnsaveNFCInfo"
+                        android:layout_width="match_parent"
+                        android:text="Save NFC info"
+                        android:layout_height="wrap_content">
+                    </Button>
+
                 </LinearLayout>
 
                 <TextView
@@ -273,6 +280,10 @@
                     android:layout_gravity="center"
                     android:text="@string/team_name"
                     android:textStyle="italic" />
+
+
+
+
             </LinearLayout>
 
 

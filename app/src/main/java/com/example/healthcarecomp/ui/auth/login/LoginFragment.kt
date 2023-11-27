@@ -1,9 +1,7 @@
 package com.example.healthcarecomp.ui.auth.login
 
-import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.nfc.NfcAdapter
 import android.nfc.NfcEvent
 import android.os.Build
@@ -16,15 +14,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
-import com.example.healthcarecomp.base.dialog.MyBottomSheetDialogFragment
-import com.example.healthcarecomp.common.Screen
+import com.example.healthcarecomp.base.dialog.NFCBottomSheetNNotify
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
 import com.example.healthcarecomp.helper.BiometricHelper
@@ -33,15 +28,11 @@ import com.example.healthcarecomp.ui.activity.auth.AuthViewModel
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
-import com.google.android.play.integrity.internal.ac
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.UnsupportedEncodingException
-import java.nio.charset.Charset
-import kotlin.experimental.and
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListener {
@@ -100,9 +91,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         } else {
             _binding.inLoginWithNFC.setOnClickListener {
                 if (nfcAdapter!!.isEnabled == true) {
-                    val fragment = MyBottomSheetDialogFragment()
+                    val fragment = NFCBottomSheetNNotify()
                     fragment.show(childFragmentManager, "my_bottom_sheet_dialog")
-
                 } else showNFCDisabledDialog()
             }
         }

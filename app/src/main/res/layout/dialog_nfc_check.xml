@@ -10,7 +10,7 @@
         android:layout_marginBottom="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scan thẻ NFC đã đăng ký "
+        android:text="Scan thẻ NFC "
         android:textStyle="bold"
         android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/gifImageView"

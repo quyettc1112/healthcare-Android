@@ -3,6 +3,7 @@ package com.example.healthcarecomp.ui.activity.auth
 import android.app.Activity
 import android.content.Intent
 import android.nfc.NfcAdapter
+import android.nfc.Tag
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.FirebaseDatabase
@@ -17,6 +18,7 @@ class AuthViewModel@Inject constructor( val firebaseDatabase: FirebaseDatabase):
     val PSSValue = MutableStateFlow<String>(String())
 
     val CheckBackPressed = MutableStateFlow<Boolean>(true)
+
 
 
     fun onTextChangePSSValue(string: String) {
@@ -34,8 +36,6 @@ class AuthViewModel@Inject constructor( val firebaseDatabase: FirebaseDatabase):
     fun SetOnBackPressedF() {
         CheckBackPressed.value = false
     }
-
-
 
     fun ClearNFCValue() {
         NFCValue.value.clear()
