@@ -1,15 +1,23 @@
 package com.example.healthcarecomp.helper
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.app.DownloadManager
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup.LayoutParams
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.documentfile.provider.DocumentFile
+import com.bumptech.glide.Glide
 import java.io.File
+import com.example.healthcarecomp.R
+import com.example.healthcarecomp.databinding.ImageViewDialogBinding
+import java.util.zip.Inflater
 
 class FileHelper {
 
@@ -103,6 +111,24 @@ class FileHelper {
 
             }
 
+        }
+
+        fun showFullScreenImage(url: String, context: Context, fileName: String) {
+            val layoutInflater = LayoutInflater.from(context)
+            val dialogBinding = ImageViewDialogBinding.inflate(layoutInflater, null, false)
+            Glide.with(context).load(Uri.parse(url)).into(dialogBinding.iv)
+            val imageViewDialog = Dialog(context)
+            imageViewDialog.setCancelable(false)
+            dialogBinding.ibClose.setOnClickListener {
+                imageViewDialog.dismiss()
+            }
+            dialogBinding.ibDownload.setOnClickListener {
+                downloadFile(url, context, fileName)
+            }
+            imageViewDialog.setContentView(dialogBinding.root)
+            imageViewDialog.window?.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            imageViewDialog.window?.setBackgroundDrawableResource(R.color.black)
+            imageViewDialog.show()
         }
     }
 

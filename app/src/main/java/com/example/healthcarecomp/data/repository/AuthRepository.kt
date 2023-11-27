@@ -1,5 +1,7 @@
 package com.example.healthcarecomp.data.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.util.Resource
 
@@ -33,4 +35,6 @@ interface AuthRepository {
     fun saveUser(user: User)
 
     fun removeUser(user: User)
+
+    suspend fun searchUsersByName(name: String, listener: (MutableLiveData<Resource<MutableList<User>>>) -> Unit)
 }

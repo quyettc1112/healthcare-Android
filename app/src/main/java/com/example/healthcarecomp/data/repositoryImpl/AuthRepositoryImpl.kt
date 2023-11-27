@@ -2,6 +2,8 @@ package com.example.healthcarecomp.data.repositoryImpl
 
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.Patient
@@ -16,7 +18,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.getValue
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.tasks.await
@@ -160,6 +161,82 @@ class AuthRepositoryImpl @Inject constructor(
         val userJson = gson.toJson(user)
         Log.d("Auth", userJson)
         sharePreference.edit().remove(sharePrefKey).apply()
+    }
+
+    override suspend fun searchUsersByName(name: String, listener: (MutableLiveData<Resource<MutableList<User>>>) -> Unit) {
+        val combinedResults = MutableLiveData<Resource<MutableList<User>>>()
+        try {
+            combinedResults.value = Resource.Success(mutableListOf())
+            searchInPatientTable(name) {list ->
+                combinedResults.value = combinedResults.value.apply {
+                    this?.data?.addAll(list)
+                }
+            }
+            searchInDoctorTable(name) {list ->
+                combinedResults.value = combinedResults.value.apply {
+                    this?.data?.addAll(list)
+                }
+            }
+            listener.invoke(combinedResults)
+        }catch (e: Exception) {
+            combinedResults.value = Resource.Error(e.localizedMessage)
+            listener.invoke(combinedResults)
+        }
+
+    }
+
+    private fun searchInPatientTable(name: String, listener: (List<User>) -> Unit) {
+
+        val patientRef = fireBaseDatabase.reference.child(Constant.PatientQuery.PATH.queryField)
+        patientRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userList = mutableListOf<Patient>()
+                snapshot.children.forEach {child ->
+                    var fullName =""
+                    if(child.hasChild(Constant.PatientQuery.FIRST_NAME.queryField))
+                        fullName +=child.child(Constant.PatientQuery.FIRST_NAME.queryField).getValue(String::class.java)!!.lowercase()
+                    if(child.hasChild(Constant.PatientQuery.LAST_NAME.queryField))
+                        fullName +=" "+  child.child(Constant.PatientQuery.LAST_NAME.queryField).getValue(String::class.java)!!.lowercase()
+                    if( fullName.contains(name.lowercase())){
+                        val user = child.getValue(Patient::class.java)
+                        user?.let {
+                            userList.add(user)
+                        }
+                    }
+                }
+                listener.invoke(userList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
+    private fun searchInDoctorTable(name: String, listener: (List<User>) -> Unit){
+        val doctorRef = fireBaseDatabase.reference.child(Constant.DoctorQuery.PATH.queryField)
+        doctorRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userList = mutableListOf<Doctor>()
+                snapshot.children.forEach {child ->
+                    var fullName =""
+                    if(child.hasChild(Constant.DoctorQuery.FIRST_NAME.queryField))
+                        fullName += child.child(Constant.DoctorQuery.FIRST_NAME.queryField).getValue(String::class.java)!!.lowercase()
+                    if(child.hasChild(Constant.DoctorQuery.LAST_NAME.queryField))
+                        fullName +=" "+  child.child(Constant.DoctorQuery.LAST_NAME.queryField).getValue(String::class.java)!!.lowercase()
+                    if( fullName.contains(name.lowercase())){ val user = child.getValue(Doctor::class.java)
+                        user?.let {
+                            userList.add(user)
+                        }
+                    }
+                }
+                listener.invoke(userList)
+            }
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
 

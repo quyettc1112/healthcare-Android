@@ -168,19 +168,7 @@ class CustomChatMessage(context: Context, attrs: AttributeSet) : ConstraintLayou
 
     }
 
-    fun createAttachmentView(attachment: Attachment, context: Context) : LinearLayout {
-        val wrapperText = LinearLayout(context)
-        wrapperText.orientation = LinearLayout.VERTICAL
-        wrapperText.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        val wrapper = LinearLayout(context)
-        wrapper.orientation = LinearLayout.HORIZONTAL
-        wrapper.layoutParams = FlexboxLayout.LayoutParams(
-            FlexboxLayout.LayoutParams.WRAP_CONTENT,
-            FlexboxLayout.LayoutParams.WRAP_CONTENT
-        )
+    fun createAttachmentView(attachment: Attachment, context: Context) : View {
         val imageView = ImageView(context)
         when (attachment.type) {
             Attachment.TYPE_IMAGE -> {
@@ -213,33 +201,51 @@ class CustomChatMessage(context: Context, attrs: AttributeSet) : ConstraintLayou
             resources.getDimensionPixelSize(R.dimen.file_message_margin_vertical)
         )
         imageView.layoutParams = layoutParams
-        val fileName = TextView(context)
-        fileName.text = attachment.fileName
-        fileName.layoutParams = FlexboxLayout.LayoutParams(
-            resources.getDimensionPixelSize(R.dimen.file_name_message_width),
-            FlexboxLayout.LayoutParams.WRAP_CONTENT
-        )
-        fileName.maxLines = 1
-        fileName.ellipsize = TextUtils.TruncateAt.MIDDLE
-        val fileSize = TextView(context)
-        fileSize.text = attachment.fileSize
-        fileSize.layoutParams = FlexboxLayout.LayoutParams(
-            FlexboxLayout.LayoutParams.WRAP_CONTENT,
-            FlexboxLayout.LayoutParams.WRAP_CONTENT
-        )
 
-        wrapperText.addView(fileName)
-        wrapperText.addView(fileSize)
-        wrapper.addView(imageView)
-        wrapper.addView(wrapperText)
-        wrapper.gravity = Gravity.CENTER_VERTICAL
-        wrapper.setOnClickListener {
-            attachment.filePath?.let {
-                FileHelper.downloadFile(attachment.filePath, context, attachment.fileName!!)
+        if(attachment.type != Attachment.TYPE_IMAGE) {
+            val wrapperText = LinearLayout(context)
+            wrapperText.orientation = LinearLayout.VERTICAL
+            wrapperText.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            val wrapper = LinearLayout(context)
+            wrapper.orientation = LinearLayout.HORIZONTAL
+            wrapper.layoutParams = FlexboxLayout.LayoutParams(
+                FlexboxLayout.LayoutParams.WRAP_CONTENT,
+                FlexboxLayout.LayoutParams.WRAP_CONTENT
+            )
+            val fileName = TextView(context)
+            fileName.text = attachment.fileName
+            fileName.layoutParams = FlexboxLayout.LayoutParams(
+                resources.getDimensionPixelSize(R.dimen.file_name_message_width),
+                FlexboxLayout.LayoutParams.WRAP_CONTENT
+            )
+            fileName.maxLines = 1
+            fileName.ellipsize = TextUtils.TruncateAt.MIDDLE
+            val fileSize = TextView(context)
+            fileSize.text = attachment.fileSize
+            fileSize.layoutParams = FlexboxLayout.LayoutParams(
+                FlexboxLayout.LayoutParams.WRAP_CONTENT,
+                FlexboxLayout.LayoutParams.WRAP_CONTENT
+            )
+            wrapperText.addView(fileName)
+            wrapperText.addView(fileSize)
+            wrapper.addView(imageView)
+            wrapper.addView(wrapperText)
+            wrapper.gravity = Gravity.CENTER_VERTICAL
+            wrapper.setOnClickListener {
+                attachment.filePath?.let {
+                    FileHelper.downloadFile(attachment.filePath, context, attachment.fileName!!)
+                }
+
             }
-
+            return wrapper
         }
-        return wrapper
+        imageView.setOnClickListener {
+            FileHelper.showFullScreenImage(attachment.filePath!!,context, attachment.fileName!!)
+        }
+        return imageView
     }
 
 

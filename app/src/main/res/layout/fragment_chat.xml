@@ -6,6 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".ui.chat.ChatFragment">
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search user name..." />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.search.SearchView
+            android:id="@+id/svChatRoom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Search user..."
+            app:layout_anchor="@+id/search_bar"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSearchSuggest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.search.SearchView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -17,23 +49,9 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="80dp"
         app:layout_constraintVertical_bias="0.5">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:elevation="4dp"
-            android:orientation="horizontal">
-
-            <com.google.android.material.search.SearchBar
-                android:id="@+id/sbChatSearch"
-                android:elevation="0dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#f5f7fa"
-                android:hint="Search conversion" />
-        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvChatUsers"
@@ -56,16 +74,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabChatAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="120dp"
-        android:layout_marginRight="24dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -76,4 +76,6 @@ open class BaseFragment(view: Int) : Fragment(view) {
     protected fun showLoadingMore(isShow: Boolean) {
 
     }
+
+
 }

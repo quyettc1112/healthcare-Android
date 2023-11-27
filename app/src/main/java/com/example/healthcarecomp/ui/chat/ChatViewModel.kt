@@ -1,6 +1,7 @@
 package com.example.healthcarecomp.ui.chat
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,7 @@ class ChatViewModel @Inject constructor(
 ) : BaseViewModel() {
     val chatRoomUpsert = MutableLiveData<Resource<ChatRoom>>()
     val chatRooms = MutableLiveData<Resource<MutableList<Triple<ChatRoom, User, Message?>>>>()
+    val searchResult = MutableLiveData<Resource<List<User>>>()
     private lateinit var listener: (Triple<ChatRoom, User, Message?>) -> Unit
     private lateinit var _userId: String
 
@@ -132,5 +134,21 @@ class ChatViewModel @Inject constructor(
 
     fun upsert(chatRoom: ChatRoom) = viewModelScope.launch {
         chatRoomUpsert.value = chatUseCase.upsert(chatRoom)
+    }
+
+    fun searchUsersByName(
+        name: String,
+        listener: (MutableLiveData<Resource<MutableList<User>>>) -> Unit
+    ) = viewModelScope.launch {
+        chatUseCase.searchUsersByName(name, listener)
+    }
+
+    fun findChatRoom(
+        userId: String,
+        partnerId: String,
+        onChatRoomFound: (ChatRoom) -> Unit,
+        onChatRoomNotFound: () -> Unit
+    ) = viewModelScope.launch {
+        chatUseCase.findChatRoom(userId, partnerId, onChatRoomFound, onChatRoomNotFound)
     }
 }
