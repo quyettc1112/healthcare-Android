@@ -1,8 +1,11 @@
 package com.example.healthcarecomp.ui.auth.login
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.nfc.NfcAdapter
+import android.nfc.NfcEvent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -13,12 +16,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.base.dialog.MyBottomSheetDialogFragment
+import com.example.healthcarecomp.common.Screen
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.FragmentLoginBinding
 import com.example.healthcarecomp.helper.BiometricHelper
@@ -27,8 +33,10 @@ import com.example.healthcarecomp.ui.activity.auth.AuthViewModel
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.extension.isDoctor
+import com.google.android.play.integrity.internal.ac
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.UnsupportedEncodingException
@@ -42,9 +50,12 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
     private lateinit var authViewModel: AuthViewModel
     private var _userGG: User? = null
     private lateinit var biometricHelper: BiometricHelper
+    private lateinit var action: MutableStateFlow<String?>
 
     // NFC Check
     private var nfcAdapter: NfcAdapter? = null
+    private var nfcEvent: NfcEvent? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,18 +68,20 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
 
         _viewModel = ViewModelProvider(requireActivity()).get(LoginViewModel::class.java)
 
-        if(requireActivity() is AuthActivity){
+        if (requireActivity() is AuthActivity) {
             authViewModel = (requireActivity() as AuthActivity).authViewModel
         }
 
         autoLogin()
         setUp_NFC_UI()
 
+
+
         return _binding.root
     }
 
     private fun autoLogin() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && _viewModel.getLoggedInUser() != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && _viewModel.getLoggedInUser() != null && authViewModel.getOnBackPressedValue() == true) {
             biometricHelper = BiometricHelper(this, { errorCode, errString ->
                 Toast.makeText(requireContext(), errString, Toast.LENGTH_SHORT).show()
             }, {
@@ -86,12 +99,9 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
             _binding.inLoginWithNFC.visibility = View.GONE
         } else {
             _binding.inLoginWithNFC.setOnClickListener {
-                if(nfcAdapter!!.isEnabled == true) {
+                if (nfcAdapter!!.isEnabled == true) {
                     val fragment = MyBottomSheetDialogFragment()
                     fragment.show(childFragmentManager, "my_bottom_sheet_dialog")
-
-                    val texttt =  authViewModel.NFCValue.value["SDT"]
-                    Toast.makeText(requireContext(), "${texttt}", Toast.LENGTH_SHORT).show()
 
                 } else showNFCDisabledDialog()
             }
@@ -204,8 +214,9 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), View.OnClickListene
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authViewModel.NFCValue.collectLatest {
-                    if (!it["SDT"].isNullOrEmpty() && !it["PSD"].isNullOrEmpty()) {
-                        _viewModel.loginByPhone(it["SDT"]!!, it["PSD"]!!)
+                    val pss = authViewModel.NFCValue.value
+                    if (!pss["SDT"].isNullOrEmpty() && !pss["PSD"].isNullOrEmpty() && authViewModel.getOnBackPressedValue()) {
+                        navigateToPage(R.id.action_loginFragment_to_PinCodeFragment)
                     }
                 }
             }

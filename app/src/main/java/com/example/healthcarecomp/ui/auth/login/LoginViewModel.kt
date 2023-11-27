@@ -1,5 +1,7 @@
 package com.example.healthcarecomp.ui.auth.login
 
+import android.content.Intent
+import android.nfc.NfcAdapter
 import androidx.lifecycle.viewModelScope
 import com.example.healthcarecomp.base.BaseViewModel
 import com.example.healthcarecomp.data.model.User
@@ -25,8 +27,6 @@ class LoginViewModel @Inject constructor(
     fun getLoggedInUser() = loginUseCase.getLoggedInUser()
 
     val loginGGFlow = MutableStateFlow<Resource<User>?>(null)
-
-
 
 
     fun autoLogin(){

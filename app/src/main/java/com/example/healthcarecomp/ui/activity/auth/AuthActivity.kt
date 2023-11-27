@@ -192,6 +192,7 @@ class AuthActivity : BaseActivity() {
     private fun readFromIntent(intent: Intent) {
         val action = intent.action
         if (NfcAdapter.ACTION_TAG_DISCOVERED == action || NfcAdapter.ACTION_TECH_DISCOVERED == action || NfcAdapter.ACTION_NDEF_DISCOVERED == action) {
+            authViewModel.SetOnBackPressedT()
             myTag = intent.getParcelableExtra<Parcelable>(NfcAdapter.EXTRA_TAG) as Tag?
             val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
             var msgs = mutableListOf<NdefMessage>()
@@ -224,7 +225,10 @@ class AuthActivity : BaseActivity() {
                 )
                 val textKey= text.substringBefore(":")
                 val textVValue = text.substringAfter(":","")
-                authMap[textKey] = textVValue
+              //  if (!textKey.take(3).equals("PSS")) {
+                    authMap[textKey] = textVValue
+             //   }
+
 
             } catch (e: UnsupportedEncodingException) {
                 Log.e("UnsupportedEncoding", e.toString())
@@ -249,6 +253,7 @@ class AuthActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         nfcAdapter!!.enableForegroundDispatch(this, pendingIntent, null, null)
+
     }
 
 
