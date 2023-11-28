@@ -13,9 +13,7 @@ class NFCBottomSheetNNotify: BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.dialog_nfc_check, container, false)
-
-        // Trả về giao diện của bottom sheet dialog
+        val view = inflater.inflate(R.layout.dialog_nfc_check, container, true)
         return view
     }
 }
