@@ -108,7 +108,7 @@ class ChatRecyclerViewAdapter : RecyclerView.Adapter<ChatRecyclerViewAdapter.Cha
                 }
             }
             message?.let {
-                messageContent.text = message.content
+                messageContent.text = if(message.content.isNullOrEmpty() && !message.attachFiles.isNullOrEmpty()) "Has send a file" else message.content
                 val context = itemView.context
                 if(!message.seen && message.senderId == user.id){
                     chatItemLayout.backgroundTintList = context.getColorStateList(R.color.i_blue_e8ebfa)

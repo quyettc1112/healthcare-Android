@@ -1,54 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.chatmessage.ChatMessageFragment">
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:paddingBottom="80dp"
-       android:background="@color/i_bg"
-       android:orientation="vertical">
-       <com.example.healthcarecomp.base.customview.CustomToolbar
-           android:id="@+id/customToolBar"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:title="username"
-           app:showStartIcon="true"
-           app:showEndIcon="true"
-           app:showShadow="true"
-           android:background="@color/white"
-           />
+    <ProgressBar
+        android:id="@+id/pbChatMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/i_bg"
+        android:orientation="vertical"
+        android:paddingBottom="80dp">
+
+        <com.example.healthcarecomp.base.customview.CustomToolbar
+            android:id="@+id/customToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:title="username"
+            app:showEndIcon="true"
+            app:showShadow="true"
+            app:showStartIcon="true" />
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/srlChatMessage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
+
             <androidx.recyclerview.widget.RecyclerView
-                android:paddingHorizontal="10dp"
                 android:id="@+id/rvChatMessageContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                />
+                android:paddingHorizontal="10dp" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilChatMessage"
-            style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            app:endIconDrawable="@drawable/baseline_send_24"
-            app:endIconMode="custom"
+        <com.example.healthcarecomp.base.customview.CustomEditTextMessage
+            android:id="@+id/etChatMessage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etChatMessageText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Type message"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-   </LinearLayout>
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

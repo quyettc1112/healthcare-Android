@@ -33,7 +33,8 @@ class FirebaseNotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         Log.i(TAG,"notification")
         message?.let {
-            generateNotification(message.notification?.title!!, message?.notification?.body!!)
+            val desc = if(message.notification?.body.isNullOrEmpty()) "Has seen a message" else message.notification?.body
+            generateNotification(message.notification?.title!!, desc!!)
             Log.i(TAG,"notification2")
         }
     }

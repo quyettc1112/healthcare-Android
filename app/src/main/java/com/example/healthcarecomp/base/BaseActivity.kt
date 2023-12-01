@@ -2,13 +2,18 @@ package com.example.healthcarecomp.base
 
 import android.app.ProgressDialog
 import android.content.DialogInterface
+import android.graphics.Rect
+import android.util.Log
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
 import com.example.healthcarecomp.base.dialog.ErrorDialog
 import com.example.healthcarecomp.base.dialog.NotifyDialog
+import com.example.healthcarecomp.util.extension.hindSoftKeyboard
 
 
 open class BaseActivity : AppCompatActivity() {

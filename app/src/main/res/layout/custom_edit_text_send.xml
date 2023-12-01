@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/llAttachFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/clText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFileList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"/>
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llAttachFile">
+
+            <LinearLayout
+                android:id="@+id/llTextBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/i_gray"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5">
+
+                <ScrollView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/tvEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@android:color/transparent"
+                            android:gravity="center_vertical"
+                            android:lineSpacingExtra="2dp"
+                            android:paddingLeft="24dp"
+                            android:text="hi"
+                            android:textColor="@color/i_body"
+                            android:textSize="19sp" />
+                    </LinearLayout>
+
+                </ScrollView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingRight="8dp">
+
+                    <ImageButton
+                        android:id="@+id/ibBtnAttach"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/attach_file_add_24px" />
+
+                    <ImageButton
+                        android:id="@+id/ibBtnImage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/add_photo_alternate_24px" />
+
+                    <ImageButton
+                        android:id="@+id/ibBtnSend"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/baseline_send_24" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/etShadow"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/i_title"
+                app:layout_constraintBottom_toBottomOf="@+id/llTextBox"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

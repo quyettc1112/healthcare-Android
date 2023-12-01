@@ -2,6 +2,7 @@ package com.example.healthcarecomp.ui.chatmessage
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
@@ -11,6 +12,7 @@ import com.example.healthcarecomp.base.BaseItemViewHolder
 import com.example.healthcarecomp.data.model.Message
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.databinding.RowItemChatMessageBinding
+import kotlinx.coroutines.runBlocking
 
 class ChatMessageRecyclerViewAdapter(private val user: User, private val partner: User) :
     BaseAdapter<Message, ChatMessageRecyclerViewAdapter.ChatMessageViewHolder>() {
@@ -22,6 +24,7 @@ class ChatMessageRecyclerViewAdapter(private val user: User, private val partner
         BaseItemViewHolder<Message, RowItemChatMessageBinding>(binding) {
         override fun bind(item: Message) {
             binding.message.apply {
+                refreshContent()
                 val person: User
                 val imageView: ImageView
                 if (item.senderId == user.id) {
@@ -36,8 +39,12 @@ class ChatMessageRecyclerViewAdapter(private val user: User, private val partner
                 item?.content?.let {
                     setContent(it)
                 }
-                Glide.with(context).load(person.avatar).into(imageView)
+                Glide.with(itemContext).load(person.avatar).into(imageView)
                 setMessageSeen(item.seen)
+                if(!item.attachFiles.isNullOrEmpty()) {
+                    displayAttachments(item.attachFiles, itemContext)
+                }
+                setContentVisible(!item.content.isNullOrEmpty())
                 onItemDisplayListener?.let {
                     it(item)
                 }
