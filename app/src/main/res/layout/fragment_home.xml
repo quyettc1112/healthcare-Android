@@ -40,7 +40,7 @@
                         android:layout_height="60dp"
                         android:gravity="center">
 
-                        <com.google.android.material.imageview.ShapeableImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/iv_useravt_UserHome"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
@@ -76,7 +76,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -97,26 +97,12 @@
                     android:textStyle="bold"></TextView>
             </LinearLayout>
 
-            <LinearLayout
+            <com.example.healthcarecomp.base.customview.CustomSearchBar
+                android:id="@+id/customSearchBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:background="@drawable/search_bg"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/sv_search_userHome"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:hint="Search"
-                    android:iconifiedByDefault="false"
-                    android:queryHint="Tìm kiếm..."
-
-                    />
-
-            </LinearLayout>
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:hint="search"/>
 
         </LinearLayout>
 
@@ -126,11 +112,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|top"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/userhome_bg"
             android:gravity="center|top"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingHorizontal="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -139,20 +124,22 @@
                 android:gravity="center|top"
                 android:orientation="vertical">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/iv_banner_userHome"
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
+                    android:layout_height="100dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/img_banner_userhome"></ImageView>
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_banner_userhome"
+                    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Large"></com.google.android.material.imageview.ShapeableImageView>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:text="What do you need?"
                     android:textSize="20dp"
@@ -160,18 +147,21 @@
 
                 </TextView>
 
+                <ScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_item_userHome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_item_userHome"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-                </androidx.recyclerview.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
+                </ScrollView>
 
                 <ProgressBar
                     android:id="@+id/pb_item_userhome"

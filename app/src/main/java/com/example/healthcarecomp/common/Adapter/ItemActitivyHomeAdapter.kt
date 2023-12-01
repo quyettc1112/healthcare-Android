@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.healthcarecomp.common.Constant
 import com.example.healthcarecomp.databinding.RvItemUserhomeBinding
 
-class ItemActitivyHomeAdapter(val ItemList: List<Constant.Item_recycleView>) :
+class ItemActitivyHomeAdapter(val ItemList: List<Constant.ItemRecycleView>) :
     RecyclerView.Adapter<ItemActitivyHomeAdapter.MainViewHolder>() {
 
-    var onItemClick: ((Constant.Item_recycleView) -> Unit)? = null
+    var onItemClick: ((Constant.ItemRecycleView) -> Unit)? = null
 
     inner class MainViewHolder(val itemBinding: RvItemUserhomeBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
-        fun bindItem(Item: Constant.Item_recycleView) {
+        fun bindItem(Item: Constant.ItemRecycleView) {
             itemBinding.ivIconItemUserHome.setImageResource(Item.imageIcon)
             itemBinding.tvNameItemUserHome.text = Item.nameIcon
         }

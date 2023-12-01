@@ -44,32 +44,32 @@ class Constant {
 
 
         // Hàm này chạy tron MainActiity khi user là người dùng phổ thông
-        fun getItemListForRecycleView_UserHome():  ArrayList<Item_recycleView>  {
-            val itemList = ArrayList<Item_recycleView>()
+        fun getItemListForRecycleView_UserHome():  ArrayList<ItemRecycleView>  {
+            val itemList = ArrayList<ItemRecycleView>()
 
-            val it1 = Item_recycleView(1, R.drawable.baseline_incomplete_circle_24 , "Medical History", R.id.action_navigation_home_to_medicalHistoryFragment)
+            val it1 = ItemRecycleView(1, R.drawable.baseline_incomplete_circle_24 , "Medical History", R.id.action_navigation_home_to_medicalHistoryFragment)
             itemList.add(it1)
-            val it2 = Item_recycleView(2, R.drawable.baseline_incomplete_circle_24 , "QR Scan")
+            val it2 = ItemRecycleView(2, R.drawable.baseline_incomplete_circle_24 , "QR Scan")
             itemList.add(it1)
-            val it3 = Item_recycleView(3, R.drawable.baseline_incomplete_circle_24 , "Schedule")
+            val it3 = ItemRecycleView(3, R.drawable.baseline_incomplete_circle_24 , "Schedule")
             itemList.add(it1)
-            val it4 = Item_recycleView(4, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it4 = ItemRecycleView(4, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it5 = Item_recycleView(5, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it5 = ItemRecycleView(5, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it6 = Item_recycleView(6, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it6 = ItemRecycleView(6, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it7 = Item_recycleView(7, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it7 = ItemRecycleView(7, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it8 = Item_recycleView(8, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it8 = ItemRecycleView(8, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it9 = Item_recycleView(9, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it9 = ItemRecycleView(9, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it10 = Item_recycleView(10, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it10 = ItemRecycleView(10, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it11 = Item_recycleView(11, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it11 = ItemRecycleView(11, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it12 = Item_recycleView(12, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it12 = ItemRecycleView(12, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
             return itemList
         }
@@ -77,31 +77,31 @@ class Constant {
 
         // Hàm này chạy tron MainActiity khi user là Bác Sĩ
 
-        fun getItemListForRecycleView_DoctorHome():  ArrayList<Item_recycleView>  {
-            val itemList = ArrayList<Item_recycleView>()
-            val it1 = Item_recycleView(1, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+        fun getItemListForRecycleView_DoctorHome():  ArrayList<ItemRecycleView>  {
+            val itemList = ArrayList<ItemRecycleView>()
+            val it1 = ItemRecycleView(1, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it2 = Item_recycleView(2, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it2 = ItemRecycleView(2, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it3 = Item_recycleView(3, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it3 = ItemRecycleView(3, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it4 = Item_recycleView(4, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it4 = ItemRecycleView(4, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it5 = Item_recycleView(5, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it5 = ItemRecycleView(5, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it6 = Item_recycleView(6, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it6 = ItemRecycleView(6, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it7 = Item_recycleView(7, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it7 = ItemRecycleView(7, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it8 = Item_recycleView(8, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it8 = ItemRecycleView(8, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it9 = Item_recycleView(9, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it9 = ItemRecycleView(9, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it10 = Item_recycleView(10, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it10 = ItemRecycleView(10, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it11 = Item_recycleView(11, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it11 = ItemRecycleView(11, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it12 = Item_recycleView(12, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
+            val it12 = ItemRecycleView(12, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
             return itemList
         }
@@ -167,7 +167,7 @@ class Constant {
         RECEIVER_ID("receiverId")
     }
 
-    class Item_recycleView(
+    class ItemRecycleView(
         val idIcon: Int,
         val imageIcon: Int,
         val nameIcon: String,

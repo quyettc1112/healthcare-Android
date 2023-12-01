@@ -33,4 +33,8 @@
     <declare-styleable name="CustomFileSend">
         <attr name="android:src"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomSearchBar">
+        <attr name="android:hint"/>
+    </declare-styleable>
 </resources>
