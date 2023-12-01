@@ -1,41 +1,62 @@
 package com.example.healthcarecomp.ui.info
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.icu.util.Calendar
 import android.net.Uri
+import android.nfc.FormatException
+import android.nfc.NdefMessage
+import android.nfc.NdefRecord
+import android.nfc.NfcAdapter
+import android.nfc.Tag
+import android.nfc.tech.Ndef
 import android.os.Bundle
+import android.os.Parcelable
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.healthcarecomp.R
 import com.example.healthcarecomp.base.BaseFragment
 import com.example.healthcarecomp.base.dialog.ConfirmDialog
+import com.example.healthcarecomp.base.dialog.NFCBottomSheetNNotify
 import com.example.healthcarecomp.data.model.Doctor
 import com.example.healthcarecomp.data.model.Patient
 import com.example.healthcarecomp.databinding.FragmentInfoBinding
+import com.example.healthcarecomp.helper.NFCHelper
 import com.example.healthcarecomp.ui.activity.auth.AuthActivity
+import com.example.healthcarecomp.ui.activity.auth.AuthViewModel
 import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.ui.activity.main.MainViewModel
+import com.example.healthcarecomp.ui.auth.login.LoginViewModel
 import com.example.healthcarecomp.util.ConvertUtils
 import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.ValidationUtils
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import dagger.hilt.android.AndroidEntryPoint
+import org.checkerframework.checker.units.qual.m
+import java.io.IOException
+import java.io.UnsupportedEncodingException
 
 @AndroidEntryPoint
 class InfoFragment : BaseFragment(R.layout.fragment_info) {
 
     private lateinit var _binding: FragmentInfoBinding
     private lateinit var _viewModel: InfoViewModel
+    private lateinit var _loginViewModel: LoginViewModel
     private lateinit var mainViewModel: MainViewModel
     private lateinit var datePickerDialog: DatePickerDialog
+    lateinit var authViewModel: AuthViewModel
+    private var nfcAdapter: NfcAdapter? = null
+    private var myTag: Tag? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,8 +66,8 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentInfoBinding.inflate(inflater, container, false)
         _viewModel = ViewModelProvider(this)[InfoViewModel::class.java]
-
-
+        _loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         return _binding.root
     }
 
@@ -57,6 +78,41 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
         setUI()
         setEvents()
         setObservers()
+        setUp_NFC_UI()
+    }
+
+
+    private fun setUp_NFC_UI() {
+        nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
+        if (nfcAdapter == null) {
+            _binding.btnsaveNFCInfo.visibility = View.GONE
+        }
+        _binding.btnsaveNFCInfo.setOnClickListener {
+            if (nfcAdapter!!.isEnabled) {
+                val mainActivity = activity as MainActivity
+                NFCHelper(authViewModel, mainActivity, _loginViewModel).handleError()
+            } else showNFCDisabledDialog()
+        }
+    }
+
+    private fun showNFCDisabledDialog() {
+        // Tạo một đối tượng dialog
+        val dialog = AlertDialog.Builder(requireContext())
+
+        // Thiết lập tiêu đề của dialog
+        dialog.setTitle("NFC bị vô hiệu hóa")
+
+        // Thiết lập nội dung của dialog
+        dialog.setMessage("NFC bị vô hiệu hóa. Vui lòng bật NFC trong cài đặt của bạn để sử dụng tính năng này.")
+
+        // Thêm nút "OK" vào dialog
+        dialog.setPositiveButton("OK") { _, _ ->
+            // Mở cài đặt NFC
+            val intent = Intent(Settings.ACTION_NFC_SETTINGS)
+            startActivity(intent)
+        }
+        // Hiển thị dialog
+        dialog.show()
     }
 
     private fun setUI() {
@@ -97,7 +153,6 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                     startActivity(Intent(requireActivity(), AuthActivity::class.java))
                     requireActivity().finish()
                 }
-
                 override fun negativeAction() {
                 }
             }
@@ -117,16 +172,16 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
             _viewModel.isEditing.value?.let {
                 _viewModel.isEditing.value = !_viewModel.isEditing.value!!
                 if (it) {
-                    var firstName = _binding.etInfoFirstName.text.toString()
-                    var lastName = _binding.etInfoLastName.text.toString()
+                    val firstName = _binding.etInfoFirstName.text.toString()
+                    val lastName = _binding.etInfoLastName.text.toString()
 
-                    var password = _binding.etInfoPassword.text.toString()
-                    var confirmPassword = _binding.etInfoPasswordConfirm.text.toString()
-                    var gender = _binding.rbMale.isChecked
+                    val password = _binding.etInfoPassword.text.toString()
+                    val confirmPassword = _binding.etInfoPasswordConfirm.text.toString()
+                    val gender = _binding.rbMale.isChecked
 
-                    var avatar = mainViewModel.currentUser.value?.avatar
+                    val avatar = mainViewModel.currentUser.value?.avatar
                     var dob: Long? = null
-                    var dobCharSequence = _binding.etDob.text.toString()
+                    val dobCharSequence = _binding.etDob.text.toString()
 
                     if (!(ValidationUtils.isValidLastName(lastName)
                                 && ValidationUtils.isValidFirstName(firstName)
@@ -311,19 +366,20 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
 
             if (uri != null) {
                 _viewModel.uploadImage(uri, onProgress = {
-                    Log.d("Image","loading")
+                    Log.d("Image", "loading")
                     _viewModel.userEditState.value = Resource.Loading()
                 }, onSuccess = {
-                    Log.d("Image","success")
+                    Log.d("Image", "success")
                     hideLoading()
                     _binding.ivUserAvatar.setImageURI(it)
                     _viewModel.upsertUser(avatar = it.toString())
                 }, onFailure = {
-                    Log.d("Image","fail")
+                    Log.d("Image", "fail")
                     _viewModel.userEditState.value = Resource.Error("Upload image failed")
                     Toast.makeText(this.requireContext(), it, Toast.LENGTH_SHORT).show()
                 })
             }
         }
     }
+
 }
