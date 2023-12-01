@@ -20,6 +20,7 @@ import com.example.healthcarecomp.ui.activity.main.MainActivity
 import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.helper.NFCHelper
 import com.example.healthcarecomp.ui.auth.login.LoginFragment
+import com.example.healthcarecomp.ui.auth.login.LoginViewModel
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -41,6 +42,7 @@ import kotlin.experimental.and
 @AndroidEntryPoint
 class AuthActivity : BaseActivity() {
     lateinit var authViewModel: AuthViewModel
+    lateinit var loginViewModel: LoginViewModel
 
 
     private lateinit var oneTapClient: SignInClient
@@ -63,6 +65,7 @@ class AuthActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         setupLoginWithGoggle()
 
 
@@ -198,7 +201,7 @@ class AuthActivity : BaseActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        NFCHelper(authViewModel, myTag, this).readFromIntent(intent)
+        NFCHelper(authViewModel,null, loginViewModel).readFromIntent(intent)
         if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action) {
             myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
         }

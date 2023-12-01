@@ -10,7 +10,7 @@
         android:layout_marginBottom="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scan thẻ NFC "
+        android:text="Đưa thẻ NFC lại gần thiết bị"
         android:textStyle="bold"
         android:textSize="25dp"
         app:layout_constraintBottom_toTopOf="@+id/gifImageView"
@@ -34,6 +34,7 @@
 
     </pl.droidsonroids.gif.GifImageView>
 
+
     <TextView
         android:id="@+id/idTagTStatus"
         android:layout_width="wrap_content"
@@ -47,25 +48,25 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gifImageView"
-        app:layout_constraintVertical_bias="0.214">
+        app:layout_constraintVertical_bias="0.057">
 
     </TextView>
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/procesStatus"
+        style="@style/Widget.Material3.LinearProgressIndicator"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:visibility="visible"
         android:indeterminate="true"
-        style="@style/Widget.Material3.LinearProgressIndicator"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/idTagTStatus">
+        app:layout_constraintTop_toBottomOf="@+id/idTagTStatus"
+        app:layout_constraintVertical_bias="0.177">
 
     </com.google.android.material.progressindicator.CircularProgressIndicator>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.ui.info
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -41,6 +42,7 @@ import com.example.healthcarecomp.util.Resource
 import com.example.healthcarecomp.util.ValidationUtils
 import com.example.healthcarecomp.util.extension.afterTextChanged
 import dagger.hilt.android.AndroidEntryPoint
+import org.checkerframework.checker.units.qual.m
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 
@@ -79,6 +81,7 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
         setUp_NFC_UI()
     }
 
+
     private fun setUp_NFC_UI() {
         nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext())
         if (nfcAdapter == null) {
@@ -86,25 +89,8 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
         }
         _binding.btnsaveNFCInfo.setOnClickListener {
             if (nfcAdapter!!.isEnabled) {
-
-                    //myTag = requireActivity().intent.getParcelableExtra<Parcelable>(NfcAdapter.EXTRA_TAG) as Tag?
                 val mainActivity = activity as MainActivity
-                    try {
-                        if (mainActivity.myTag == null) {
-                            Toast.makeText(context, NFCHelper.ERROR_DETECTED, Toast.LENGTH_LONG).show()
-                        } else {
-                            NFCHelper(authViewModel, myTag, requireContext()).writeMultipleRecords("com.easa", "012414sbahusfbasjhfabfhas14", "asdafasf", "1214", mainActivity.myTag)
-                            Toast.makeText(context, NFCHelper.WRITE_SUCCESS, Toast.LENGTH_LONG).show()
-                        }
-                    } catch (e: IOException) {
-                        Toast.makeText(context, NFCHelper.WRITE_ERROR, Toast.LENGTH_LONG).show()
-                        e.printStackTrace()
-                    } catch (e: FormatException) {
-                        Toast.makeText(context, NFCHelper.WRITE_ERROR, Toast.LENGTH_LONG).show()
-                        e.printStackTrace()
-                    }
-
-
+                NFCHelper(authViewModel, mainActivity, _loginViewModel).handleError()
             } else showNFCDisabledDialog()
         }
     }
@@ -167,7 +153,6 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
                     startActivity(Intent(requireActivity(), AuthActivity::class.java))
                     requireActivity().finish()
                 }
-
                 override fun negativeAction() {
                 }
             }
