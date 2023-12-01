@@ -1,5 +1,6 @@
 package com.example.healthcarecomp.ui.activity.main
 
+import android.nfc.Tag
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,7 @@ import com.example.healthcarecomp.data.model.User
 import com.example.healthcarecomp.data.repository.AuthRepository
 import com.example.healthcarecomp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,8 +21,14 @@ class MainViewModel @Inject constructor(
     var currentUser = MutableLiveData<User?>()
     val localUser: User? = authRepository.getLoggedInUser()
 
+    val myTag = MutableStateFlow<Tag?>(null)
+
     init {
         onUserChange(localUser)
+    }
+
+    fun changeTag(tag: Tag?) {
+        myTag.value = tag
     }
 
     private fun onUserChange(user: User?) = viewModelScope.launch{
@@ -40,6 +48,8 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+
 
 
 
