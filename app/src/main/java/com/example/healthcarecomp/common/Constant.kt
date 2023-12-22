@@ -59,18 +59,6 @@ class Constant {
             itemList.add(it1)
             val it6 = ItemRecycleView(6, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
             itemList.add(it1)
-            val it7 = ItemRecycleView(7, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
-            itemList.add(it1)
-            val it8 = ItemRecycleView(8, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
-            itemList.add(it1)
-            val it9 = ItemRecycleView(9, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
-            itemList.add(it1)
-            val it10 = ItemRecycleView(10, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
-            itemList.add(it1)
-            val it11 = ItemRecycleView(11, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
-            itemList.add(it1)
-            val it12 = ItemRecycleView(12, R.drawable.baseline_incomplete_circle_24 , "Chỉ Số IBM")
-            itemList.add(it1)
             return itemList
         }
 

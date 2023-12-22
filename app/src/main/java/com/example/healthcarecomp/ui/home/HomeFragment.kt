@@ -90,7 +90,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
         val gridSpacingItemDecoration = GridSpacingItemDecoration(20)
         binding.rvItemUserHome.addItemDecoration(gridSpacingItemDecoration)
-
         binding.rvItemUserHome.layoutManager = layoutManager
         binding.rvItemUserHome.adapter = adapter
         adapter.onItemClick = {
@@ -98,24 +97,17 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 moveToPage(action)
             }
         }
-
-        // Lưu trữ tổng số item trong Grid layout
-        val totalItemCount = adapter.itemCount
-        // Lưu trữ số item hiện đang được hiển thị trên màn hình
-        var visibleItemCount = layoutManager.childCount
-
-        var progress = 0F
-
-        var tmp = 0F
-        binding.rvItemUserHome.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                tmp += dx
-                progress = (tmp / 900 * 100)
-                Log.d("tmppp", progress.toString())
-                binding.pbItemUserhome.progress = progress.toInt()
-            }
-        })
+//        var progress = 0F
+//
+//        var tmp = 0F
+//        binding.rvItemUserHome.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                tmp += dx
+//                progress = (tmp / 900 * 100)
+//                binding.pbItemUserhome.progress = progress.toInt()
+//            }
+//        })
     }
 
     private fun moveToPage(action: Int) {
@@ -133,7 +125,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     }
 
     class GridSpacingItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
-
         override fun getItemOffsets(
             outRect: Rect,
             view: View,

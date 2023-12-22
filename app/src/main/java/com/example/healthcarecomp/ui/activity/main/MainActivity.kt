@@ -83,16 +83,18 @@ class MainActivity : BaseActivity() {
         if (nfcAdapter == null) {
             // Stop here, we definitely need NFC
             Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show()
-            finish()
+            //finish()
+        } else {
+            //NFCHelper(authViewModel, myTag, this).readFromIntent(intent)
+            pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                PendingIntent.FLAG_MUTABLE
+            )
+            readFromIntent(intent = intent)
         }
-        //NFCHelper(authViewModel, myTag, this).readFromIntent(intent)
-        pendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-            PendingIntent.FLAG_MUTABLE
-        )
-        readFromIntent(intent = intent)
+
 
     }
     private fun readFromIntent(intent: Intent) {
@@ -148,7 +150,6 @@ class MainActivity : BaseActivity() {
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
              val selectedId = when (destination.id) {
-
                 in Constant.BottomNav.CHAT_NAV ->  R.id.navigation_chat
                 in Constant.BottomNav.SCHEDULE_NAV -> R.id.navigation_schedule
                 in Constant.BottomNav.INFO_NAV -> R.id.navigation_info
@@ -169,12 +170,12 @@ class MainActivity : BaseActivity() {
 
     public override fun onResume() {
         super.onResume()
-        nfcAdapter!!.enableForegroundDispatch(this, pendingIntent, null, null)
+     //   nfcAdapter!!.enableForegroundDispatch(this, pendingIntent, null, null)
     }
 
     override fun onPause() {
         super.onPause()
-        myTag = intent.getParcelableExtra<Parcelable>(NfcAdapter.EXTRA_TAG) as Tag?
+       // myTag = intent.getParcelableExtra<Parcelable>(NfcAdapter.EXTRA_TAG) as Tag?
     }
 
 

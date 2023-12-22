@@ -73,7 +73,7 @@ class AuthActivity : BaseActivity() {
         if (nfcAdapter == null) {
             // Stop here, we definitely need NFC
             Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show()
-            finish()
+            //finish()
         }
         pendingIntent = PendingIntent.getActivity(
             this,
@@ -206,15 +206,11 @@ class AuthActivity : BaseActivity() {
             myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
         }
     }
-
     override fun onResume() {
         super.onResume()
-        nfcAdapter!!.enableForegroundDispatch(this, pendingIntent, null, null)
-
-    }
-    override fun onPause() {
-        super.onPause()
-       // nfcAdapter!!.disableForegroundDispatch(this)
+        if (nfcAdapter != null) {
+            nfcAdapter!!.enableForegroundDispatch(this, pendingIntent, null, null)
+        }
     }
 
 

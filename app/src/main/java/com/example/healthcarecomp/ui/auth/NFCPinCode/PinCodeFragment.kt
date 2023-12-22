@@ -62,7 +62,6 @@ class PinCodeFragment : BaseFragment(R.layout.fragment_pin_code){
         _binding.passPinCodeNFC.afterTextChanged {
             authViewModel.onTextChangePSSValue(it)
         }
-
         _binding.btnLogin.setOnClickListener {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
